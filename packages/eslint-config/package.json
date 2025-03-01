@@ -1,0 +1,14 @@
+{
+  "name": "@quick-bite/eslint-config",
+  "type": "module",
+  "version": "1.0.0",
+  "exports": {
+    ".": "./eslint.config.js",
+    "./create-config": "./create-config.js"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^4.3.0",
+    "eslint": "^9.20.1",
+    "eslint-plugin-format": "^1.0.1"
+  }
+}

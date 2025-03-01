@@ -1,0 +1,23 @@
+{
+  "name": "@quick-bite/app-config",
+  "type": "module",
+  "version": "1.0.0",
+  "exports": {
+    ".": "./dist/index.js",
+    "./create-config": "./dist/create-config.js"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist",
+    "prepare": "pnpm run clean && pnpm run build"
+  },
+  "devDependencies": {
+    "@quick-bite/eslint-config": "workspace:^",
+    "eslint": "^9.21.0",
+    "eslint-plugin-format": "^1.0.1",
+    "typescript": "^5.7.3"
+  }
+}

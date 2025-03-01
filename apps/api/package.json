@@ -1,0 +1,32 @@
+{
+  "name": "@quick-bite/api",
+  "type": "module",
+  "version": "1.0.0",
+  "packageManager": "pnpm@10.5.2",
+  "license": "ISC",
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@quick-bite/app-config": "workspace:^",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@quick-bite/eslint-config": "workspace:^",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.13.5",
+    "esbuild": "^0.25.0",
+    "eslint": "^9.21.0",
+    "eslint-plugin-format": "^1.0.1",
+    "nodemon": "^3.1.9",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
+  }
+}

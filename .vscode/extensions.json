@@ -1,0 +1,13 @@
+{
+    "recommendations": [
+        "formulahendry.auto-rename-tag",
+        "streetsidesoftware.code-spell-checker",
+        "dbaeumer.vscode-eslint",
+        "eamodio.gitlens",
+        "ecmel.vscode-html-css",
+        "ms-vscode.vscode-typescript-next",
+        "christian-kohler.npm-intellisense",
+        "christian-kohler.path-intellisense",
+        "bradlc.vscode-tailwindcss"
+    ]
+}
