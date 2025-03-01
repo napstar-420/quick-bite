@@ -4,6 +4,10 @@ import config from "@quick-bite/app-config"
 
 // https://vite.dev/config/
 export default defineConfig({
+  build: {
+    outDir: '../api/public',
+    emptyOutDir: true,
+  },
   plugins: [react()],
   server: {
     proxy: {
