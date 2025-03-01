@@ -15,11 +15,20 @@ app.use(morganMiddleware);
 
 await connectDB();
 
+app.use(express.static(path.join(config.__dirname, "./public")));
+
+app.use((req, res, next) => {
+  if (req.originalUrl.startsWith("/api")) {
+    return next();
+  }
+
+  res.sendFile(path.join(config.__dirname, "public", "index.html"));
+});
+
 app.use("/api", AppRouter);
 
-app.use(express.static(path.join(config.__dirname, "./public")));
-app.get("*", (_, res) => {
-  res.sendFile(path.join(config.__dirname, "public", "index.html"));
+app.use((_, res) => {
+  res.status(404).json({ message: "Route not found" });
 });
 
 const PORT = config.API_PORT;
