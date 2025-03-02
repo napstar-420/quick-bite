@@ -15,7 +15,8 @@ async function verifyJwt(req, res, next) {
     const decoded = jwt.verify(token, config.ACCESS_TOKEN_SECRET);
     req.user_id = decoded.id;
     next();
-  } catch (error) {
+  }
+  catch (error) {
     logger.debug(error);
     return res.status(403).json({ message: 'Forbidden' });
   }

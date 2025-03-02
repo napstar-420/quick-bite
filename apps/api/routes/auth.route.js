@@ -8,15 +8,7 @@ const router = express.Router();
 router.post(
   '/signup',
   validations.signupValidation,
-  () => {},
-  () => {},
-  () => {},
-  () => {},
-  () => {},
-  () => {},
-  () => {},
-  () => {},
-  authController.signup
+  authController.signup,
 );
 router.post('/signin', validations.signinValidation, authController.signin);
 router.get('/refresh-token', authController.refreshToken);

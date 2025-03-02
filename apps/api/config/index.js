@@ -23,7 +23,8 @@ module.exports = createConfig.default({
   PASS_MAX_LENGTH,
   PASS_ALLOWED_SPECIAL_CHARS,
   PASS_REGEX: new RegExp(
-    `^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[${PASS_ALLOWED_SPECIAL_CHARS}])[A-Za-z\\d${PASS_ALLOWED_SPECIAL_CHARS}]{${PASS_MIN_LENGTH},${PASS_MAX_LENGTH}}$`
+    // eslint-disable-next-line style/max-len
+    `^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[${PASS_ALLOWED_SPECIAL_CHARS}])[A-Za-z\\d${PASS_ALLOWED_SPECIAL_CHARS}]{${PASS_MIN_LENGTH},${PASS_MAX_LENGTH}}$`,
   ),
   SALT_ROUNDS: 10,
   ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET || 'secret',

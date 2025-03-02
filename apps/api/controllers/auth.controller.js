@@ -26,7 +26,7 @@ async function signup(req, res) {
   const data = matchedData(req);
   const existingUser = await UserService.getUser(
     { email: data.email },
-    'email'
+    'email',
   );
 
   if (existingUser) {
@@ -45,11 +45,12 @@ async function signup(req, res) {
     res.cookie(
       config.REFRESH_TOKEN_COOKIE_NAME,
       refreshToken,
-      refreshTokenConfig
+      refreshTokenConfig,
     );
 
     return res.json({ accessToken });
-  } catch {
+  }
+  catch {
     return res.sendStatus(500);
   }
 }
@@ -71,7 +72,7 @@ async function signin(req, res) {
   const data = matchedData(req);
   const user = await UserService.getUser(
     { email: data.email },
-    'name email password'
+    'name email password',
   );
 
   if (isNil(user)) {
@@ -93,7 +94,7 @@ async function signin(req, res) {
   res.cookie(
     config.REFRESH_TOKEN_COOKIE_NAME,
     refreshToken,
-    refreshTokenConfig
+    refreshTokenConfig,
   );
 
   return res.json({ accessToken });
@@ -120,7 +121,8 @@ async function refreshToken(req, res) {
 
   try {
     jwt.verify(refreshToken, config.REFRESH_TOKEN_SECRET);
-  } catch {
+  }
+  catch {
     return res.sendStatus(403);
   }
 

@@ -22,13 +22,13 @@ const logger = winston.createLogger({
     winston.format.timestamp({
       format: 'YYYY-MM-DD hh:mm:ss.SSS A',
     }),
-    winston.format.json()
+    winston.format.json(),
   ),
   transports: [
     new winston.transports.Console({
       format: winston.format.combine(
         winston.format.colorize(),
-        winston.format.simple()
+        winston.format.simple(),
       ),
     }),
     errorFileRotateTransport,
