@@ -1,38 +1,52 @@
-import cors from "cors";
-import express from "express";
-import path from "node:path";
+const cors = require("cors");
+const express = require("express");
+const path = require("node:path");
 
-import { connectDB } from "./config/db.js";
-import config from "./config/index.js";
-import { morganMiddleware } from "./middlewares/morgan.middleware.js";
-import AppRouter from "./router.js";
-import { logger } from "./utils/logger.js";
+const { connectDB } = require("./config/db.js");
+const config = require("./config");
+const { errorHandler, errorNotFoundHandler } = require("./middlewares/error.middleware.js");
+const { morganMiddleware } = require("./middlewares/morgan.middleware.js");
+const AppRouter = require("./router.js");
+const { logger } = require("./utils/logger.js");
 
 const app = express();
 app.use(cors());
+
+// Trust Proxy for Proxies
+app.set("trust proxy", true);
+
+// Parse incoming requests data
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+// Log incoming requests
 app.use(morganMiddleware);
 
-await connectDB();
+// Connect to database
+connectDB();
 
-app.use(express.static(path.join(config.__dirname, "./public")));
+// Serve static files
+app.use(express.static(path.join(__dirname, "./public")));
 
 app.use((req, res, next) => {
+  // If url doesn't contain "/api" serve react app from public folder
   if (req.originalUrl.startsWith("/api")) {
     return next();
   }
 
-  res.sendFile(path.join(config.__dirname, "public", "index.html"));
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
+// Set app router
 app.use("/api", AppRouter);
 
-app.use((_, res) => {
-  res.status(404).json({ message: "Route not found" });
-});
+// Error Handlers
+app.use(errorNotFoundHandler);
+app.use(errorHandler);
 
 const PORT = config.API_PORT;
 
+// Start app
 app.listen(PORT, () => {
   logger.info(`Server running on port http://localhost:${PORT}`);
 });

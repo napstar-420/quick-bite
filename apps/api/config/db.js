@@ -1,11 +1,12 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
-import { logger } from "../utils/logger.js";
-import config from "./index.js";
+const { logger } = require("../utils/logger");
+const config = require(".");
 
-export async function connectDB() {
+async function connectDB() {
+  console.log(config.DB_URI, '<----')
   try {
-    const conn = await mongoose.connect(config.DB_CONN_STR);
+    const conn = await mongoose.connect(config.DB_URI);
     logger.info(`MongoDB connected: ${conn.connection.host}`);
   }
   catch (error) {
@@ -15,7 +16,17 @@ export async function connectDB() {
   }
 }
 
+mongoose.connection.on('connecting', () => {
+  logger.debug('Connecting to MongoDB...');
+});
+
+mongoose.connection.on('error', (err) => {
+  logger.error('MongoDB connection error:', err);
+});
+
 mongoose.connection.on("disconnected", () => {
   logger.warn("MongoDB disconnected! Reconnecting...");
   connectDB();
 });
+
+module.exports = { connectDB };

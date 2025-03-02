@@ -1,8 +1,9 @@
-import morgan from "morgan";
+const morgan = require("morgan");
 
-import { logger } from "../utils/logger.js";
+const { logger } = require("../utils/logger.js");
 
-export const morganMiddleware = morgan(
+// Morgan Middleware
+const morganMiddleware = morgan(
   ":method :url :status :res[content-length] - :response-time ms",
   {
     stream: {
@@ -10,3 +11,5 @@ export const morganMiddleware = morgan(
     },
   },
 );
+
+module.exports = { morganMiddleware };
