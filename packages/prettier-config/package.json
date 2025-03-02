@@ -1,0 +1,22 @@
+{
+  "name": "@quick-bite/prettier-config",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "exports": {
+    ".": "./prettier.config.js",
+    "./create-config": "./create-prettier.config.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.5.2",
+  "dependencies": {
+    "prettier": "3.5.2"
+  }
+}
