@@ -1,10 +1,6 @@
-const { customAlphabet } = require("nanoid");
-const bcrypt = require("bcrypt");
-const config = require('../config')
+const bcrypt = require("bcryptjs");
 
-function genUserId() {
-  return customAlphabet("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890", 16);
-}
+const config = require("../config");
 
 async function hashPassword(password) {
   const salt = await bcrypt.genSalt(config.SALT_ROUNDS);
@@ -16,4 +12,4 @@ async function comparePassword(password, hashPassword) {
   return await bcrypt.compare(password, hashPassword);
 }
 
-module.exports = { genUserId, hashPassword, comparePassword };
+module.exports = { hashPassword, comparePassword };

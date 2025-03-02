@@ -1,14 +1,14 @@
-const { compare, genSalt, hash } = require("bcryptjs");
 const { model, Schema } = require("mongoose");
 
 const config = require("../config");
+const { hashPassword } = require("../utils/helpers");
 const { genUserId } = require("../utils/id");
 
 const UserSchema = new Schema(
   {
     _id: {
       type: String,
-      default: () => genUserId(),
+      default: genUserId,
     },
     name: {
       type: String,
@@ -25,11 +25,14 @@ const UserSchema = new Schema(
     password: {
       type: String,
       required: true,
-      minlength: config.USER_PASS_MIN_LENGTH,
+      minlength: config.PASS_MIN_LENGTH,
+    },
+    refreshToken: {
+      type: String,
+      default: null,
     },
     phone: {
       type: String,
-      required: true,
       unique: true,
     },
     addresses: [
@@ -59,17 +62,12 @@ const UserSchema = new Schema(
 );
 
 UserSchema.pre("save", async function (next) {
-  if (!this.isModified("password"))
+  if (!this.isModified("password")) {
     return next();
-  const salt = await genSalt(10);
-  this.password = await hash(this.password, salt);
+  }
+
+  this.password = await hashPassword(this.password);
   next();
 });
 
-UserSchema.methods.comparePassword = async function (enteredPassword) {
-  return compare(enteredPassword, this.password);
-};
-
-const User = model("User", UserSchema);
-
-module.exports = User;
+module.exports = model("User", UserSchema);

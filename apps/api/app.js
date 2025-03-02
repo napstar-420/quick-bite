@@ -1,9 +1,10 @@
+const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const express = require("express");
 const path = require("node:path");
 
-const { connectDB } = require("./config/db.js");
 const config = require("./config");
+const { connectDB } = require("./config/db.js");
 const { errorHandler, errorNotFoundHandler } = require("./middlewares/error.middleware.js");
 const { morganMiddleware } = require("./middlewares/morgan.middleware.js");
 const AppRouter = require("./router.js");
@@ -11,6 +12,7 @@ const { logger } = require("./utils/logger.js");
 
 const app = express();
 app.use(cors());
+app.use(cookieParser());
 
 // Trust Proxy for Proxies
 app.set("trust proxy", true);
