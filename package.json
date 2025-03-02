@@ -7,7 +7,9 @@
     "lint": "pnpm run -r --parallel lint",
     "lint:fix": "pnpm run -r --parallel lint:fix",
     "dev": "pnpm run -r --parallel dev",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "pnpm run -r --parallel format",
+    "format:check": "pnpm run -r --parallel format:check"
   },
   "keywords": [],
   "author": "",

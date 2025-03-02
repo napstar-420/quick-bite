@@ -1,6 +1,6 @@
-const bcrypt = require("bcryptjs");
+const bcrypt = require('bcryptjs');
 
-const config = require("../config");
+const config = require('../config');
 
 async function hashPassword(password) {
   const salt = await bcrypt.genSalt(config.SALT_ROUNDS);

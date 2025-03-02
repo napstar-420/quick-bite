@@ -12,12 +12,16 @@
     "build": "tsc",
     "dev": "tsc --watch",
     "clean": "rm -rf dist",
-    "prepare": "pnpm run clean && pnpm run build"
+    "prepare": "pnpm run clean && pnpm run build",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "devDependencies": {
     "@quick-bite/eslint-config": "workspace:^",
+    "@quick-bite/prettier-config": "workspace:^",
     "eslint": "^9.21.0",
     "eslint-plugin-format": "^1.0.1",
+    "prettier": "^3.5.2",
     "typescript": "^5.7.3"
   }
 }

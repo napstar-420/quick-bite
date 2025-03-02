@@ -1,10 +1,10 @@
-import { useState } from "react"
+import { useState } from "react";
 
 function App() {
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
 
   async function handleClick() {
-    const response = await fetch('/api');
+    const response = await fetch("/api");
     const data = await response.json();
 
     setMessage(data.message);
@@ -17,7 +17,7 @@ function App() {
 
       <p>{message}</p>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

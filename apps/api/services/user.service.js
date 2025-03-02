@@ -1,10 +1,10 @@
-const UserModel = require("../models/user.model");
+const UserModel = require('../models/user.model');
 
-async function getUserByID(id, projection = "name email") {
+async function getUserByID(id, projection = 'name email') {
   return UserModel.findById(id, projection);
 }
 
-async function getUser(filters, projection = "name email") {
+async function getUser(filters, projection = 'name email') {
   return UserModel.findOne(filters, projection);
 }
 

@@ -8,7 +8,7 @@ class HttpError extends Error {
 class NotFoundError extends HttpError {
   constructor(message, status = 404) {
     super(status, message);
-    this.name = "NotFoundError";
+    this.name = 'NotFoundError';
   }
 }
 

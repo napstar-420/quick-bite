@@ -1,8 +1,8 @@
-const { model, Schema } = require("mongoose");
+const { model, Schema } = require('mongoose');
 
-const config = require("../config");
-const { hashPassword } = require("../utils/helpers");
-const { genUserId } = require("../utils/id");
+const config = require('../config');
+const { hashPassword } = require('../utils/helpers');
+const { genUserId } = require('../utils/id');
 
 const UserSchema = new Schema(
   {
@@ -47,22 +47,22 @@ const UserSchema = new Schema(
         location: {
           type: {
             type: String,
-            enum: ["Point"],
-            default: "Point",
+            enum: ['Point'],
+            default: 'Point',
           },
           coordinates: {
             type: [Number],
-            index: "2dsphere",
+            index: '2dsphere',
           },
         },
       },
     ],
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
-UserSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) {
+UserSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) {
     return next();
   }
 
@@ -70,4 +70,4 @@ UserSchema.pre("save", async function (next) {
   next();
 });
 
-module.exports = model("User", UserSchema);
+module.exports = model('User', UserSchema);

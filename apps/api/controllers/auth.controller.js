@@ -1,13 +1,13 @@
-const { validationResult, matchedData } = require("express-validator");
-const jwt = require("jsonwebtoken");
-const { isNil } = require("lodash");
+const { validationResult, matchedData } = require('express-validator');
+const jwt = require('jsonwebtoken');
+const { isNil } = require('lodash');
 
-const config = require("../config");
-const { refreshTokenConfig } = require("../config/auth.config");
-const UserService = require("../services/user.service");
-const { genUserAccessToken, genUserRefreshToken } = require("../utils/auth");
-const { comparePassword } = require("../utils/helpers");
-const { logger } = require("../utils/logger");
+const config = require('../config');
+const { refreshTokenConfig } = require('../config/auth.config');
+const UserService = require('../services/user.service');
+const { genUserAccessToken, genUserRefreshToken } = require('../utils/auth');
+const { comparePassword } = require('../utils/helpers');
+const { logger } = require('../utils/logger');
 
 /**
  * Handles user signup
@@ -24,10 +24,15 @@ async function signup(req, res) {
   }
 
   const data = matchedData(req);
-  const existingUser = await UserService.getUser({ email: data.email }, "email");
+  const existingUser = await UserService.getUser(
+    { email: data.email },
+    'email'
+  );
 
   if (existingUser) {
-    return res.status(409).json({ message: "User with this email already exists" });
+    return res
+      .status(409)
+      .json({ message: 'User with this email already exists' });
   }
 
   try {
@@ -37,11 +42,14 @@ async function signup(req, res) {
     const refreshToken = genUserRefreshToken(newUser.id);
     // Update refresh token
     UserService.updateUser(newUser.id, { refreshToken });
-    res.cookie(config.REFRESH_TOKEN_COOKIE_NAME, refreshToken, refreshTokenConfig);
+    res.cookie(
+      config.REFRESH_TOKEN_COOKIE_NAME,
+      refreshToken,
+      refreshTokenConfig
+    );
 
     return res.json({ accessToken });
-  }
-  catch {
+  } catch {
     return res.sendStatus(500);
   }
 }
@@ -61,7 +69,10 @@ async function signin(req, res) {
   }
 
   const data = matchedData(req);
-  const user = await UserService.getUser({ email: data.email }, "name email password");
+  const user = await UserService.getUser(
+    { email: data.email },
+    'name email password'
+  );
 
   if (isNil(user)) {
     return res.sendStatus(401);
@@ -79,7 +90,11 @@ async function signin(req, res) {
   // Update refresh token
   UserService.updateUser(user.id, { refreshToken });
 
-  res.cookie(config.REFRESH_TOKEN_COOKIE_NAME, refreshToken, refreshTokenConfig);
+  res.cookie(
+    config.REFRESH_TOKEN_COOKIE_NAME,
+    refreshToken,
+    refreshTokenConfig
+  );
 
   return res.json({ accessToken });
 }
@@ -105,8 +120,7 @@ async function refreshToken(req, res) {
 
   try {
     jwt.verify(refreshToken, config.REFRESH_TOKEN_SECRET);
-  }
-  catch {
+  } catch {
     return res.sendStatus(403);
   }
 
