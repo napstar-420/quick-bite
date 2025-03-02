@@ -5,7 +5,7 @@ const dotenv = require("dotenv");
 const path = require("node:path");
 
 dotenv.config({
-  path: [path.join(__dirname, "../env"), path.join(__dirname, "../../../.env")],
+  path: [path.join(__dirname, ".../.env"), path.join(__dirname, "../../../.env")],
 });
 
 const PASS_MIN_LENGTH = 8;
@@ -15,7 +15,7 @@ const PASS_ALLOWED_SPECIAL_CHARS = "@$!%*?&_";
 module.exports = createConfig.default({
   DB_URI: process.env.DB_URI || "",
   NODE_ENV: process.env.NODE_ENV || "development",
-  LOG_LEVEL: process.env.LOG_LEVEL || "info",
+  LOG_LEVEL: process.env.LOG_LEVEL || "debug",
   PASS_MIN_LENGTH,
   PASS_MAX_LENGTH,
   PASS_ALLOWED_SPECIAL_CHARS,
