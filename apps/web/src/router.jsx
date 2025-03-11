@@ -3,13 +3,20 @@ import {
   createBrowserRouter,
   Route,
 } from "react-router-dom";
+import NotFound from "./pages/not-found";
+import Auth from "./pages/auth";
+import Home from "./pages/home";
+import { Layout as HomeLayout } from "./components/layout";
+
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/">
-      <Route index element={<h1>Home</h1>} />
-      <Route path="about" element={<h1>About</h1>} />
-      <Route path="contact" element={<h1>Contact</h1>} />
+      <Route element={<HomeLayout />}>
+        <Route index element={<Home />} />
+        <Route path="*" element={<NotFound />} />
+      </Route>
+      <Route path="auth" element={<Auth />} />
     </Route>
   )
 );
