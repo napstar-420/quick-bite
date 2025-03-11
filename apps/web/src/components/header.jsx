@@ -36,7 +36,7 @@ export function Header() {
             </div>
             <Input
               type="text"
-              placeholder="Search Uber Eats"
+              placeholder="Search Quick Bite"
               className="pl-10 py-2 bg-gray-100 border-none"
             />
           </div>
@@ -61,7 +61,7 @@ export function Header() {
             variant="secondary"
             className="font-medium rounded-full"
           >
-            <Link to={config.ROUTES.AUTH}>Log in</Link>
+            <Link to={config.ROUTES.AUTH}>Sign up</Link>
           </Button>
         </div>
       </div>

@@ -2,8 +2,14 @@ import { Input } from "../components/ui/input"
 import { Button } from "../components/ui/button"
 import config from "../config"
 import { Link } from "react-router-dom"
+import { useLocation } from "react-router-dom"
 
-export default function UberEatsLogin() {
+export default function Auth() {
+  const location = useLocation();
+
+  // eslint-disable-next-line no-unused-vars
+  const from = location?.state?.from || config.ROUTES.HOME;
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
