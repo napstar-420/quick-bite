@@ -7,13 +7,13 @@ import {
   Ticket,
   HelpCircle,
   LogOut,
+  UserRound,
 } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Link } from "react-router-dom";
 import config from "../config";
 import { useAuth } from "../hooks/useAuth";
-import { UserRound } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,6 +22,31 @@ import {
   DropdownMenuTrigger,
 } from "../components/ui/dropdown-menu";
 import { useState } from "react";
+
+// TODO: add Address book, Order history, Favorites, Loyalty points
+const userDropDownItems = [
+  {
+    Icon: UserRound,
+    label: "Account",
+    href: config.ROUTES.ACCOUNT,
+  },
+  {
+    Icon: Ticket,
+    label: "Vouchers",
+    href: "",
+    separator: true,
+  },
+  {
+    Icon: HelpCircle,
+    label: "Help",
+    href: "",
+  },
+  {
+    Icon: LogOut,
+    label: "Logout",
+    href: config.ROUTES.LOGOUT,
+  },
+];
 
 export function Header() {
   const [open, setOpen] = useState(false);
@@ -86,39 +111,23 @@ export function Header() {
                 </DropdownMenuTrigger>
               </Button>
               <DropdownMenuContent>
-                <DropdownMenuItem className="p-0" onClick={handleItemClick}>
-                  <Link
-                    to={"/account"}
-                    className="flex items-center gap-2 w-full px-2 py-1.5"
-                  >
-                    <UserRound /> Account
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="p-0" onClick={handleItemClick}>
-                  <Link
-                    to={"/vouchers"}
-                    className="flex items-center gap-2 w-full px-2 py-1.5"
-                  >
-                    <Ticket /> Vouchers
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem className="p-0" onClick={handleItemClick}>
-                  <Link
-                    to={"/help"}
-                    className="flex items-center gap-2 w-full px-2 py-1.5"
-                  >
-                    <HelpCircle /> Help center
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="p-0" onClick={handleItemClick}>
-                  <Link
-                    to={"/logout"}
-                    className="flex items-center gap-2 w-full px-2 py-1.5"
-                  >
-                    <LogOut /> Logout
-                  </Link>
-                </DropdownMenuItem>
+                {userDropDownItems.map((item, index) => (
+                  <>
+                    <DropdownMenuItem
+                      key={index}
+                      className="p-0"
+                      onClick={handleItemClick}
+                    >
+                      <Link
+                        to={item.href}
+                        className="flex items-center gap-2 w-full px-2 py-1.5"
+                      >
+                        <item.Icon /> {item.label}
+                      </Link>
+                    </DropdownMenuItem>
+                    {item.separator && <DropdownMenuSeparator />}
+                  </>
+                ))}
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (

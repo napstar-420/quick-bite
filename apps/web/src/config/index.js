@@ -4,6 +4,7 @@ export default createConfig({
   ROUTES: {
     HOME: "/",
     AUTH: "/auth",
+    LOGOUT: "/logout",
     CART: "/cart",
   }
 });
