@@ -11,6 +11,7 @@ import { Layout as RootLayout } from "../components/layout/root-layout";
 import AuthProvider from "../components/auth-provider";
 import ErrorPage from "../pages/error";
 import PrivateRoute from "./private-route";
+import AccountPage from "../pages/account";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -20,10 +21,10 @@ const router = createBrowserRouter(
           <Route element={<HomeLayout />}>
             <Route index element={<Home />} />
             <Route
-              path="profile"
+              path="account"
               element={
                 <PrivateRoute>
-                  <h1>Hello</h1>
+                  <AccountPage />
                 </PrivateRoute>
               }
             />
