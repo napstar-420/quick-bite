@@ -11,7 +11,8 @@ router.post(
   authController.signup,
 );
 router.post('/signin', validations.signinValidation, authController.signin);
-router.get('/refresh-token', authController.refreshToken);
-router.get('/signout', authController.signout);
+router.get('/refresh', authController.refreshToken);
+router.post('/signout', authController.signout);
+router.get('/check-user', validations.validateEmailParam, authController.checkUserExists);
 
 module.exports = router;

@@ -8,7 +8,7 @@ const UserSchema = new Schema(
   {
     _id: {
       type: String,
-      default: genUserId,
+      default: () => genUserId(),
     },
     name: {
       type: String,
@@ -26,6 +26,7 @@ const UserSchema = new Schema(
       type: String,
       required: true,
       minlength: config.PASS_MIN_LENGTH,
+      maxlength: config.PASS_MAX_LENGTH,
     },
     refreshToken: {
       type: String,
@@ -34,6 +35,7 @@ const UserSchema = new Schema(
     phone: {
       type: String,
       unique: true,
+      sparse: true,
     },
     addresses: [
       {
@@ -65,8 +67,10 @@ UserSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {
     return next();
   }
+  else {
+    this.password = await hashPassword(this.password);
+  }
 
-  this.password = await hashPassword(this.password);
   next();
 });
 

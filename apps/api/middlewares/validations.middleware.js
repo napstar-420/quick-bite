@@ -1,4 +1,4 @@
-const { body } = require('express-validator');
+const { body, query } = require('express-validator');
 
 const config = require('../config');
 
@@ -59,7 +59,16 @@ const signupValidation = [
     ),
 ];
 
+const validateEmailParam = [
+  query('email')
+    .trim()
+    .isEmail()
+    .withMessage('A valid email address is required')
+    .normalizeEmail(),
+];
+
 module.exports = {
   signinValidation,
   signupValidation,
+  validateEmailParam,
 };
