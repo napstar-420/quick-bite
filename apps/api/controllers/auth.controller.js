@@ -48,9 +48,10 @@ async function signup(req, res) {
       refreshTokenConfig,
     );
 
-    return res.json({ accessToken });
+    return res.json({ token: accessToken, user: newUser });
   }
-  catch {
+  catch (error) {
+    logger.error(error);
     return res.sendStatus(500);
   }
 }
@@ -76,13 +77,13 @@ async function signin(req, res) {
   );
 
   if (isNil(user)) {
-    return res.sendStatus(401);
+    return res.status(401).json({ message: 'Invalid credentials' });
   }
 
   const passwordsMatched = await comparePassword(data.password, user.password);
 
   if (!passwordsMatched) {
-    return res.sendStatus(401);
+    return res.status(401).json({ message: 'Invalid credentials' });
   }
 
   const accessToken = genUserAccessToken(user.id);
@@ -97,7 +98,7 @@ async function signin(req, res) {
     refreshTokenConfig,
   );
 
-  return res.json({ accessToken });
+  return res.json({ token: accessToken, user });
 }
 
 /**
@@ -122,13 +123,14 @@ async function refreshToken(req, res) {
   try {
     jwt.verify(refreshToken, config.REFRESH_TOKEN_SECRET);
   }
-  catch {
+  catch (error) {
+    logger.error(error);
     return res.sendStatus(403);
   }
 
   const accessToken = genUserAccessToken(user.id);
 
-  return res.json({ accessToken });
+  return res.json({ token: accessToken, user });
 }
 
 /**
@@ -159,9 +161,48 @@ async function signout(req, res) {
   return res.sendStatus(204);
 }
 
+/**
+ * Checks if a user with the specified email exists
+ * @param {Request} req - Express request object with email query parameter
+ * @param {Response} res - Express response object
+ * @returns {Promise<void>}
+ */
+async function checkUserExists(req, res) {
+  // Validate the email parameter
+  const validationErrors = validationResult(req);
+  if (!validationErrors.isEmpty()) {
+    const errors = validationErrors.array();
+    return res.status(400).json({ errors });
+  }
+
+  const data = matchedData(req);
+
+  try {
+    // Check if user exists
+    const user = await UserService.getUser(
+      { email: data.email },
+      'email',
+    );
+
+    logger.debug(`User existence check for email: ${data.email}`);
+
+    return res.json({
+      exists: !isNil(user),
+      email: data.email,
+    });
+  }
+  catch (error) {
+    logger.error(`Error checking user existence: ${error.message}`);
+    return res.status(500).json({
+      message: 'Internal server error while checking user existence',
+    });
+  }
+}
+
 module.exports = {
   signin,
   signout,
   refreshToken,
   signup,
+  checkUserExists,
 };
