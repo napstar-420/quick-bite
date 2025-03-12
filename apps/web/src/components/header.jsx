@@ -1,13 +1,35 @@
-import { Search, Menu, MapPin, ChevronDown, ShoppingBag } from "lucide-react";
+import {
+  Search,
+  Menu,
+  MapPin,
+  ChevronDown,
+  ShoppingBag,
+  Ticket,
+  HelpCircle,
+  LogOut,
+} from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Link } from "react-router-dom";
 import config from "../config";
 import { useAuth } from "../hooks/useAuth";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { UserRound } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../components/ui/dropdown-menu";
+import { useState } from "react";
 
 export function Header() {
+  const [open, setOpen] = useState(false);
   const { isAuthenticated, user } = useAuth();
+
+  const handleItemClick = () => {
+    setOpen(false);
+  };
 
   return (
     <header className="border-b border-gray-200 py-3">
@@ -55,28 +77,68 @@ export function Header() {
           </Link>
 
           {isAuthenticated ? (
-            <div className="flex items-center gap-2">
-              <Avatar>
-                <AvatarImage src={user.avatar} />
-                <AvatarFallback>{user.name[0]}</AvatarFallback>
-              </Avatar>
-            </div>
-          ) : <>
-            <Button
-              asChild
-              variant="link"
-              className="hover:no-underline font-medium rounded-full"
-            >
-              <Link to={config.ROUTES.AUTH}>Log in</Link>
-            </Button>
-            <Button
-              asChild
-              variant="secondary"
-              className="font-medium rounded-full"
-            >
-              <Link to={config.ROUTES.AUTH}>Sign up</Link>
-            </Button>
-          </>}
+            // TODO: refactor
+            <DropdownMenu open={open} onOpenChange={setOpen}>
+              <Button asChild variant="outline">
+                <DropdownMenuTrigger>
+                  <UserRound />
+                  {user.name.split(" ")[0]}
+                </DropdownMenuTrigger>
+              </Button>
+              <DropdownMenuContent>
+                <DropdownMenuItem className="p-0" onClick={handleItemClick}>
+                  <Link
+                    to={"/account"}
+                    className="flex items-center gap-2 w-full px-2 py-1.5"
+                  >
+                    <UserRound /> Account
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="p-0" onClick={handleItemClick}>
+                  <Link
+                    to={"/vouchers"}
+                    className="flex items-center gap-2 w-full px-2 py-1.5"
+                  >
+                    <Ticket /> Vouchers
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="p-0" onClick={handleItemClick}>
+                  <Link
+                    to={"/help"}
+                    className="flex items-center gap-2 w-full px-2 py-1.5"
+                  >
+                    <HelpCircle /> Help center
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="p-0" onClick={handleItemClick}>
+                  <Link
+                    to={"/logout"}
+                    className="flex items-center gap-2 w-full px-2 py-1.5"
+                  >
+                    <LogOut /> Logout
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <>
+              <Button
+                asChild
+                variant="link"
+                className="hover:no-underline font-medium rounded-full"
+              >
+                <Link to={config.ROUTES.AUTH}>Log in</Link>
+              </Button>
+              <Button
+                asChild
+                variant="secondary"
+                className="font-medium rounded-full"
+              >
+                <Link to={config.ROUTES.AUTH}>Sign up</Link>
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </header>
