@@ -52,8 +52,8 @@ import AccountPage from "../pages/account";
 
 // Admin Pages
 import AdminDashboard from "../pages/admin/dashboard";
-// import AdminUsers from "../pages/admin/users";
-// import AdminRestaurants from "../pages/admin/restaurants";
+import AdminUsers from "../pages/admin/users";
+import AdminRestaurants from "../pages/admin/restaurants";
 // import AdminDelivery from "../pages/admin/delivery";
 // import AdminOrders from "../pages/admin/orders";
 // import AdminReports from "../pages/admin/reports";
@@ -156,9 +156,9 @@ const router = createBrowserRouter(
             }
           >
             <Route index element={<AdminDashboard />} />
-            {/* <Route path="users" element={<AdminUsers />} />
+            <Route path="users" element={<AdminUsers />} />
             <Route path="restaurants" element={<AdminRestaurants />} />
-            <Route path="delivery" element={<AdminDelivery />} />
+            {/* <Route path="delivery" element={<AdminDelivery />} />
             <Route path="orders" element={<AdminOrders />} />
             <Route path="reports" element={<AdminReports />} />
             <Route path="settings" element={<AdminSettings />} /> */}
