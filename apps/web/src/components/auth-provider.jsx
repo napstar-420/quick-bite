@@ -1,8 +1,8 @@
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { useRefreshMutation } from '../features/auth/authApiSlice';
-import { setCredentials, logout } from '../features/auth/authSlice';
-import { Outlet } from 'react-router-dom';
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { useRefreshMutation } from "../features/auth/authApiSlice";
+import { setCredentials, logout } from "../features/auth/authSlice";
+import { Outlet } from "react-router-dom";
 
 const AuthProvider = () => {
   const dispatch = useDispatch();
@@ -22,7 +22,7 @@ const AuthProvider = () => {
     verifyRefreshToken();
   }, [dispatch, refresh]);
 
-  return isLoading ? <div className='text-6xl'>Loading...</div> : <Outlet />;
+  return isLoading ? <div className="text-6xl">Loading...</div> : <Outlet />;
 };
 
 export default AuthProvider;

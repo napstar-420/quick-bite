@@ -1,13 +1,13 @@
-import axios from 'axios';
-import { store } from '../store';
-import { logout, setCredentials } from '../features/auth/authSlice';
-import { API_ROUTES } from '../lib/constants';
+import axios from "axios";
+import { store } from "../store";
+import { logout, setCredentials } from "../features/auth/authSlice";
+import { API_ROUTES } from "../lib/constants";
 
 // Create axios instance
 const api = axios.create({
   baseURL: API_ROUTES.BASE_URL,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
   withCredentials: true, // Important for cookies
 });
@@ -21,7 +21,7 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 // Response interceptor for token refresh
@@ -36,9 +36,13 @@ api.interceptors.response.use(
 
       try {
         // Call refresh endpoint
-        const response = await axios.get(API_ROUTES.AUTH.REFRESH, {}, {
-          withCredentials: true
-        });
+        const response = await axios.get(
+          API_ROUTES.AUTH.REFRESH,
+          {},
+          {
+            withCredentials: true,
+          },
+        );
 
         const { token } = response.data;
 
@@ -58,7 +62,7 @@ api.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export default api;

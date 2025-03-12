@@ -1,14 +1,14 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   user: null,
   token: null,
   isAuthenticated: false,
-  isLoading: true
+  isLoading: true,
 };
 
 const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
     setCredentials: (state, action) => {
@@ -17,7 +17,7 @@ const authSlice = createSlice({
       // Only update what's provided in the payload
       if (user) state.user = user;
       if (token) state.token = token;
-      if (typeof isLoading === 'boolean') state.isLoading = isLoading;
+      if (typeof isLoading === "boolean") state.isLoading = isLoading;
 
       // If either is updated, user is authenticated
       if (user || token) {

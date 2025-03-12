@@ -1,16 +1,16 @@
-import React from 'react';
-import { useRouteError } from 'react-router-dom';
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
-import { Button } from '../components/ui/button';
-import { Home, RefreshCcw } from 'lucide-react';
+import React from "react";
+import { useRouteError } from "react-router-dom";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { Button } from "../components/ui/button";
+import { Home, RefreshCcw } from "lucide-react";
 
 const ErrorPage = () => {
   const error = useRouteError();
 
   // Extract error information
-  const errorMessage = error?.message || 'An unexpected error occurred';
+  const errorMessage = error?.message || "An unexpected error occurred";
   const errorStatus = error?.status || 500;
-  const errorStatusText = error?.statusText || 'Internal Server Error';
+  const errorStatusText = error?.statusText || "Internal Server Error";
 
   // Function to handle refresh
   const handleRefresh = () => {
@@ -19,7 +19,7 @@ const ErrorPage = () => {
 
   // Function to navigate home
   const handleGoHome = () => {
-    window.location.href = '/';
+    window.location.href = "/";
   };
 
   return (
@@ -29,18 +29,20 @@ const ErrorPage = () => {
           <AlertTitle className="text-xl font-bold">
             {errorStatus} {errorStatusText}
           </AlertTitle>
-          <AlertDescription className="mt-2">
-            {errorMessage}
-          </AlertDescription>
+          <AlertDescription className="mt-2">{errorMessage}</AlertDescription>
         </Alert>
 
         <div className="space-y-4">
           <div className="p-6 bg-white rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold mb-4">What might have happened?</h2>
+            <h2 className="text-xl font-semibold mb-4">
+              What might have happened?
+            </h2>
             <ul className="space-y-2 text-gray-600">
               <li className="flex items-start">
                 <span className="mr-2">•</span>
-                <span>The page you were looking for might have been moved or deleted</span>
+                <span>
+                  The page you were looking for might have been moved or deleted
+                </span>
               </li>
               <li className="flex items-start">
                 <span className="mr-2">•</span>
@@ -62,10 +64,7 @@ const ErrorPage = () => {
               <RefreshCcw className="mr-2 h-4 w-4" />
               Try Again
             </Button>
-            <Button
-              className="flex-1"
-              onClick={handleGoHome}
-            >
+            <Button className="flex-1" onClick={handleGoHome}>
               <Home className="mr-2 h-4 w-4" />
               Go Home
             </Button>

@@ -5,7 +5,10 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import config from "../config";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useSigninMutation, useSignupMutation } from "../features/auth/authApiSlice";
+import {
+  useSigninMutation,
+  useSignupMutation,
+} from "../features/auth/authApiSlice";
 import { checkUserExists } from "../lib/helpers";
 
 // TODO: Break up into smaller components
@@ -15,7 +18,7 @@ const STEPS = {
   EMAIL: 0,
   PASSWORD: 1,
   LOADING: 2,
-  SUCCESS: 3
+  SUCCESS: 3,
 };
 
 export default function Auth() {
@@ -39,14 +42,14 @@ export default function Auth() {
   const handleEmailContinue = async () => {
     if (!email) {
       toast.error("Email required", {
-        description: "Please enter your email address"
+        description: "Please enter your email address",
       });
       return;
     }
 
-    if (!email.includes('@')) {
+    if (!email.includes("@")) {
       toast.error("Invalid email", {
-        description: "Please enter a valid email address"
+        description: "Please enter a valid email address",
       });
       return;
     }
@@ -63,10 +66,9 @@ export default function Auth() {
 
       // Move to password step
       setCurrentStep(STEPS.PASSWORD);
-    }
-    catch {
+    } catch {
       toast.error("Error checking user", {
-        description: "Please try again later"
+        description: "Please try again later",
       });
       return;
     } finally {
@@ -81,14 +83,17 @@ export default function Auth() {
     if (!userExists) {
       if (!name) {
         toast.error("Name required", {
-          description: "Please enter your name"
+          description: "Please enter your name",
         });
         return;
       }
 
-      if (name.length < config.NAME_MIN_LENGTH || name.length > config.NAME_MAX_LENGTH) {
+      if (
+        name.length < config.NAME_MIN_LENGTH ||
+        name.length > config.NAME_MAX_LENGTH
+      ) {
         toast.error("Invalid name", {
-          description: `Name must be between ${config.NAME_MIN_LENGTH} and ${config.NAME_MAX_LENGTH} characters`
+          description: `Name must be between ${config.NAME_MIN_LENGTH} and ${config.NAME_MAX_LENGTH} characters`,
         });
         return;
       }
@@ -96,23 +101,31 @@ export default function Auth() {
 
     if (!password) {
       toast.error("Password required", {
-        description: "Please enter your password"
+        description: "Please enter your password",
       });
       return;
     }
 
-    const { PASS_MIN_LENGTH, PASS_MAX_LENGTH, PASS_REGEX, PASS_ALLOWED_SPECIAL_CHARS } = config;
+    const {
+      PASS_MIN_LENGTH,
+      PASS_MAX_LENGTH,
+      PASS_REGEX,
+      PASS_ALLOWED_SPECIAL_CHARS,
+    } = config;
 
-    if (password.length < PASS_MIN_LENGTH || password.length > PASS_MAX_LENGTH) {
+    if (
+      password.length < PASS_MIN_LENGTH ||
+      password.length > PASS_MAX_LENGTH
+    ) {
       toast.error("Invalid password", {
-        description: `Password must be between ${PASS_MIN_LENGTH} and ${PASS_MAX_LENGTH} characters`
+        description: `Password must be between ${PASS_MIN_LENGTH} and ${PASS_MAX_LENGTH} characters`,
       });
       return;
     }
 
     if (!PASS_REGEX.test(password)) {
       toast.error("Invalid password", {
-        description: `Password must contain at least one uppercase letter, one lowercase letter, one number and one special character (allowed special characters are ${PASS_ALLOWED_SPECIAL_CHARS})`
+        description: `Password must contain at least one uppercase letter, one lowercase letter, one number and one special character (allowed special characters are ${PASS_ALLOWED_SPECIAL_CHARS})`,
       });
       return;
     }
@@ -129,9 +142,12 @@ export default function Auth() {
       }
 
       setCurrentStep(STEPS.SUCCESS);
-      toast.success(userExists ? "Signed in successfully" : "Account created successfully", {
-        description: "Welcome to " + config.APP_NAME
-      });
+      toast.success(
+        userExists ? "Signed in successfully" : "Account created successfully",
+        {
+          description: "Welcome to " + config.APP_NAME,
+        },
+      );
 
       // Navigate back to the original location
       navigate(from, { replace: true });
@@ -139,7 +155,7 @@ export default function Auth() {
       setCurrentStep(STEPS.PASSWORD);
 
       toast.error(userExists ? "Sign in failed" : "Sign up failed", {
-        description: error.data?.message || "An unexpected error occurred"
+        description: error.data?.message || "An unexpected error occurred",
       });
     }
   };
@@ -149,7 +165,9 @@ export default function Auth() {
       {/* Header */}
       <header className="bg-primary text-primary-foreground p-4">
         <div className="container mx-auto">
-          <Link to={config.ROUTES.HOME} className="text-xl">{config.APP_NAME}</Link>
+          <Link to={config.ROUTES.HOME} className="text-xl">
+            {config.APP_NAME}
+          </Link>
         </div>
       </header>
 
@@ -159,9 +177,17 @@ export default function Auth() {
           <div className="flex flex-col items-center">
             <div className="w-full max-w-sm space-y-6">
               {currentStep === STEPS.EMAIL && (
-                <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); handleEmailContinue(); }}>
+                <form
+                  className="space-y-6"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    handleEmailContinue();
+                  }}
+                >
                   {/* Form Heading */}
-                  <h2 className="text-2xl font-medium text-center">What&apos;s your email?</h2>
+                  <h2 className="text-2xl font-medium text-center">
+                    What&apos;s your email?
+                  </h2>
 
                   {/* Input Field */}
                   <div className="space-y-2">
@@ -200,8 +226,7 @@ export default function Auth() {
                     <p className="text-center text-gray-500">
                       {userExists
                         ? "Enter your password to sign in"
-                        : "Set a password for your new account"
-                      }
+                        : "Set a password for your new account"}
                     </p>
                     <p className="text-center font-medium">{email}</p>
                   </div>
@@ -237,7 +262,9 @@ export default function Auth() {
                       maxLength={config.PASS_MAX_LENGTH}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      placeholder={userExists ? "Enter your password" : "Create a password"}
+                      placeholder={
+                        userExists ? "Enter your password" : "Create a password"
+                      }
                       className="h-14 rounded-md border-gray-300"
                     />
                   </div>
@@ -313,7 +340,12 @@ export default function Auth() {
                     variant="outline"
                     className="w-full h-14 bg-gray-100 hover:bg-gray-200 text-black border-gray-300 rounded-md flex items-center justify-center gap-2"
                   >
-                    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="20"
+                      height="20"
+                      fill="currentColor"
+                    >
                       <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
                     </svg>
                     Continue with Apple
@@ -321,8 +353,9 @@ export default function Auth() {
 
                   {/* Legal Text */}
                   <p className="text-xs text-gray-600 mt-4">
-                    By proceeding, you consent to get calls, WhatsApp or SMS/RCS messages, including by automated means,
-                    from {config.APP_NAME} and its affiliates to the number provided.
+                    By proceeding, you consent to get calls, WhatsApp or SMS/RCS
+                    messages, including by automated means, from{" "}
+                    {config.APP_NAME} and its affiliates to the number provided.
                   </p>
                 </>
               )}

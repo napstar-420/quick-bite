@@ -6,5 +6,5 @@ export default createConfig({
     AUTH: "/auth",
     LOGOUT: "/logout",
     CART: "/cart",
-  }
+  },
 });

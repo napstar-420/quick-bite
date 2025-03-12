@@ -1,6 +1,6 @@
-import { API_ROUTES } from '../../lib/constants.js';
-import { apiSlice } from '../../services/api.js';
-import { setCredentials, logout } from './authSlice';
+import { API_ROUTES } from "../../lib/constants.js";
+import { apiSlice } from "../../services/api.js";
+import { setCredentials, logout } from "./authSlice";
 
 // TODO: Handle errors in catch blocks
 
@@ -9,7 +9,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
     signin: builder.mutation({
       query: (credentials) => ({
         url: API_ROUTES.AUTH.SIGNIN,
-        method: 'POST',
+        method: "POST",
         body: credentials,
       }),
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
@@ -20,7 +20,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
     signup: builder.mutation({
       query: (userData) => ({
         url: API_ROUTES.AUTH.SIGNUP,
-        method: 'POST',
+        method: "POST",
         body: userData,
       }),
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
@@ -31,7 +31,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
     refresh: builder.mutation({
       query: () => ({
         url: API_ROUTES.AUTH.REFRESH,
-        method: 'GET',
+        method: "GET",
       }),
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
@@ -45,7 +45,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
     signout: builder.mutation({
       query: () => ({
         url: API_ROUTES.AUTH.SIGN_OUT,
-        method: 'POST',
+        method: "POST",
       }),
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         await queryFulfilled;

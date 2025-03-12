@@ -37,10 +37,12 @@ export default function HomePage() {
           </div>
 
           <h1 className="text-2xl font-bold mb-4">We&apos;re coming soon</h1>
-          <p className="text-gray-600">We are always expanding our coverage area. Please check back in the future.</p>
+          <p className="text-gray-600">
+            We are always expanding our coverage area. Please check back in the
+            future.
+          </p>
         </div>
       </main>
     </div>
-  )
+  );
 }
-

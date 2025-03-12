@@ -21,7 +21,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../components/ui/dropdown-menu";
-import { useState } from "react";
+import React, { useState } from "react";
 
 // TODO: add Address book, Order history, Favorites, Loyalty points
 const userDropDownItems = [
@@ -112,12 +112,8 @@ export function Header() {
               </Button>
               <DropdownMenuContent>
                 {userDropDownItems.map((item, index) => (
-                  <>
-                    <DropdownMenuItem
-                      key={index}
-                      className="p-0"
-                      onClick={handleItemClick}
-                    >
+                  <React.Fragment key={index}>
+                    <DropdownMenuItem className="p-0" onClick={handleItemClick}>
                       <Link
                         to={item.href}
                         className="flex items-center gap-2 w-full px-2 py-1.5"
@@ -126,7 +122,7 @@ export function Header() {
                       </Link>
                     </DropdownMenuItem>
                     {item.separator && <DropdownMenuSeparator />}
-                  </>
+                  </React.Fragment>
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>

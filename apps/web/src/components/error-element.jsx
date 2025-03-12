@@ -1,11 +1,11 @@
-import React from 'react';
-import { useRouteError } from 'react-router-dom';
-import { AlertCircle, RefreshCcw } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import React from "react";
+import { useRouteError } from "react-router-dom";
+import { AlertCircle, RefreshCcw } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const NestedErrorElement = () => {
   const error = useRouteError();
-  const errorMessage = error?.message || 'An unexpected error occurred';
+  const errorMessage = error?.message || "An unexpected error occurred";
 
   const handleRetry = () => {
     window.location.reload();
@@ -19,9 +19,7 @@ const NestedErrorElement = () => {
           <h3 className="text-sm font-medium text-red-800">
             Error loading content
           </h3>
-          <p className="text-sm text-red-700 mt-1">
-            {errorMessage}
-          </p>
+          <p className="text-sm text-red-700 mt-1">{errorMessage}</p>
           <div className="mt-3">
             <Button
               variant="outline"
