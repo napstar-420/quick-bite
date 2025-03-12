@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { store } from '../app/store';
+import { store } from '../store';
 import { logout, setCredentials } from '../features/auth/authSlice';
 import { API_ROUTES } from '../lib/constants';
 
@@ -51,7 +51,6 @@ api.interceptors.response.use(
         // Retry the original request
         return api(originalRequest);
       } catch (refreshError) {
-        console.log('Refresh failed:', refreshError);
         // If refresh fails, log out
         store.dispatch(logout());
         return Promise.reject(refreshError);

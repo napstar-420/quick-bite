@@ -12,10 +12,9 @@ const AuthProvider = () => {
     // Try to refresh token on app load
     const verifyRefreshToken = async () => {
       try {
-        const { data } = await refresh().unwrap();
-        dispatch(setCredentials({ token: data.token, user: data.user }));
-      } catch (error) {
-        console.error('Token refresh failed:', error);
+        const data = await refresh().unwrap();
+        dispatch(setCredentials({ ...data, isLoading: false }));
+      } catch {
         dispatch(logout());
       }
     };

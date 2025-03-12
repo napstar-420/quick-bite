@@ -1,65 +1,56 @@
+import { API_ROUTES } from '../../lib/constants.js';
 import { apiSlice } from '../../services/api.js';
 import { setCredentials, logout } from './authSlice';
+
+// TODO: Handle errors in catch blocks
 
 export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     signin: builder.mutation({
       query: (credentials) => ({
-        url: '/auth/signin',
+        url: API_ROUTES.AUTH.SIGNIN,
         method: 'POST',
         body: credentials,
       }),
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-          dispatch(setCredentials(data));
-        } catch (error) {
-          console.log('Login failed:', error);
-        }
+        const { data } = await queryFulfilled;
+        dispatch(setCredentials(data));
       },
     }),
     signup: builder.mutation({
       query: (userData) => ({
-        url: '/auth/signup',
+        url: API_ROUTES.AUTH.SIGNUP,
         method: 'POST',
         body: userData,
       }),
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        const { data } = await queryFulfilled;
+        dispatch(setCredentials(data));
+      },
     }),
     refresh: builder.mutation({
       query: () => ({
-        url: '/auth/refresh',
+        url: API_ROUTES.AUTH.REFRESH,
         method: 'GET',
       }),
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          dispatch(setCredentials({ token: data.token }));
-        } catch (error) {
-          console.log('Refresh failed:', error);
+          dispatch(setCredentials({ ...data, isLoading: false }));
+        } catch {
           dispatch(logout());
         }
       },
     }),
     signout: builder.mutation({
       query: () => ({
-        url: '/auth/logout',
-        method: 'GET',
+        url: API_ROUTES.AUTH.SIGN_OUT,
+        method: 'POST',
       }),
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        try {
-          await queryFulfilled;
-          dispatch(logout());
-        } catch (error) {
-          console.log('Logout failed:', error);
-        }
+        await queryFulfilled;
+        dispatch(logout());
       },
-    }),
-    checkUserExists: builder.query({
-      query: (email) => ({
-        url: `/auth/check-user?email=${encodeURIComponent(email)}`,
-        method: 'GET',
-      }),
-      transformResponse: (response) => response.exists,
     }),
   }),
 });
@@ -69,5 +60,4 @@ export const {
   useSignupMutation,
   useRefreshMutation,
   useSignoutMutation,
-  useCheckUserExistsQuery,
 } = authApiSlice;

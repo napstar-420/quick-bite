@@ -1,6 +1,7 @@
 // RTK Query API configuration
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { logout, setCredentials } from '../features/auth/authSlice';
+import { API_ROUTES } from '../lib/constants';
 
 // Base query with token handling
 const baseQuery = fetchBaseQuery({
@@ -25,10 +26,8 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
 
   // If we get a 401 Unauthorized, try to get a new token
   if (result.error && result.error.status === 401) {
-    console.log('Refreshing access token');
-
     // Try to get a new token
-    const refreshResult = await baseQuery('/auth/refresh', api, extraOptions);
+    const refreshResult = await baseQuery(API_ROUTES.AUTH.REFRESH, api, extraOptions);
 
     if (refreshResult.data) {
       // Store the new token

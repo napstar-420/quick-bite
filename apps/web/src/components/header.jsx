@@ -3,8 +3,12 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Link } from "react-router-dom";
 import config from "../config";
+import { useAuth } from "../hooks/useAuth";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 export function Header() {
+  const { isAuthenticated, user } = useAuth();
+
   return (
     <header className="border-b border-gray-200 py-3">
       <div className="container mx-auto px-4 flex items-center justify-between">
@@ -49,20 +53,30 @@ export function Header() {
               0
             </span>
           </Link>
-          <Button
-            asChild
-            variant="link"
-            className="hover:no-underline font-medium rounded-full"
-          >
-            <Link to={config.ROUTES.AUTH}>Log in</Link>
-          </Button>
-          <Button
-            asChild
-            variant="secondary"
-            className="font-medium rounded-full"
-          >
-            <Link to={config.ROUTES.AUTH}>Sign up</Link>
-          </Button>
+
+          {isAuthenticated ? (
+            <div className="flex items-center gap-2">
+              <Avatar>
+                <AvatarImage src={user.avatar} />
+                <AvatarFallback>{user.name[0]}</AvatarFallback>
+              </Avatar>
+            </div>
+          ) : <>
+            <Button
+              asChild
+              variant="link"
+              className="hover:no-underline font-medium rounded-full"
+            >
+              <Link to={config.ROUTES.AUTH}>Log in</Link>
+            </Button>
+            <Button
+              asChild
+              variant="secondary"
+              className="font-medium rounded-full"
+            >
+              <Link to={config.ROUTES.AUTH}>Sign up</Link>
+            </Button>
+          </>}
         </div>
       </div>
     </header>
