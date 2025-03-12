@@ -28,6 +28,11 @@ const UserSchema = new Schema(
       minlength: config.PASS_MIN_LENGTH,
       maxlength: config.PASS_MAX_LENGTH,
     },
+    role: {
+      type: String,
+      enum: ['user', 'admin'],
+      default: 'user',
+    },
     refreshToken: {
       type: String,
       default: null,
