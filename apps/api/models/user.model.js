@@ -73,7 +73,7 @@ const UserSchema = new Schema(
       },
     ],
   },
-  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
+  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } },
 );
 
 UserSchema.virtual('status').get(function () {

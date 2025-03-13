@@ -356,7 +356,7 @@ export default function AdminDashboard() {
       </Tabs>
     </div>
   );
-};
+}
 
 // Helper components
 const StatCard = ({ title, value, icon, change, changeText }) => {

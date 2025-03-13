@@ -162,7 +162,7 @@ const router = createBrowserRouter(
             <Route path="orders" element={<AdminOrders />} />
             <Route path="reports" element={<AdminReports />} />
             <Route path="settings" element={<AdminSettings />} /> */}
-            <Route path="*" element={<NotFound backTo={'/admin'} />} />
+            <Route path="*" element={<NotFound backTo={"/admin"} />} />
           </Route>
         </Route>
       </Route>

@@ -179,10 +179,7 @@ async function checkUserExists(req, res) {
 
   try {
     // Check if user exists
-    const user = await UserService.getUser(
-      { email: data.email },
-      'email',
-    );
+    const user = await UserService.getUser({ email: data.email }, 'email');
 
     logger.debug(`User existence check for email: ${data.email}`);
 

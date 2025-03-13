@@ -21,7 +21,7 @@ router.get(
       .isIn(['active', 'inactive', 'suspended'])
       .withMessage('Invalid status value'),
   ],
-  userController.getUsers
+  userController.getUsers,
 );
 
 router.get(
@@ -34,7 +34,7 @@ router.get(
       .isString()
       .withMessage('ID must be a string'),
   ],
-  userController.getUser
+  userController.getUser,
 );
 
 module.exports = router;

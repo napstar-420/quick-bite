@@ -23,10 +23,12 @@ async function getUsers(
 
     if (filters.status === 'suspended') {
       queryFilters.suspended = true;
-    } else if (filters.status === 'inactive') {
+    }
+    else if (filters.status === 'inactive') {
       queryFilters.suspended = false;
       queryFilters.lastActive = { $lt: thirtyDaysAgo };
-    } else if (filters.status === 'active') {
+    }
+    else if (filters.status === 'active') {
       queryFilters.suspended = false;
       queryFilters.lastActive = { $gte: thirtyDaysAgo };
     }

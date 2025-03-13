@@ -225,7 +225,9 @@ async function seedUsers() {
   const HASHED_PASSWORD = await hashPassword(USER_PASSWORD);
 
   logger.info(`Starting to generate ${TOTAL_USERS} users with addresses...`);
-  logger.info('This may take a few minutes due to API rate limiting (1 request/second)');
+  logger.info(
+    'This may take a few minutes due to API rate limiting (1 request/second)',
+  );
 
   for (let i = 0; i < TOTAL_USERS; i++) {
     try {
@@ -260,10 +262,12 @@ async function seedUsers() {
   }
 }
 
-seedData().then(() => {
-  logger.info('Data seeded successfully');
-  process.exit(0);
-}).catch((error) => {
-  logger.error('Error while seeding data', error);
-  process.exit(1);
-});
+seedData()
+  .then(() => {
+    logger.info('Data seeded successfully');
+    process.exit(0);
+  })
+  .catch((error) => {
+    logger.error('Error while seeding data', error);
+    process.exit(1);
+  });

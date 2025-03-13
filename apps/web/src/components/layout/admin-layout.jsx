@@ -71,8 +71,9 @@ export function Layout() {
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar for desktop */}
       <aside
-        className={`fixed inset-y-0 left-0 z-10 hidden transform bg-[#1A535C] text-white md:flex md:flex-col md:w-64 transition-transform duration-200 ease-in-out ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
+        className={`fixed inset-y-0 left-0 z-10 hidden transform bg-[#1A535C] text-white md:flex md:flex-col md:w-64 transition-transform duration-200 ease-in-out ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
       >
         <div className="flex items-center justify-between h-16 px-4 border-b border-[#1A535C]/20">
           <div className="flex items-center gap-2">
@@ -260,8 +261,10 @@ export function Layout() {
         </header>
 
         {/* Page content */}
-        <main className="flex-1 p-6 overflow-y-auto"><Outlet /></main>
+        <main className="flex-1 p-6 overflow-y-auto">
+          <Outlet />
+        </main>
       </div>
     </div>
   );
-};
+}

@@ -59,7 +59,7 @@ import axios from "../../services/axios";
 import config from "../../config";
 import { API_ROUTES } from "../../lib/constants";
 import { formatDate } from "../../lib/utils";
-import { toast } from 'sonner'
+import { toast } from "sonner";
 
 const ITEMS_PER_PAGE = config.PAGINATION.ITEMS_PER_PAGE;
 
@@ -74,7 +74,7 @@ export default function AdminUsers() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [users, setUsers] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   // Open user details/edit dialog
   const handleUserClick = (user) => {
@@ -146,10 +146,9 @@ export default function AdminUsers() {
       const { data } = response;
       setUsers(data.users);
       setTotalPages(data.totalPages);
-    }
-    catch (error) {
-      toast.error('Something went wrong', {
-        description: error.message || error
+    } catch (error) {
+      toast.error("Something went wrong", {
+        description: error.message || error,
       });
 
       setUsers([]);
@@ -490,11 +489,13 @@ export default function AdminUsers() {
                   <p className="text-sm font-medium text-gray-500">
                     Registration Date
                   </p>
-                  <p>{formatDate(selectedUser.createdAt, {
-                    year: "numeric",
-                    month: "short",
-                    day: "2-digit",
-                  })}</p>
+                  <p>
+                    {formatDate(selectedUser.createdAt, {
+                      year: "numeric",
+                      month: "short",
+                      day: "2-digit",
+                    })}
+                  </p>
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-500">

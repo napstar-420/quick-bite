@@ -54,7 +54,7 @@ const restaurantData = {
       rating: 4.7,
       totalOrders: 1245,
       avgDeliveryTime: 32,
-      featured: true
+      featured: true,
     },
     {
       id: "R002",
@@ -69,7 +69,7 @@ const restaurantData = {
       rating: 4.2,
       totalOrders: 578,
       avgDeliveryTime: 38,
-      featured: false
+      featured: false,
     },
     {
       id: "R003",
@@ -84,7 +84,7 @@ const restaurantData = {
       rating: 4.5,
       totalOrders: 2134,
       avgDeliveryTime: 25,
-      featured: true
+      featured: true,
     },
     {
       id: "R004",
@@ -99,7 +99,7 @@ const restaurantData = {
       rating: 4.8,
       totalOrders: 967,
       avgDeliveryTime: 35,
-      featured: true
+      featured: true,
     },
     {
       id: "R005",
@@ -114,7 +114,7 @@ const restaurantData = {
       rating: 4.1,
       totalOrders: 325,
       avgDeliveryTime: 30,
-      featured: false
+      featured: false,
     },
     {
       id: "R006",
@@ -129,7 +129,7 @@ const restaurantData = {
       rating: 4.4,
       totalOrders: 856,
       avgDeliveryTime: 28,
-      featured: false
+      featured: false,
     },
     {
       id: "R007",
@@ -144,7 +144,7 @@ const restaurantData = {
       rating: 4.0,
       totalOrders: 652,
       avgDeliveryTime: 40,
-      featured: false
+      featured: false,
     },
   ],
   pendingApplications: [
@@ -155,7 +155,7 @@ const restaurantData = {
       owner: "Elena Christos",
       contact: "+1 (555) 852-7410",
       applicationDate: "2025-03-05",
-      status: "Pending Review"
+      status: "Pending Review",
     },
     {
       id: "RA002",
@@ -164,7 +164,7 @@ const restaurantData = {
       owner: "Somchai Patel",
       contact: "+1 (555) 741-9630",
       applicationDate: "2025-03-08",
-      status: "Pending Review"
+      status: "Pending Review",
     },
     {
       id: "RA003",
@@ -173,9 +173,9 @@ const restaurantData = {
       owner: "Robert Johnson",
       contact: "+1 (555) 963-0258",
       applicationDate: "2025-03-10",
-      status: "Document Verification"
-    }
-  ]
+      status: "Document Verification",
+    },
+  ],
 };
 
 // Restaurant Status Badge Component
@@ -221,23 +221,34 @@ export default function RestaurantsManagement() {
   const [statusFilter, setStatusFilter] = useState("");
 
   // Filter restaurants based on search term and filters
-  const filteredRestaurants = restaurantData.restaurants.filter(restaurant => {
-    const matchesSearch = restaurant.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      restaurant.cuisine.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCuisine = cuisineFilter === "" || restaurant.cuisine === cuisineFilter;
-    const matchesStatus = statusFilter === "" || restaurant.status === statusFilter;
+  const filteredRestaurants = restaurantData.restaurants.filter(
+    (restaurant) => {
+      const matchesSearch =
+        restaurant.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        restaurant.cuisine.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCuisine =
+        cuisineFilter === "" || restaurant.cuisine === cuisineFilter;
+      const matchesStatus =
+        statusFilter === "" || restaurant.status === statusFilter;
 
-    return matchesSearch && matchesCuisine && matchesStatus;
-  });
+      return matchesSearch && matchesCuisine && matchesStatus;
+    },
+  );
 
   // Get unique cuisines for filter dropdown
-  const cuisines = [...new Set(restaurantData.restaurants.map(r => r.cuisine))];
-  const statuses = [...new Set(restaurantData.restaurants.map(r => r.status))];
+  const cuisines = [
+    ...new Set(restaurantData.restaurants.map((r) => r.cuisine)),
+  ];
+  const statuses = [
+    ...new Set(restaurantData.restaurants.map((r) => r.status)),
+  ];
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold tracking-tight">Restaurant Management</h1>
+        <h1 className="text-3xl font-bold tracking-tight">
+          Restaurant Management
+        </h1>
         <Button className="bg-brand-primary hover:bg-brand-primary/90">
           <Plus className="w-4 h-4 mr-2" /> Add New Restaurant
         </Button>
@@ -254,7 +265,9 @@ export default function RestaurantsManagement() {
           <Card>
             <CardHeader className="pb-2">
               <CardTitle>Restaurant Directory</CardTitle>
-              <CardDescription>Manage all restaurants on the platform</CardDescription>
+              <CardDescription>
+                Manage all restaurants on the platform
+              </CardDescription>
 
               <div className="flex flex-col gap-4 mt-4 md:flex-row">
                 <div className="relative flex-1">
@@ -268,14 +281,19 @@ export default function RestaurantsManagement() {
                 </div>
 
                 <div className="flex gap-2">
-                  <Select value={cuisineFilter} onValueChange={setCuisineFilter}>
+                  <Select
+                    value={cuisineFilter}
+                    onValueChange={setCuisineFilter}
+                  >
                     <SelectTrigger className="w-[160px]">
                       <SelectValue placeholder="Cuisine" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">All Cuisines</SelectItem>
-                      {cuisines.map(cuisine => (
-                        <SelectItem key={cuisine} value={cuisine}>{cuisine}</SelectItem>
+                      {cuisines.map((cuisine) => (
+                        <SelectItem key={cuisine} value={cuisine}>
+                          {cuisine}
+                        </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -286,24 +304,58 @@ export default function RestaurantsManagement() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all-s">All Statuses</SelectItem>
-                      {statuses.map(status => (
-                        <SelectItem key={status} value={status}>{status}</SelectItem>
+                      {statuses.map((status) => (
+                        <SelectItem key={status} value={status}>
+                          {status}
+                        </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
 
                   <div className="flex items-center space-x-2 border rounded-md px-3">
                     <button
-                      className={`p-1 rounded ${view === 'grid' ? 'bg-gray-200' : ''}`}
-                      onClick={() => setView('grid')}
+                      className={`p-1 rounded ${view === "grid" ? "bg-gray-200" : ""}`}
+                      onClick={() => setView("grid")}
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /></svg>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <rect x="3" y="3" width="7" height="7" />
+                        <rect x="14" y="3" width="7" height="7" />
+                        <rect x="14" y="14" width="7" height="7" />
+                        <rect x="3" y="14" width="7" height="7" />
+                      </svg>
                     </button>
                     <button
-                      className={`p-1 rounded ${view === 'list' ? 'bg-gray-200' : ''}`}
-                      onClick={() => setView('list')}
+                      className={`p-1 rounded ${view === "list" ? "bg-gray-200" : ""}`}
+                      onClick={() => setView("list")}
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" /><line x1="8" y1="18" x2="21" y2="18" /><line x1="3" y1="6" x2="3.01" y2="6" /><line x1="3" y1="12" x2="3.01" y2="12" /><line x1="3" y1="18" x2="3.01" y2="18" /></svg>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <line x1="8" y1="6" x2="21" y2="6" />
+                        <line x1="8" y1="12" x2="21" y2="12" />
+                        <line x1="8" y1="18" x2="21" y2="18" />
+                        <line x1="3" y1="6" x2="3.01" y2="6" />
+                        <line x1="3" y1="12" x2="3.01" y2="12" />
+                        <line x1="3" y1="18" x2="3.01" y2="18" />
+                      </svg>
                     </button>
                   </div>
                 </div>
@@ -311,10 +363,13 @@ export default function RestaurantsManagement() {
             </CardHeader>
 
             <CardContent>
-              {view === 'grid' ? (
+              {view === "grid" ? (
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  {filteredRestaurants.map(restaurant => (
-                    <RestaurantCard key={restaurant.id} restaurant={restaurant} />
+                  {filteredRestaurants.map((restaurant) => (
+                    <RestaurantCard
+                      key={restaurant.id}
+                      restaurant={restaurant}
+                    />
                   ))}
                 </div>
               ) : (
@@ -333,19 +388,29 @@ export default function RestaurantsManagement() {
                       </tr>
                     </thead>
                     <tbody>
-                      {filteredRestaurants.map(restaurant => (
+                      {filteredRestaurants.map((restaurant) => (
                         <tr key={restaurant.id} className="border-b">
                           <td className="px-4 py-3 text-sm">{restaurant.id}</td>
                           <td className="px-4 py-3">
                             <div className="flex items-center space-x-3">
                               <div className="w-10 h-10 overflow-hidden rounded-md">
-                                <img src={restaurant.image} alt={restaurant.name} className="object-cover w-full h-full" />
+                                <img
+                                  src={restaurant.image}
+                                  alt={restaurant.name}
+                                  className="object-cover w-full h-full"
+                                />
                               </div>
-                              <span className="font-medium">{restaurant.name}</span>
+                              <span className="font-medium">
+                                {restaurant.name}
+                              </span>
                             </div>
                           </td>
-                          <td className="px-4 py-3 text-sm">{restaurant.cuisine}</td>
-                          <td className="px-4 py-3 text-sm">{restaurant.owner}</td>
+                          <td className="px-4 py-3 text-sm">
+                            {restaurant.cuisine}
+                          </td>
+                          <td className="px-4 py-3 text-sm">
+                            {restaurant.owner}
+                          </td>
                           <td className="px-4 py-3 text-sm">
                             <div className="flex items-center">
                               <Star className="w-4 h-4 mr-1 text-yellow-500 fill-yellow-500" />
@@ -363,7 +428,11 @@ export default function RestaurantsManagement() {
                               <Button variant="outline" size="sm">
                                 <Edit className="w-4 h-4" />
                               </Button>
-                              <Button variant="outline" size="sm" className="text-red-600 border-red-200 hover:bg-red-50">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="text-red-600 border-red-200 hover:bg-red-50"
+                              >
                                 <Trash2 className="w-4 h-4" />
                               </Button>
                             </div>
@@ -379,7 +448,9 @@ export default function RestaurantsManagement() {
                 <div className="py-8 text-center">
                   <Coffee className="inline-block w-12 h-12 mb-4 text-gray-400" />
                   <h3 className="text-lg font-medium">No restaurants found</h3>
-                  <p className="text-gray-500">Try adjusting your filters or search term</p>
+                  <p className="text-gray-500">
+                    Try adjusting your filters or search term
+                  </p>
                 </div>
               )}
             </CardContent>
@@ -390,7 +461,9 @@ export default function RestaurantsManagement() {
           <Card>
             <CardHeader>
               <CardTitle>New Restaurant Applications</CardTitle>
-              <CardDescription>Review and process new restaurant requests</CardDescription>
+              <CardDescription>
+                Review and process new restaurant requests
+              </CardDescription>
             </CardHeader>
             <CardContent>
               {restaurantData.pendingApplications.length > 0 ? (
@@ -409,23 +482,42 @@ export default function RestaurantsManagement() {
                       </tr>
                     </thead>
                     <tbody>
-                      {restaurantData.pendingApplications.map(application => (
+                      {restaurantData.pendingApplications.map((application) => (
                         <tr key={application.id} className="border-b">
-                          <td className="px-4 py-3 text-sm">{application.id}</td>
-                          <td className="px-4 py-3 font-medium">{application.name}</td>
-                          <td className="px-4 py-3 text-sm">{application.cuisine}</td>
-                          <td className="px-4 py-3 text-sm">{application.owner}</td>
-                          <td className="px-4 py-3 text-sm">{application.contact}</td>
-                          <td className="px-4 py-3 text-sm">{application.applicationDate}</td>
+                          <td className="px-4 py-3 text-sm">
+                            {application.id}
+                          </td>
+                          <td className="px-4 py-3 font-medium">
+                            {application.name}
+                          </td>
+                          <td className="px-4 py-3 text-sm">
+                            {application.cuisine}
+                          </td>
+                          <td className="px-4 py-3 text-sm">
+                            {application.owner}
+                          </td>
+                          <td className="px-4 py-3 text-sm">
+                            {application.contact}
+                          </td>
+                          <td className="px-4 py-3 text-sm">
+                            {application.applicationDate}
+                          </td>
                           <td className="px-4 py-3 text-sm text-center">
                             <StatusBadge status={application.status} />
                           </td>
                           <td className="px-4 py-3 text-right">
                             <div className="flex items-center justify-end space-x-2">
-                              <Button size="sm" className="bg-green-600 hover:bg-green-700">
+                              <Button
+                                size="sm"
+                                className="bg-green-600 hover:bg-green-700"
+                              >
                                 <Check className="w-4 h-4 mr-1" /> Approve
                               </Button>
-                              <Button variant="outline" size="sm" className="text-red-600 border-red-200 hover:bg-red-50">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="text-red-600 border-red-200 hover:bg-red-50"
+                              >
                                 <X className="w-4 h-4 mr-1" /> Reject
                               </Button>
                             </div>
@@ -438,8 +530,12 @@ export default function RestaurantsManagement() {
               ) : (
                 <div className="py-8 text-center">
                   <Coffee className="inline-block w-12 h-12 mb-4 text-gray-400" />
-                  <h3 className="text-lg font-medium">No pending applications</h3>
-                  <p className="text-gray-500">All restaurant applications have been processed</p>
+                  <h3 className="text-lg font-medium">
+                    No pending applications
+                  </h3>
+                  <p className="text-gray-500">
+                    All restaurant applications have been processed
+                  </p>
                 </div>
               )}
             </CardContent>
@@ -450,13 +546,15 @@ export default function RestaurantsManagement() {
           <Card>
             <CardHeader>
               <CardTitle>Featured Restaurants</CardTitle>
-              <CardDescription>Manage restaurants that appear in featured sections</CardDescription>
+              <CardDescription>
+                Manage restaurants that appear in featured sections
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {restaurantData.restaurants
-                  .filter(r => r.featured)
-                  .map(restaurant => (
+                  .filter((r) => r.featured)
+                  .map((restaurant) => (
                     <RestaurantCard
                       key={restaurant.id}
                       restaurant={restaurant}
@@ -465,11 +563,16 @@ export default function RestaurantsManagement() {
                   ))}
               </div>
 
-              {restaurantData.restaurants.filter(r => r.featured).length === 0 && (
+              {restaurantData.restaurants.filter((r) => r.featured).length ===
+                0 && (
                 <div className="py-8 text-center">
                   <Coffee className="inline-block w-12 h-12 mb-4 text-gray-400" />
-                  <h3 className="text-lg font-medium">No featured restaurants</h3>
-                  <p className="text-gray-500">Add restaurants to the featured section</p>
+                  <h3 className="text-lg font-medium">
+                    No featured restaurants
+                  </h3>
+                  <p className="text-gray-500">
+                    Add restaurants to the featured section
+                  </p>
                 </div>
               )}
             </CardContent>
@@ -478,7 +581,7 @@ export default function RestaurantsManagement() {
       </Tabs>
     </div>
   );
-};
+}
 
 // Restaurant Card Component
 const RestaurantCard = ({ restaurant, showFeaturedToggle = false }) => {
@@ -495,7 +598,9 @@ const RestaurantCard = ({ restaurant, showFeaturedToggle = false }) => {
         </div>
         {restaurant.featured && (
           <div className="absolute top-2 left-2">
-            <Badge className="bg-brand-accent text-brand-secondary">Featured</Badge>
+            <Badge className="bg-brand-accent text-brand-secondary">
+              Featured
+            </Badge>
           </div>
         )}
       </div>
@@ -526,8 +631,16 @@ const RestaurantCard = ({ restaurant, showFeaturedToggle = false }) => {
 
         {showFeaturedToggle && (
           <div className="flex items-center justify-between mb-4 pb-4 border-b">
-            <Label htmlFor={`featured-${restaurant.id}`} className="font-medium">Featured Status</Label>
-            <Switch id={`featured-${restaurant.id}`} checked={restaurant.featured} />
+            <Label
+              htmlFor={`featured-${restaurant.id}`}
+              className="font-medium"
+            >
+              Featured Status
+            </Label>
+            <Switch
+              id={`featured-${restaurant.id}`}
+              checked={restaurant.featured}
+            />
           </div>
         )}
 
@@ -536,11 +649,17 @@ const RestaurantCard = ({ restaurant, showFeaturedToggle = false }) => {
             <Edit className="w-4 h-4 mr-2" /> Edit
           </Button>
           {restaurant.status === "Active" ? (
-            <Button variant="outline" className="flex-1 text-amber-600 border-amber-200 hover:bg-amber-50">
+            <Button
+              variant="outline"
+              className="flex-1 text-amber-600 border-amber-200 hover:bg-amber-50"
+            >
               Suspend
             </Button>
           ) : (
-            <Button variant="outline" className="flex-1 text-green-600 border-green-200 hover:bg-green-50">
+            <Button
+              variant="outline"
+              className="flex-1 text-green-600 border-green-200 hover:bg-green-50"
+            >
               Activate
             </Button>
           )}

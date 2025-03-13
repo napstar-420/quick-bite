@@ -39,7 +39,10 @@ async function getUser(req, res) {
   const data = matchedData(req);
 
   try {
-    const result = await UserService.getUserByID(data.id, '-password -refreshToken -id -__v');
+    const result = await UserService.getUserByID(
+      data.id,
+      '-password -refreshToken -id -__v',
+    );
 
     if (isNil(result)) {
       res.status(404).json({ message: 'User not found' });
