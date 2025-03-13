@@ -4,7 +4,7 @@ const express = require('express');
 const path = require('node:path');
 
 const config = require('./config');
-const { connectDB } = require('./config/db.js');
+const { connectDB } = require('./db/connect');
 const {
   errorHandler,
   errorNotFoundHandler,
