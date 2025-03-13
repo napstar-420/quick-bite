@@ -7,4 +7,8 @@ export default createConfig({
     LOGOUT: "/logout",
     CART: "/cart",
   },
+
+  PAGINATION: {
+    ITEMS_PER_PAGE: 10
+  }
 });

@@ -7,4 +7,5 @@ export const API_ROUTES = {
     REFRESH: "auth/refresh",
     CHECK_USER: "auth/check-user",
   },
+  GET_USERS: 'user'
 };

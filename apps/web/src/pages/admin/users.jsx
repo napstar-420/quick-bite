@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from "../../components/ui/card";
 import {
   Table,
@@ -12,14 +12,14 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow
+  TableRow,
 } from "../../components/ui/table";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from "../../components/ui/dropdown-menu";
 import {
   Dialog,
@@ -27,134 +27,41 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle
+  DialogTitle,
 } from "../../components/ui/dialog";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
+  SelectValue,
 } from "../../components/ui/select";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "../../components/ui/pagination";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "../../components/ui/pagination";
 import { Badge } from "../../components/ui/badge";
-import { Search, MoreVertical, Filter, UserPlus, X, Check, Star, ExternalLink } from "lucide-react";
+import {
+  Search,
+  MoreVertical,
+  Filter,
+  X,
+  Check,
+  ExternalLink,
+} from "lucide-react";
+import axios from "../../services/axios";
+import config from "../../config";
+import { API_ROUTES } from "../../lib/constants";
+import { formatDate } from "../../lib/utils";
+import { toast } from 'sonner'
 
-// Sample user data (would come from API in a real application)
-const dummyUsers = [
-  {
-    id: "USR001",
-    name: "Emma Wilson",
-    email: "emma.wilson@example.com",
-    phone: "+1 (555) 123-4567",
-    registrationDate: "2025-01-15",
-    lastActive: "2025-03-10",
-    status: "Active",
-    type: "Customer",
-    orders: 42
-  },
-  {
-    id: "USR002",
-    name: "James Smith",
-    email: "james.smith@example.com",
-    phone: "+1 (555) 987-6543",
-    registrationDate: "2025-01-20",
-    lastActive: "2025-03-11",
-    status: "Active",
-    type: "Customer",
-    orders: 28
-  },
-  {
-    id: "USR003",
-    name: "Olivia Thompson",
-    email: "olivia.t@example.com",
-    phone: "+1 (555) 456-7890",
-    registrationDate: "2025-02-02",
-    lastActive: "2025-02-28",
-    status: "Inactive",
-    type: "Customer",
-    orders: 8
-  },
-  {
-    id: "USR004",
-    name: "William Johnson",
-    email: "william.j@example.com",
-    phone: "+1 (555) 567-8901",
-    registrationDate: "2025-02-10",
-    lastActive: "2025-03-09",
-    status: "Active",
-    type: "Customer",
-    orders: 15
-  },
-  {
-    id: "USR005",
-    name: "Sofia Garcia",
-    email: "sofia.g@example.com",
-    phone: "+1 (555) 234-5678",
-    registrationDate: "2025-02-15",
-    lastActive: "2025-03-12",
-    status: "Active",
-    type: "Customer",
-    orders: 31
-  },
-  {
-    id: "USR006",
-    name: "Benjamin Miller",
-    email: "ben.miller@example.com",
-    phone: "+1 (555) 345-6789",
-    registrationDate: "2025-02-18",
-    lastActive: "2025-03-01",
-    status: "Suspended",
-    type: "Customer",
-    orders: 4
-  },
-  {
-    id: "USR007",
-    name: "Isabella Davis",
-    email: "isabella.d@example.com",
-    phone: "+1 (555) 765-4321",
-    registrationDate: "2025-02-23",
-    lastActive: "2025-03-11",
-    status: "Active",
-    type: "Customer",
-    orders: 19
-  },
-  {
-    id: "RES001",
-    name: "Fresh Bites Restaurant",
-    email: "contact@freshbites.com",
-    phone: "+1 (555) 111-2222",
-    registrationDate: "2025-01-10",
-    lastActive: "2025-03-12",
-    status: "Active",
-    type: "Restaurant",
-    orders: 278
-  },
-  {
-    id: "DEL001",
-    name: "Michael Brooks",
-    email: "michael.b@example.com",
-    phone: "+1 (555) 444-3333",
-    registrationDate: "2025-01-05",
-    lastActive: "2025-03-12",
-    status: "Active",
-    type: "Delivery",
-    orders: 156
-  },
-  {
-    id: "RES002",
-    name: "Spice House",
-    email: "info@spicehouse.com",
-    phone: "+1 (555) 222-9999",
-    registrationDate: "2025-02-08",
-    lastActive: "2025-03-10",
-    status: "Active",
-    type: "Restaurant",
-    orders: 187
-  }
-];
+const ITEMS_PER_PAGE = config.PAGINATION.ITEMS_PER_PAGE;
 
 export default function AdminUsers() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -165,27 +72,9 @@ export default function AdminUsers() {
   const [isUserDialogOpen, setIsUserDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
-
-  // Filter users based on search query and filters
-  const filteredUsers = dummyUsers.filter(user => {
-    const matchesSearch =
-      user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.id.toLowerCase().includes(searchQuery.toLowerCase());
-
-    const matchesStatus = filterStatus === "All" || user.status === filterStatus;
-    const matchesType = filterType === "All" || user.type === filterType;
-
-    return matchesSearch && matchesStatus && matchesType;
-  });
-
-  // Pagination
-  const itemsPerPage = 6;
-  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
-  const paginatedUsers = filteredUsers.slice(
-    (page - 1) * itemsPerPage,
-    page * itemsPerPage
-  );
+  const [users, setUsers] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(false)
 
   // Open user details/edit dialog
   const handleUserClick = (user) => {
@@ -203,11 +92,11 @@ export default function AdminUsers() {
   const StatusBadge = ({ status }) => {
     const getStatusStyles = () => {
       switch (status) {
-        case "Active":
+        case "active":
           return "bg-green-100 text-green-800";
-        case "Inactive":
+        case "inactive":
           return "bg-gray-100 text-gray-800";
-        case "Suspended":
+        case "suspended":
           return "bg-red-100 text-red-800";
         default:
           return "bg-gray-100 text-gray-800";
@@ -243,22 +132,48 @@ export default function AdminUsers() {
     );
   };
 
+  const fetchUsers = async () => {
+    setLoading(true);
+
+    try {
+      const response = await axios.get(API_ROUTES.GET_USERS, {
+        params: {
+          page,
+          limit: ITEMS_PER_PAGE,
+        },
+      });
+
+      const { data } = response;
+      setUsers(data.users);
+      setTotalPages(data.totalPages);
+    }
+    catch (error) {
+      toast.error('Something went wrong', {
+        description: error.message || error
+      });
+
+      setUsers([]);
+      setTotalPages(1);
+      setPage(1);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, [page]);
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold tracking-tight">User Management</h1>
-        <Button className="bg-[#FF6B35] hover:bg-[#FF6B35]/90">
-          <UserPlus className="w-4 h-4 mr-2" />
-          Add User
-        </Button>
       </div>
 
       <Card>
         <CardHeader className="pb-3">
           <CardTitle>All Users</CardTitle>
-          <CardDescription>
-            Manage users, restaurants, and delivery personnel
-          </CardDescription>
+          <CardDescription>Manage all users on this platform</CardDescription>
         </CardHeader>
         <CardContent>
           {/* Search and filters */}
@@ -324,7 +239,9 @@ export default function AdminUsers() {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Registration Date</label>
+                  <label className="text-sm font-medium">
+                    Registration Date
+                  </label>
                   <Select>
                     <SelectTrigger>
                       <SelectValue placeholder="Any time" />
@@ -347,7 +264,9 @@ export default function AdminUsers() {
                     <SelectContent>
                       <SelectItem value="all">All users</SelectItem>
                       <SelectItem value="active">Active recently</SelectItem>
-                      <SelectItem value="inactive">Inactive (30+ days)</SelectItem>
+                      <SelectItem value="inactive">
+                        Inactive (30+ days)
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -368,10 +287,13 @@ export default function AdminUsers() {
                 </div>
               </div>
               <div className="flex justify-end mt-4 space-x-2">
-                <Button variant="outline" onClick={() => {
-                  setFilterStatus("All");
-                  setFilterType("All");
-                }}>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setFilterStatus("All");
+                    setFilterType("All");
+                  }}
+                >
                   Reset
                 </Button>
                 <Button onClick={() => setIsFilterOpen(false)}>
@@ -396,35 +318,45 @@ export default function AdminUsers() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {paginatedUsers.length > 0 ? (
-                  paginatedUsers.map((user) => (
+                {users.length && !loading > 0 ? (
+                  users.map((user) => (
                     <TableRow key={user.id}>
                       <TableCell className="font-medium">
                         <div className="flex flex-col">
                           <span>{user.name}</span>
-                          <span className="text-xs text-gray-500">{user.id}</span>
+                          <span className="text-xs text-gray-500">
+                            {user.id}
+                          </span>
                         </div>
                       </TableCell>
                       <TableCell>
                         <div className="flex flex-col">
                           <span className="text-sm">{user.email}</span>
-                          <span className="text-xs text-gray-500">{user.phone}</span>
+                          <span className="text-xs text-gray-500">
+                            {user.phone}
+                          </span>
                         </div>
                       </TableCell>
                       <TableCell>
-                        <TypeBadge type={user.type} />
+                        <TypeBadge type={user.type || "Customer"} />
                       </TableCell>
                       <TableCell>
                         <StatusBadge status={user.status} />
                       </TableCell>
                       <TableCell className="text-right">
-                        {user.orders}
+                        {user.orders || 10}
                       </TableCell>
                       <TableCell>
                         <div className="flex flex-col">
-                          <span className="text-sm">{user.registrationDate}</span>
+                          <span className="text-sm">
+                            {formatDate(user.createdAt, {
+                              year: "numeric",
+                              month: "short",
+                              day: "2-digit",
+                            })}
+                          </span>
                           <span className="text-xs text-gray-500">
-                            Last active: {user.lastActive}
+                            Last active: {formatDate(user.lastActive)}
                           </span>
                         </div>
                       </TableCell>
@@ -463,9 +395,21 @@ export default function AdminUsers() {
                       </TableCell>
                     </TableRow>
                   ))
+                ) : loading ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={7}
+                      className="text-center py-6 text-gray-500"
+                    >
+                      Loading......
+                    </TableCell>
+                  </TableRow>
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center py-6 text-gray-500">
+                    <TableCell
+                      colSpan={7}
+                      className="text-center py-6 text-gray-500"
+                    >
                       No users found matching your search criteria
                     </TableCell>
                   </TableRow>
@@ -475,18 +419,18 @@ export default function AdminUsers() {
           </div>
 
           {/* Pagination */}
-          {filteredUsers.length > itemsPerPage && (
-            <div className="mt-4">
-              <Pagination>
-                <PaginationContent>
-                  <PaginationItem>
-                    <PaginationPrevious
-                      onClick={() => setPage(Math.max(1, page - 1))}
-                      disabled={page === 1}
-                    />
-                  </PaginationItem>
+          <div className="mt-4">
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    onClick={() => setPage(Math.max(1, page - 1))}
+                    disabled={page === 1}
+                  />
+                </PaginationItem>
 
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                  (pageNum) => (
                     <PaginationItem key={pageNum}>
                       <PaginationLink
                         isActive={pageNum === page}
@@ -495,18 +439,18 @@ export default function AdminUsers() {
                         {pageNum}
                       </PaginationLink>
                     </PaginationItem>
-                  ))}
+                  ),
+                )}
 
-                  <PaginationItem>
-                    <PaginationNext
-                      onClick={() => setPage(Math.min(totalPages, page + 1))}
-                      disabled={page === totalPages}
-                    />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
-            </div>
-          )}
+                <PaginationItem>
+                  <PaginationNext
+                    onClick={() => setPage(Math.min(totalPages, page + 1))}
+                    disabled={page === totalPages}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
         </CardContent>
       </Card>
 
@@ -543,16 +487,26 @@ export default function AdminUsers() {
                   <p>{selectedUser.phone}</p>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Registration Date</p>
-                  <p>{selectedUser.registrationDate}</p>
+                  <p className="text-sm font-medium text-gray-500">
+                    Registration Date
+                  </p>
+                  <p>{formatDate(selectedUser.createdAt, {
+                    year: "numeric",
+                    month: "short",
+                    day: "2-digit",
+                  })}</p>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Last Active</p>
-                  <p>{selectedUser.lastActive}</p>
+                  <p className="text-sm font-medium text-gray-500">
+                    Last Active
+                  </p>
+                  <p>{formatDate(selectedUser.lastActive)}</p>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Total Orders</p>
-                  <p>{selectedUser.orders}</p>
+                  <p className="text-sm font-medium text-gray-500">
+                    Total Orders
+                  </p>
+                  <p>{selectedUser.orders || 10}</p>
                 </div>
               </div>
 
@@ -597,7 +551,8 @@ export default function AdminUsers() {
             <DialogHeader>
               <DialogTitle>Confirm Deletion</DialogTitle>
               <DialogDescription>
-                Are you sure you want to delete this user? This action cannot be undone.
+                Are you sure you want to delete this user? This action cannot be
+                undone.
               </DialogDescription>
             </DialogHeader>
 
@@ -621,13 +576,11 @@ export default function AdminUsers() {
               >
                 Cancel
               </Button>
-              <Button variant="destructive">
-                Delete User
-              </Button>
+              <Button variant="destructive">Delete User</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
       )}
     </div>
   );
-};
+}

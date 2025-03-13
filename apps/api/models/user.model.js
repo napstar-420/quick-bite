@@ -42,6 +42,14 @@ const UserSchema = new Schema(
       unique: true,
       sparse: true,
     },
+    lastActive: {
+      type: Date,
+      default: Date.now(),
+    },
+    suspended: {
+      type: Boolean,
+      default: false,
+    },
     addresses: [
       {
         label: { type: String, required: true },
@@ -65,17 +73,31 @@ const UserSchema = new Schema(
       },
     ],
   },
-  { timestamps: true },
+  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
+
+UserSchema.virtual('status').get(function () {
+  if (this.suspended) {
+    return 'suspended';
+  }
+
+  if (this.lastActive) {
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    if (this.lastActive < thirtyDaysAgo) {
+      return 'inactive';
+    }
+  }
+
+  return 'active';
+});
 
 UserSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {
     return next();
   }
-  else {
-    this.password = await hashPassword(this.password);
-  }
-
+  this.password = await hashPassword(this.password);
   next();
 });
 
