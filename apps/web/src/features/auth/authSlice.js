@@ -5,6 +5,7 @@ const initialState = {
   token: null,
   isAuthenticated: false,
   isLoading: true,
+  userRoles: [],
 };
 
 const authSlice = createSlice({
@@ -18,24 +19,28 @@ const authSlice = createSlice({
       if (user) state.user = user;
       if (token) state.token = token;
       if (typeof isLoading === "boolean") state.isLoading = isLoading;
-
       // If either is updated, user is authenticated
       if (user || token) {
         state.isAuthenticated = true;
       }
+    },
+    setUserRoles: (state, action) => {
+      state.userRoles = action.payload;
     },
     logout: (state) => {
       state.user = null;
       state.token = null;
       state.isAuthenticated = false;
       state.isLoading = false;
+      state.userRoles = [];
     },
   },
 });
 
-export const { setCredentials, logout } = authSlice.actions;
+export const { setCredentials, logout, setUserRoles } = authSlice.actions;
 export default authSlice.reducer;
 export const selectCurrentUser = (state) => state.auth.user;
 export const selectToken = (state) => state.auth.token;
 export const selectIsAuthenticated = (state) => state.auth.isAuthenticated;
 export const selectIsLoading = (state) => state.auth.isLoading;
+export const selectUserRoles = (state) => state.auth.userRoles;

@@ -7,5 +7,8 @@ export const API_ROUTES = {
     REFRESH: "auth/refresh",
     CHECK_USER: "auth/check-user",
   },
+  USERS: {
+    ROLES: (userId) => `user/${userId}/roles`,
+  },
   GET_USERS: "user",
 };

@@ -1,6 +1,6 @@
 import { API_ROUTES } from "../../lib/constants.js";
 import { apiSlice } from "../../services/api.js";
-import { setCredentials, logout } from "./authSlice";
+import { setCredentials, logout, setUserRoles } from "./authSlice";
 
 // TODO: Handle errors in catch blocks
 
@@ -52,6 +52,17 @@ export const authApiSlice = apiSlice.injectEndpoints({
         dispatch(logout());
       },
     }),
+
+    getUserRoles: builder.query({
+      query: (userId) => ({
+        url: API_ROUTES.USERS.ROLES(userId),
+        method: "GET",
+      }),
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        const { data } = await queryFulfilled;
+        dispatch(setUserRoles(data));
+      },
+    }),
   }),
 });
 
@@ -60,4 +71,5 @@ export const {
   useSignupMutation,
   useRefreshMutation,
   useSignoutMutation,
+  useGetUserRolesQuery,
 } = authApiSlice;

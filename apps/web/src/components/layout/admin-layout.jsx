@@ -29,13 +29,14 @@ import { Input } from "../ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Link, Outlet } from "react-router-dom";
 
-export function Layout() {
+export default function AdminLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
+  // TODO: update path from config
   const menuItems = [
     { icon: <Home size={20} />, name: "Dashboard", path: "/admin" },
     {
@@ -71,9 +72,8 @@ export function Layout() {
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar for desktop */}
       <aside
-        className={`fixed inset-y-0 left-0 z-10 hidden transform bg-[#1A535C] text-white md:flex md:flex-col md:w-64 transition-transform duration-200 ease-in-out ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`fixed inset-y-0 left-0 z-10 hidden transform bg-[#1A535C] text-white md:flex md:flex-col md:w-64 transition-transform duration-200 ease-in-out ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
       >
         <div className="flex items-center justify-between h-16 px-4 border-b border-[#1A535C]/20">
           <div className="flex items-center gap-2">
