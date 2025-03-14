@@ -2,6 +2,8 @@ const express = require('express');
 const { query, param } = require('express-validator');
 
 const userController = require('../controllers/user.controller');
+const authorize = require('../middlewares/authorize.middleware');
+const verifyJwt = require('../middlewares/verify-jwt.middleware');
 
 const router = express.Router();
 
@@ -35,6 +37,16 @@ router.get(
       .withMessage('ID must be a string'),
   ],
   userController.getUser,
+);
+
+router.use(verifyJwt);
+
+router.get(
+  '/:id/roles',
+  authorize('user', 'read', {
+    getOwnerIds: req => [req.params.id],
+  }),
+  userController.getUserRoles,
 );
 
 module.exports = router;

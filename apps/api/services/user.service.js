@@ -1,4 +1,6 @@
+const config = require('../config');
 const UserModel = require('../models/user.model');
+const { getRole } = require('../services/auth.service');
 
 async function getUserByID(id, projection = 'name email') {
   return UserModel.findById(id, projection);
@@ -54,9 +56,23 @@ async function updateUser(id, data) {
 }
 
 async function createUser(data) {
+  const role = await getRole({ name: config.ROLES.CUSTOMER }, 'id');
+  data.roles = [role.id];
+
   const user = new UserModel(data);
   await user.save();
   return user;
+}
+
+async function getUserRoles(userId) {
+  const user = await UserModel.findById(userId, 'roles').populate({
+    path: 'roles',
+    populate: {
+      path: 'permissions',
+      model: 'Permission',
+    },
+  });
+  return user.roles;
 }
 
 module.exports = {
@@ -65,4 +81,5 @@ module.exports = {
   updateUser,
   createUser,
   getUsers,
+  getUserRoles,
 };

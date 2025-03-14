@@ -6,7 +6,7 @@ const { logger } = require('../utils/logger');
  * @param {string} resource - The resource being accessed
  * @param {string} action - The action being performed (create, read, update, delete, manage)
  * @param {object} [options] - Additional options
- * @param {Function} [options.getOwnerId] - Function to extract owner ID from request
+ * @param {Function} [options.getOwnerIds] - Function to extract owner ID from request
  * @returns {Function} - Express middleware function
  */
 function authorize(resource, action, options = {}) {
@@ -20,7 +20,7 @@ function authorize(resource, action, options = {}) {
 
       // Get resource owner ID if provided
       let resourceOwnerId = [];
-      if (options.getOwnerId) {
+      if (options.getOwnerIds) {
         resourceOwnerId = options.getOwnerIds(req);
       }
 

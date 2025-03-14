@@ -47,4 +47,14 @@ async function getUser(req, res) {
   }
 }
 
-module.exports = { getUsers, getUser };
+async function getUserRoles(req, res) {
+  try {
+    const result = await UserService.getUserRoles(req.params.id);
+    res.json(result);
+  }
+  catch (error) {
+    res.status(500).json({ error: 'Server Error', details: error.message });
+  }
+}
+
+module.exports = { getUsers, getUser, getUserRoles };

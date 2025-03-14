@@ -1,7 +1,9 @@
 const { faker } = require('@faker-js/faker');
 const axios = require('axios');
 
+const config = require('../config');
 const UserModel = require('../models/user.model');
+const { getRole } = require('../services/auth.service');
 const { hashPassword } = require('../utils/helpers');
 const { logger } = require('../utils/logger');
 const { connectDB, disconnectDB } = require('./connect');
@@ -229,18 +231,21 @@ async function seedUsers() {
     'This may take a few minutes due to API rate limiting (1 request/second)',
   );
 
+  const role = await getRole({ name: config.ROLES.CUSTOMER }, 'id');
+
   for (let i = 0; i < TOTAL_USERS; i++) {
     try {
-      const address = await getRandomAddress();
+      // const address = await getRandomAddress();
       users.push({
         name: faker.person.fullName(),
         email: faker.internet.email(),
         password: HASHED_PASSWORD,
         phone: faker.phone.number({ style: 'international' }),
-        addresses: [address],
+        addresses: [],
         lastActive: faker.date.past(1),
         createdAt: faker.date.past(1),
         updatedAt: faker.date.past(1),
+        roles: [role.id],
       });
 
       // Log progress

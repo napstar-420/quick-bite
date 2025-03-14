@@ -2,12 +2,7 @@ const { validationResult, matchedData } = require('express-validator');
 
 const Permission = require('../models/permission.model');
 const Role = require('../models/role.model');
-const {
-  createRole,
-  createPermission,
-  assignRolesToUser,
-  removeRolesFromUser,
-} = require('../services/auth.service');
+const AuthService = require('../services/auth.service');
 const { logger } = require('../utils/logger');
 
 /**
@@ -62,10 +57,16 @@ async function createNewRole(req, res) {
     // Check if role with the same name already exists
     const existingRole = await Role.findOne({ name });
     if (existingRole) {
-      return res.status(400).json({ message: 'Role with this name already exists' });
+      return res
+        .status(400)
+        .json({ message: 'Role with this name already exists' });
     }
 
-    const role = await createRole({ name, description, permissions });
+    const role = await AuthService.createRole({
+      name,
+      description,
+      permissions,
+    });
     return res.status(201).json(role);
   }
   catch (error) {
@@ -99,7 +100,9 @@ async function updateRole(req, res) {
     if (data.name && data.name !== role.name) {
       const existingRole = await Role.findOne({ name: data.name });
       if (existingRole) {
-        return res.status(400).json({ message: 'Role with this name already exists' });
+        return res
+          .status(400)
+          .json({ message: 'Role with this name already exists' });
       }
     }
 
@@ -159,14 +162,24 @@ async function createNewPermission(req, res) {
     const { name, description, resource, action, scope } = matchedData(req);
 
     // Check if permission with the same resource and action already exists
-    const existingPermission = await Permission.findOne({ resource, action, scope });
+    const existingPermission = await Permission.findOne({
+      resource,
+      action,
+      scope,
+    });
     if (existingPermission) {
       return res.status(400).json({
         message: `Permission for ${action} on ${resource} already exists`,
       });
     }
 
-    const permission = await createPermission({ name, description, resource, action, scope });
+    const permission = await AuthService.createPermission({
+      name,
+      description,
+      resource,
+      action,
+      scope,
+    });
     return res.status(201).json(permission);
   }
   catch (error) {
@@ -184,12 +197,14 @@ async function assignRoles(req, res) {
   try {
     const { userId, roleIds } = matchedData(req);
 
-    const user = await assignRolesToUser(userId, roleIds);
+    const user = await AuthService.assignRolesToUser(userId, roleIds);
     return res.status(200).json(user);
   }
   catch (error) {
     logger.error(`Assign roles error: ${error.message}`);
-    return res.status(500).json({ message: error.message || 'Internal server error' });
+    return res
+      .status(500)
+      .json({ message: error.message || 'Internal server error' });
   }
 }
 
@@ -202,12 +217,14 @@ async function removeRoles(req, res) {
   try {
     const { userId, roleIds } = matchedData(req);
 
-    const user = await removeRolesFromUser(userId, roleIds);
+    const user = await AuthService.removeRolesFromUser(userId, roleIds);
     return res.status(200).json(user);
   }
   catch (error) {
     logger.error(`Remove roles error: ${error.message}`);
-    return res.status(500).json({ message: error.message || 'Internal server error' });
+    return res
+      .status(500)
+      .json({ message: error.message || 'Internal server error' });
   }
 }
 

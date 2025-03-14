@@ -8,10 +8,10 @@ const { logger } = require('../utils/logger');
  * @param {string} userId - The user ID
  * @param {string} resource - The resource being accessed
  * @param {string} action - The action being performed
- * @param {string} resourceOwnerId - The owner ID of the resource (optional)
+ * @param {string} resourceOwnerIds - The owner IDs of the resource (optional)
  * @returns {Promise<boolean>} - Whether the user has the permission
  */
-async function hasPermission(userId, resource, action, resourceOwnerId = []) {
+async function hasPermission(userId, resource, action, resourceOwnerIds = []) {
   try {
     const user = await User.findById(userId).populate({
       path: 'roles',
@@ -26,8 +26,7 @@ async function hasPermission(userId, resource, action, resourceOwnerId = []) {
     }
 
     // Check if user is the owner of the resource
-    const isOwner = resourceOwnerId.some(id => userId === id.toString());
-
+    const isOwner = resourceOwnerIds.some(id => userId === id.toString());
     return user.roles.some((role) => {
       return role.permissions.some((permission) => {
         // Check if permission matches resource and action
@@ -163,6 +162,17 @@ async function removeRolesFromUser(userId, roleIds) {
   }
 }
 
+async function getRole(filters, projection, options) {
+  try {
+    const role = await Role.findOne(filters, projection, options);
+    return role;
+  }
+  catch (error) {
+    logger.error(`Get role by name error: ${error.message}`);
+    throw error;
+  }
+}
+
 module.exports = {
   hasPermission,
   createRole,
@@ -170,4 +180,5 @@ module.exports = {
   assignRolesToUser,
   removeRolesFromUser,
   updateRole,
+  getRole,
 };
