@@ -8,9 +8,10 @@ const { logger } = require('../utils/logger');
  * @param {string} userId - The user ID
  * @param {string} resource - The resource being accessed
  * @param {string} action - The action being performed
+ * @param {string} resourceOwnerId - The owner ID of the resource (optional)
  * @returns {Promise<boolean>} - Whether the user has the permission
  */
-async function hasPermission(userId, resource, action) {
+async function hasPermission(userId, resource, action, resourceOwnerId = []) {
   try {
     const user = await User.findById(userId).populate({
       path: 'roles',
@@ -24,13 +25,28 @@ async function hasPermission(userId, resource, action) {
       return false;
     }
 
+    // Check if user is the owner of the resource
+    const isOwner = resourceOwnerId.some(id => userId === id.toString());
+
     return user.roles.some((role) => {
       return role.permissions.some((permission) => {
-        return (
-          (permission.resource === resource && permission.action === action)
-          || (permission.resource === resource && permission.action === 'manage')
-          || (permission.resource === '*' && permission.action === '*')
-        );
+        // Check if permission matches resource and action
+        const resourceMatches
+          = permission.resource === resource
+            || permission.resource === '*';
+
+        const actionMatches
+          = permission.action === action
+            || permission.action === 'manage';
+
+        // Check scope
+        // If permission scope is 'global', it applies to all resources
+        // If permission scope is 'own', it only applies to resources owned by the user
+        const scopeMatches
+          = permission.scope === 'global'
+            || (permission.scope === 'own' && isOwner);
+
+        return resourceMatches && actionMatches && scopeMatches;
       });
     });
   }
@@ -56,6 +72,23 @@ async function createRole(roleData) {
   }
   catch (error) {
     logger.error(`Create role error: ${error.message}`);
+    throw error;
+  }
+}
+
+/**
+ * Update a role
+ * @param {string} roleId - The role ID
+ * @param {object} roleData - The role data
+ * @returns {Promise<object>} - The updated role
+ */
+async function updateRole(roleId, roleData) {
+  try {
+    const role = await Role.findByIdAndUpdate(roleId, roleData, { new: true });
+    return role;
+  }
+  catch (error) {
+    logger.error(`Update role error: ${error.message}`);
     throw error;
   }
 }
@@ -136,4 +169,5 @@ module.exports = {
   createPermission,
   assignRolesToUser,
   removeRolesFromUser,
+  updateRole,
 };

@@ -1,15 +1,10 @@
-const { validationResult, matchedData } = require('express-validator');
+const { matchedData } = require('express-validator');
 const { isNil } = require('lodash');
 
 const UserService = require('../services/user.service');
 const { logger } = require('../utils/logger');
 
 async function getUsers(req, res) {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
   const data = matchedData(req);
   const {
     page = 1,
@@ -31,11 +26,6 @@ async function getUsers(req, res) {
 }
 
 async function getUser(req, res) {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
   const data = matchedData(req);
 
   try {

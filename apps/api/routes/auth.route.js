@@ -12,7 +12,12 @@ router.post(
   handleValidationErrors,
   authController.signup,
 );
-router.post('/signin', validations.signinValidation, handleValidationErrors, authController.signin);
+router.post(
+  '/signin',
+  validations.signinValidation,
+  handleValidationErrors,
+  authController.signin,
+);
 router.get('/refresh', authController.refreshToken);
 router.post('/signout', authController.signout);
 router.get(

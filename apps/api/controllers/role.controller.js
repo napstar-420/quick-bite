@@ -87,7 +87,7 @@ async function updateRole(req, res) {
   }
 
   try {
-    const { name, description, permissions } = matchedData(req);
+    const data = matchedData(req);
 
     // Check if role exists
     const role = await Role.findById(req.params.id);
@@ -96,24 +96,15 @@ async function updateRole(req, res) {
     }
 
     // Check if new name conflicts with existing role
-    if (name && name !== role.name) {
-      const existingRole = await Role.findOne({ name });
+    if (data.name && data.name !== role.name) {
+      const existingRole = await Role.findOne({ name: data.name });
       if (existingRole) {
         return res.status(400).json({ message: 'Role with this name already exists' });
       }
-      role.name = name;
     }
 
-    if (description) {
-      role.description = description;
-    }
-
-    if (permissions) {
-      role.permissions = permissions;
-    }
-
-    await role.save();
-    return res.status(200).json(role);
+    const updatedRole = await updateRole(role._id, data);
+    return res.status(200).json(updatedRole);
   }
   catch (error) {
     logger.error(`Update role error: ${error.message}`);
@@ -164,24 +155,18 @@ async function getAllPermissions(req, res) {
  * @param {object} res - Express response object
  */
 async function createNewPermission(req, res) {
-  const errors = validationResult(req);
-
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
   try {
-    const { name, description, resource, action } = matchedData(req);
+    const { name, description, resource, action, scope } = matchedData(req);
 
     // Check if permission with the same resource and action already exists
-    const existingPermission = await Permission.findOne({ resource, action });
+    const existingPermission = await Permission.findOne({ resource, action, scope });
     if (existingPermission) {
       return res.status(400).json({
         message: `Permission for ${action} on ${resource} already exists`,
       });
     }
 
-    const permission = await createPermission({ name, description, resource, action });
+    const permission = await createPermission({ name, description, resource, action, scope });
     return res.status(201).json(permission);
   }
   catch (error) {
@@ -196,12 +181,6 @@ async function createNewPermission(req, res) {
  * @param {object} res - Express response object
  */
 async function assignRoles(req, res) {
-  const errors = validationResult(req);
-
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
   try {
     const { userId, roleIds } = matchedData(req);
 
@@ -220,12 +199,6 @@ async function assignRoles(req, res) {
  * @param {object} res - Express response object
  */
 async function removeRoles(req, res) {
-  const errors = validationResult(req);
-
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
   try {
     const { userId, roleIds } = matchedData(req);
 

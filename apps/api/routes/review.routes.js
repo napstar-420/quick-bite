@@ -46,7 +46,7 @@ router.put(
 router.delete(
   '/:id',
   authorize('review', 'delete', {
-    getOwnerId: req => getReviewUserId(req.params.id),
+    getOwnerIds: req => getReviewUserId(req.params.id),
   }),
   reviewController.deleteReview,
 );

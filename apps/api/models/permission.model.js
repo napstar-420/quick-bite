@@ -29,6 +29,12 @@ const PermissionSchema = new Schema(
       enum: ['create', 'read', 'update', 'delete', 'manage'],
       trim: true,
     },
+    scope: {
+      type: String,
+      required: true,
+      enum: ['global', 'own'],
+      trim: true,
+    },
   },
   { timestamps: true },
 );
