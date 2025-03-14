@@ -1,64 +1,61 @@
 const { model, Schema } = require('mongoose');
 
-const reviewSchema = new Schema(
+const { genReviewId } = require('../utils/id');
+
+const ReviewSchema = new Schema(
   {
-    customer: {
-      type: Schema.Types.ObjectId,
+    _id: {
+      type: String,
+      default: () => genReviewId(),
+    },
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    content: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    rating: {
+      type: Number,
+      required: true,
+      min: 1,
+      max: 5,
+    },
+    user: {
+      type: String,
       ref: 'User',
       required: true,
     },
-    order: {
-      type: Schema.Types.ObjectId,
-      ref: 'Order',
+    menuItem: {
+      type: String,
+      ref: 'MenuItem',
       required: true,
     },
     restaurant: {
-      type: Schema.Types.ObjectId,
+      type: String,
       ref: 'Restaurant',
       required: true,
     },
-    deliveryPerson: {
-      type: Schema.Types.ObjectId,
-      ref: 'DeliveryPerson',
-    },
-    foodRating: {
+    likes: {
       type: Number,
-      required: true,
-      min: 1,
-      max: 5,
+      default: 0,
     },
-    deliveryRating: {
+    userReviewCount: {
       type: Number,
-      min: 1,
-      max: 5,
-    },
-    comment: {
-      type: String,
-      trim: true,
-    },
-    photos: [
-      {
-        type: String,
-      },
-    ],
-    restaurantReply: {
-      text: { type: String },
-      date: { type: Date },
-    },
-    isPublished: {
-      type: Boolean,
-      default: true,
-    },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
-    updatedAt: {
-      type: Date,
-      default: Date.now,
+      default: 1,
     },
   },
   { timestamps: true },
 );
 
-module.exports = model('Review', reviewSchema);
+// Create indexes for faster lookups
+ReviewSchema.index({ user: 1 });
+ReviewSchema.index({ menuItem: 1 });
+ReviewSchema.index({ restaurant: 1 });
+ReviewSchema.index({ rating: 1 });
+ReviewSchema.index({ createdAt: 1 });
+
+module.exports = model('Review', ReviewSchema);

@@ -1,4 +1,4 @@
-const { validationResult, matchedData } = require('express-validator');
+const { matchedData } = require('express-validator');
 const jwt = require('jsonwebtoken');
 const { isNil } = require('lodash');
 
@@ -16,13 +16,6 @@ const { logger } = require('../utils/logger');
  * @returns {Promise<void>}
  */
 async function signup(req, res) {
-  const validationErrors = validationResult(req);
-
-  if (!validationErrors.isEmpty()) {
-    const errors = validationErrors.array();
-    return res.status(400).json({ errors });
-  }
-
   const data = matchedData(req);
   const existingUser = await UserService.getUser(
     { email: data.email },
@@ -63,13 +56,6 @@ async function signup(req, res) {
  * @returns {Promise<void>}
  */
 async function signin(req, res) {
-  const validationErrors = validationResult(req);
-
-  if (!validationErrors.isEmpty()) {
-    const errors = validationErrors.array();
-    return res.status(400).json({ errors });
-  }
-
   const data = matchedData(req);
   const user = await UserService.getUser(
     { email: data.email },
@@ -129,6 +115,8 @@ async function refreshToken(req, res) {
   }
 
   const accessToken = genUserAccessToken(user.id);
+  // Update user lastActive
+  await UserService.updateUser(user.id, { lastActive: new Date() });
 
   return res.json({ token: accessToken, user });
 }
@@ -168,13 +156,6 @@ async function signout(req, res) {
  * @returns {Promise<void>}
  */
 async function checkUserExists(req, res) {
-  // Validate the email parameter
-  const validationErrors = validationResult(req);
-  if (!validationErrors.isEmpty()) {
-    const errors = validationErrors.array();
-    return res.status(400).json({ errors });
-  }
-
   const data = matchedData(req);
 
   try {
