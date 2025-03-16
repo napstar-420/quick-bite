@@ -1,7 +1,13 @@
 const { model, Schema } = require('mongoose');
 
+const { genRestaurantId } = require('../utils/id');
+
 const restaurantSchema = new Schema(
   {
+    _id: {
+      type: String,
+      default: () => genRestaurantId(),
+    },
     name: {
       type: String,
       required: true,
@@ -19,35 +25,24 @@ const restaurantSchema = new Schema(
       required: true,
     },
     owner: {
-      type: Schema.Types.ObjectId,
+      type: Schema.Types.String,
       ref: 'User',
       required: true,
+    },
+    logo: {
+      type: String,
+    },
+    coverImage: {
+      type: String,
     },
     description: {
       type: String,
       trim: true,
     },
-    address: {
-      street: { type: String, required: true },
-      city: { type: String, required: true },
-      state: { type: String, required: true },
-      zipCode: { type: String, required: true },
-    },
-    location: {
-      type: {
-        type: String,
-        enum: ['Point'],
-        default: 'Point',
-      },
-      coordinates: {
-        type: [Number], // [longitude, latitude]
-        required: true,
-      },
-    },
-    cuisine: [
+    categories: [
       {
-        type: String,
-        required: true,
+        type: Schema.Types.String,
+        ref: 'RestaurantCategory',
       },
     ],
     priceRange: {
@@ -55,39 +50,13 @@ const restaurantSchema = new Schema(
       enum: ['$', '$$', '$$$', '$$$$'],
       default: '$$',
     },
-    openingHours: [
-      {
-        day: { type: String, required: true },
-        open: { type: String, required: true },
-        close: { type: String, required: true },
-        isClosed: { type: Boolean, default: false },
-      },
-    ],
-    images: [
-      {
-        type: String,
-      },
-    ],
-    coverImage: {
-      type: String,
-    },
-    averageRating: {
-      type: Number,
-      default: 0,
-      min: 0,
-      max: 5,
-    },
-    totalRatings: {
-      type: Number,
-      default: 0,
-    },
     isActive: {
       type: Boolean,
       default: true,
     },
     status: {
       type: String,
-      enum: ['pending', 'approved', 'rejected'],
+      enum: ['pending', 'under-review', 'approved', 'rejected', 'closed', 'suspended'],
       default: 'pending',
     },
     createdAt: {

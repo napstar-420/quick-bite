@@ -57,4 +57,13 @@ export default {
     EXPENSIVE: '$$$',
     LUXURY: '$$$$',
   },
+
+  RESTAURANT_STATUS: {
+    PENDING: 'pending',
+    UNDER_REVIEW: 'under-review',
+    APPROVED: 'approved',
+    REJECTED: 'rejected',
+    CLOSED: 'closed',
+    SUSPENDED: 'suspended',
+  },
 };

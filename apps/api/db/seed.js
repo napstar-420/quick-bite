@@ -2,14 +2,17 @@ const { faker } = require('@faker-js/faker');
 const axios = require('axios');
 
 const config = require('../config');
+const CategoryModel = require('../models/restaurant-category.model');
 const UserModel = require('../models/user.model');
 const { getRole } = require('../services/auth.service');
 const { hashPassword } = require('../utils/helpers');
 const { logger } = require('../utils/logger');
 const { connectDB, disconnectDB } = require('./connect');
 
-const TOTAL_USERS = 100;
+const TOTAL_USERS = 10;
 const USER_PASSWORD = 'Pakistan@123';
+const ADMIN_PASSWORD = 'Pakistan@123';
+const SUPER_ADMIN_PASSWORD = 'Pakistan@123';
 // Using OpenStreetMap's Nominatim API which doesn't require an API key
 // Note: Please respect their usage policy:
 // https://operations.osmfoundation.org/policies/nominatim/
@@ -20,12 +23,14 @@ async function seedData() {
   await connectDB();
   await deleteData();
   await seedUsers();
+  await seedCategories();
   await disconnectDB();
 }
 
 async function deleteData() {
   try {
     await UserModel.deleteMany();
+    await CategoryModel.deleteMany();
     logger.debug('Emptied DB for fresh seeding');
   }
   catch (error) {
@@ -232,16 +237,18 @@ async function seedUsers() {
   );
 
   const role = await getRole({ name: config.ROLES.CUSTOMER }, 'id');
+  const adminRole = await getRole({ name: config.ROLES.ADMIN }, 'id');
+  const superAdminRole = await getRole({ name: config.ROLES.SUPER_ADMIN }, 'id');
 
   for (let i = 0; i < TOTAL_USERS; i++) {
     try {
-      // const address = await getRandomAddress();
+      const address = await getRandomAddress();
       users.push({
         name: faker.person.fullName(),
         email: faker.internet.email(),
         password: HASHED_PASSWORD,
         phone: faker.phone.number({ style: 'international' }),
-        addresses: [],
+        addresses: [address],
         lastActive: faker.date.past(1),
         createdAt: faker.date.past(1),
         updatedAt: faker.date.past(1),
@@ -258,12 +265,53 @@ async function seedUsers() {
     }
   }
 
+  // Add admin user
+  users.push({
+    name: 'Admin',
+    email: 'admin@quickbite.com',
+    password: await hashPassword(ADMIN_PASSWORD),
+    phone: '+923001234567',
+    addresses: [],
+    roles: [adminRole.id],
+  });
+
+  // Add super admin user
+  users.push({
+    name: 'Super Admin',
+    email: 'superadmin@quickbite.com',
+    password: await hashPassword(SUPER_ADMIN_PASSWORD),
+    phone: '+923011234567',
+    addresses: [],
+    roles: [superAdminRole.id],
+  });
+
   try {
     await UserModel.insertMany(users);
     logger.info(`${users.length} users seeded successfully.`);
   }
   catch (error) {
     logger.error('Error seeding users', error);
+  }
+}
+
+async function seedCategories() {
+  const categories = [];
+
+  for (let i = 0; i < 50; i++) {
+    categories.push({ name: faker.food.ethnicCategory() });
+  }
+
+  const filteredCategories = categories.filter(
+    (category, index, self) =>
+      index === self.findIndex(t => t.name === category.name),
+  );
+
+  try {
+    await CategoryModel.insertMany(filteredCategories);
+    logger.info(`${filteredCategories.length} categories seeded successfully.`);
+  }
+  catch (error) {
+    logger.error('Error seeding categories', error);
   }
 }
 

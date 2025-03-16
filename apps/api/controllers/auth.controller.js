@@ -111,6 +111,8 @@ async function refreshToken(req, res) {
   }
   catch (error) {
     logger.error(error);
+    await UserService.updateUser(user.id, { refreshToken: null });
+    res.clearCookie(config.REFRESH_TOKEN_COOKIE_NAME, refreshTokenConfig);
     return res.sendStatus(403);
   }
 

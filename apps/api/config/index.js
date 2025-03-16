@@ -17,7 +17,7 @@ module.exports = createConfig.default({
   SALT_ROUNDS: 10,
   ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET,
   REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET,
-  ACCESS_TOKEN_EXP: '30s',
+  ACCESS_TOKEN_EXP: '5s',
   REFRESH_TOKEN_EXP: '30d',
   REFRESH_TOKEN_COOKIE_NAME: 'refreshToken',
   USER_ID_LENGTH: 16,
@@ -29,4 +29,18 @@ module.exports = createConfig.default({
   PERMISSION_ID_LENGTH: 10,
   PERMISSION_ID_ALPHABETS:
     '1234567890',
+  RESTAURANT_ID_PREFIX: 'R',
+  RESTAURANT_BRANCH_ID_PREFIX: 'RB',
+  ID_LENGTH: 10,
+  ID_ALPHABETS: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890',
+
+  DAYS_OF_WEEK: {
+    MONDAY: 'monday',
+    TUESDAY: 'tuesday',
+    WEDNESDAY: 'wednesday',
+    THURSDAY: 'thursday',
+    FRIDAY: 'friday',
+    SATURDAY: 'saturday',
+    SUNDAY: 'sunday',
+  },
 });

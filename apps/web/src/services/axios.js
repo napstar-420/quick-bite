@@ -31,12 +31,12 @@ api.interceptors.response.use(
     const originalRequest = error.config;
 
     // If the error is 401 and we haven't already tried to refresh
-    if (error?.response?.status === 401 && !originalRequest._retry) {
+    if (error?.response?.status === 403 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {
         // Call refresh endpoint
-        const response = await axios.get(
+        const response = await api.get(
           API_ROUTES.AUTH.REFRESH,
           {},
           {
