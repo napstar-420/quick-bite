@@ -4,26 +4,36 @@ import {
   Route,
   Outlet,
 } from "react-router-dom";
-import NotFound from "../pages/not-found";
-import Auth from "../pages/auth";
 import Home from "../pages/home";
+
+// Auth Pages
+import Auth from "../pages/auth";
+import Logout from "../pages/auth/logout";
+
+// Layout Components
 import HomeLayout from "../components/layout/home-layout";
 import RootLayout from "../components/layout/root-layout";
 import AdminLayout from "../components/layout/admin-layout";
+
+// Admin Pages
 import AdminDashboard from "../pages/admin/dashboard";
 import AdminUsers from "../pages/admin/users";
 import AdminRestaurants from "../pages/admin/restaurants";
-// import { Layout as DashboardLayout } from "../components/layout/dashboard-layout";
-// import { Layout as PartnerLayout } from "../components/layout/partner-layout";
-// import { Layout as DeliveryLayout } from "../components/layout/delivery-layout";
+
+// Auth Components
 import AuthProvider from "../components/auth-provider";
-import ErrorPage from "../pages/error";
-import PrivateRoute from "./private-route";
 import RoleBasedRoute from "./role-based-route.jsx";
+import PrivateRoute from "./private-route";
 import PublicRoute from "./public-route";
-// import AdminRoutes from "./admin-routes";
+import NotFound from "../pages/not-found";
+import ErrorPage from "../pages/error";
 import Unauthorized from "../pages/unauthorized";
 import Suspended from "../pages/suspended";
+
+// Partner Pages
+import PartnerNew from "../pages/partner/new";
+
+// Config
 import config from "../config";
 
 const router = createBrowserRouter(
@@ -43,6 +53,22 @@ const router = createBrowserRouter(
           {/* Suspended Routes */}
           <Route path="suspended" element={<Suspended />} />
 
+          {/* Auth Routes */}
+          <Route
+            path="auth"
+            element={
+              // <PublicRoute>
+              <Auth />
+              // </PublicRoute>
+            }
+          />
+
+          <Route
+            path="logout"
+            element={
+              <Logout />
+            }
+          />
           {/* Private Routes */}
           <Route
             path="admin"
@@ -60,13 +86,13 @@ const router = createBrowserRouter(
             <Route path="*" element={<NotFound backTo={"/admin"} />} />
           </Route>
 
-          {/* Auth Routes */}
+          {/* Partner Routes */}
           <Route
-            path="auth"
+            path="partner/new"
             element={
-              <PublicRoute>
-                <Auth />
-              </PublicRoute>
+              <PrivateRoute>
+                <PartnerNew />
+              </PrivateRoute>
             }
           />
         </Route>

@@ -11,4 +11,10 @@ export const API_ROUTES = {
     ROLES: (userId) => `user/${userId}/roles`,
   },
   GET_USERS: "user",
+  CATEGORIES: {
+    SEARCH: "category/search",
+  },
+  RESTAURANTS: {
+    CREATE: "restaurant",
+  },
 };

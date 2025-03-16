@@ -49,4 +49,12 @@ export default {
     GLOBAL: 'global',
     OWN: 'own',
   },
+
+  // Update the new restaurant page if price ranges changes
+  PRICE_RANGES: {
+    CHEAP: '$',
+    MID: '$$',
+    EXPENSIVE: '$$$',
+    LUXURY: '$$$$',
+  },
 };
