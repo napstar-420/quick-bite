@@ -7,6 +7,12 @@ const idGenerator = customAlphabet(
   config.ID_LENGTH,
 );
 
+function generateId(prefix) {
+  const id = idGenerator();
+
+  return prefix ? `${prefix}${id}` : id;
+}
+
 const genUserId = idGenerator;
 
 const genRoleId = customAlphabet(
@@ -38,6 +44,7 @@ const genReviewId = customAlphabet(
 );
 
 module.exports = {
+  generateId,
   genUserId,
   genRoleId,
   genPermissionId,

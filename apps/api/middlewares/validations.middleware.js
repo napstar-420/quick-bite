@@ -444,6 +444,18 @@ const createRestaurantValidation = [
     }),
 ];
 
+const createMenuValidation = [
+  body('name')
+    .trim()
+    .notEmpty()
+    .withMessage('Menu name is required')
+    .isLength({ min: 3, max: 64 })
+    .withMessage('Menu name must be between 3 and 64 characters'),
+  body('isAvailable').isBoolean().optional(),
+  body('branches').isArray({ min: 1 }).withMessage('One branch is required'),
+  body('branches.*').isString().withMessage('Each branch must be a string'),
+];
+
 module.exports = {
   signinValidation,
   signupValidation,
@@ -456,4 +468,5 @@ module.exports = {
   createReviewValidation,
   updateReviewValidation,
   createRestaurantValidation,
+  createMenuValidation,
 };

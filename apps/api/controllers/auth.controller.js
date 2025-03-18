@@ -4,7 +4,10 @@ const { isNil } = require('lodash');
 
 const config = require('../config');
 const { refreshTokenConfig } = require('../config/auth.config');
+// Services
+const AuthService = require('../services/auth.service');
 const UserService = require('../services/user.service');
+// Utils
 const { genUserAccessToken, genUserRefreshToken } = require('../utils/auth');
 const { comparePassword } = require('../utils/helpers');
 const { logger } = require('../utils/logger');
@@ -31,7 +34,14 @@ async function signup(req, res) {
   try {
     const newUser = await UserService.createUser(data);
     logger.debug(`New user created: ${newUser.email}`);
-    const accessToken = genUserAccessToken(newUser.id);
+    const roles = await AuthService.getRoles(
+      { _id: { $in: newUser.roles } },
+      'name',
+    );
+    const accessToken = genUserAccessToken(
+      newUser.id,
+      roles.map(role => role.name),
+    );
     const refreshToken = genUserRefreshToken(newUser.id);
     // Update refresh token
     UserService.updateUser(newUser.id, { refreshToken });
@@ -59,7 +69,7 @@ async function signin(req, res) {
   const data = matchedData(req);
   const user = await UserService.getUser(
     { email: data.email },
-    'name email password',
+    'name email password roles',
   );
 
   if (isNil(user)) {
@@ -72,7 +82,14 @@ async function signin(req, res) {
     return res.status(401).json({ message: 'Invalid credentials' });
   }
 
-  const accessToken = genUserAccessToken(user.id);
+  const roles = await AuthService.getRoles(
+    { _id: { $in: user.roles } },
+    'name',
+  );
+  const accessToken = genUserAccessToken(
+    user.id,
+    roles.map(role => role.name),
+  );
   const refreshToken = genUserRefreshToken(user.id);
 
   // Update refresh token
@@ -100,7 +117,7 @@ async function refreshToken(req, res) {
     return res.sendStatus(401);
   }
 
-  const user = await UserService.getUser({ refreshToken });
+  const user = await UserService.getUser({ refreshToken }, 'id roles');
 
   if (isNil(user)) {
     return res.sendStatus(403);
@@ -116,7 +133,14 @@ async function refreshToken(req, res) {
     return res.sendStatus(403);
   }
 
-  const accessToken = genUserAccessToken(user.id);
+  const roles = await AuthService.getRoles(
+    { _id: { $in: user.roles } },
+    'name',
+  );
+  const accessToken = genUserAccessToken(
+    user.id,
+    roles.map(role => role.name),
+  );
   // Update user lastActive
   await UserService.updateUser(user.id, { lastActive: new Date() });
 
@@ -138,7 +162,7 @@ async function signout(req, res) {
     return res.sendStatus(204);
   }
 
-  const user = await UserService.getUser({ refreshToken });
+  const user = await UserService.getUser({ refreshToken }, 'id');
 
   if (isNil(user)) {
     return res.sendStatus(204);

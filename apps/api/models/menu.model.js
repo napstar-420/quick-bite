@@ -2,7 +2,7 @@ const { Schema, model } = require('mongoose');
 
 const { generateId } = require('../utils/id');
 
-const menuItemSchema = new Schema(
+const MenuSchema = new Schema(
   {
     _id: {
       type: String,
@@ -15,26 +15,20 @@ const menuItemSchema = new Schema(
       trim: true,
     },
 
-    description: {
-      type: String,
-      trim: true,
-    },
+    branches: [
+      {
+        type: String,
+        ref: 'RestaurantBranch',
+        required: true,
+      },
+    ],
 
-    price: {
-      type: Number,
-      required: true,
-      min: 0,
-    },
-
-    image: {
-      type: String,
-    },
-
-    branch: {
-      type: String,
-      ref: 'RestaurantBranch',
-      required: true,
-    },
+    menuItems: [
+      {
+        type: String,
+        ref: 'MenuItem',
+      },
+    ],
 
     isAvailable: {
       type: Boolean,
@@ -54,4 +48,4 @@ const menuItemSchema = new Schema(
   { timestamps: true },
 );
 
-module.exports = model('MenuItem', menuItemSchema);
+module.exports = model('Menu', MenuSchema);

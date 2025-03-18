@@ -33,6 +33,9 @@ import Suspended from "../pages/suspended";
 // Partner Pages
 import PartnerNew from "../pages/partner/new";
 
+
+import { PartnerRoutes } from "./partner-routes";
+
 // Config
 import config from "../config";
 
@@ -95,6 +98,8 @@ const router = createBrowserRouter(
               </PrivateRoute>
             }
           />
+
+          {PartnerRoutes}
         </Route>
       </Route>
     </Route>,

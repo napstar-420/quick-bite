@@ -2,17 +2,21 @@ const config = require('../config');
 const UserModel = require('../models/user.model');
 const { getRole } = require('../services/auth.service');
 
-async function getUserByID(id, projection = 'name email') {
+async function getUserByID(id, projection) {
   return UserModel.findById(id, projection);
 }
 
-async function getUser(filters, projection = 'name email phone') {
-  return UserModel.findOne(filters, projection);
+async function getUser(
+  filters,
+  projection,
+  options,
+) {
+  return UserModel.findOne(filters, projection, options);
 }
 
 async function getUsers(
   filters = {},
-  projection = 'name email phone',
+  projection,
   options = { page: 1, limit: 10 },
 ) {
   const { page, limit } = options;

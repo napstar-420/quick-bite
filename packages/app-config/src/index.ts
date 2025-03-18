@@ -29,6 +29,8 @@ export default {
     ROLE: 'role',
     PERMISSION: 'permission',
     RESTAURANT: 'restaurant',
+    BRANCH: 'branch',
+    MENU: 'menu',
     MENU_ITEM: 'menu-item',
     ORDER: 'order',
     REVIEW: 'review',

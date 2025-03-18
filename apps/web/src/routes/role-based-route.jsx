@@ -36,8 +36,6 @@ export default function RoleBasedRoute({ children, role, redirectTo = '/auth' })
     return <Navigate to="/suspended" replace />;
   }
 
-  console.log(user);
-
   // Check if user has required permission
   if (!hasRole(role)) {
     return <Navigate to="/unauthorized" replace />;

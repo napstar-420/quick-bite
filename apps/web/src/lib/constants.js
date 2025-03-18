@@ -17,4 +17,10 @@ export const API_ROUTES = {
   RESTAURANTS: {
     CREATE: "restaurant",
   },
+  PARTNER: {
+    RESTAURANT: "partner/restaurant",
+    BRANCHES: "partner/branches",
+    MENUS: "partner/restaurant/menus",
+    MENU_ITEMS: "partner/menu-items",
+  },
 };

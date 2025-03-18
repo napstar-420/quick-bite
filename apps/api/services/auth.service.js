@@ -26,7 +26,7 @@ async function hasPermission(userId, resource, action, resourceOwnerIds = []) {
     }
 
     // Check if user is the owner of the resource
-    const isOwner = resourceOwnerIds.some(id => userId === id.toString());
+    const isOwner = resourceOwnerIds.includes(userId);
     return user.roles.some((role) => {
       return role.permissions.some((permission) => {
         // Check if permission matches resource and action
@@ -173,6 +173,11 @@ async function getRole(filters, projection, options) {
   }
 }
 
+async function getRoles(filters, projection, options) {
+  const role = await Role.find(filters, projection, options).exec();
+  return role;
+}
+
 module.exports = {
   hasPermission,
   createRole,
@@ -181,4 +186,5 @@ module.exports = {
   removeRolesFromUser,
   updateRole,
   getRole,
+  getRoles,
 };

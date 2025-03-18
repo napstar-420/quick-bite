@@ -29,7 +29,7 @@ const RestaurantBranchSchema = new Schema(
     },
     staff: [
       {
-        type: Schema.Types.String,
+        type: String,
         ref: 'User',
       },
     ],
