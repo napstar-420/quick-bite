@@ -59,7 +59,8 @@ export function AddressForm({ onSubmit }) {
       const linkElement = document.createElement("link");
       linkElement.rel = "stylesheet";
       linkElement.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
-      linkElement.integrity = "sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=";
+      linkElement.integrity =
+        "sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=";
       linkElement.crossOrigin = "";
       document.head.appendChild(linkElement);
 
@@ -97,28 +98,32 @@ export function AddressForm({ onSubmit }) {
     const defaultLocation = [31.5204, 74.3587]; // [latitude, longitude]
 
     // Create map
-    const mapInstance = window.L.map(mapRef.current).setView(defaultLocation, 13);
+    const mapInstance = window.L.map(mapRef.current).setView(
+      defaultLocation,
+      13,
+    );
 
     // Add OpenStreetMap tile layer
-    window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    window.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       maxZoom: 19,
     }).addTo(mapInstance);
 
     // Create a marker
     const marker = window.L.marker(defaultLocation, {
-      draggable: true
+      draggable: true,
     }).addTo(mapInstance);
 
     // Update form when marker is dragged
-    marker.on('dragend', function () {
+    marker.on("dragend", function () {
       const position = marker.getLatLng();
       updateLocationInForm(position.lng, position.lat);
       reverseGeocode(position.lat, position.lng);
     });
 
     // Update form when map is clicked
-    mapInstance.on('click', function (e) {
+    mapInstance.on("click", function (e) {
       marker.setLatLng(e.latlng);
       updateLocationInForm(e.latlng.lng, e.latlng.lat);
       reverseGeocode(e.latlng.lat, e.latlng.lng);
@@ -145,10 +150,10 @@ export function AddressForm({ onSubmit }) {
         `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1`,
         {
           headers: {
-            'Accept-Language': 'en-US,en;q=0.9',
-            'User-Agent': 'AddressForm/1.0' // Nominatim requires a user agent
-          }
-        }
+            "Accept-Language": "en-US,en;q=0.9",
+            "User-Agent": "AddressForm/1.0", // Nominatim requires a user agent
+          },
+        },
       );
 
       const data = await response.json();
@@ -157,14 +162,13 @@ export function AddressForm({ onSubmit }) {
         const address = data.address;
 
         // Extract address components
-        const street = [
-          address.house_number || '',
-          address.road || ''
-        ].filter(Boolean).join(' ');
+        const street = [address.house_number || "", address.road || ""]
+          .filter(Boolean)
+          .join(" ");
 
-        const city = address.city || address.town || address.village || '';
-        const state = address.state || '';
-        const zipCode = address.postcode || '';
+        const city = address.city || address.town || address.village || "";
+        const state = address.state || "";
+        const zipCode = address.postcode || "";
 
         // Update form fields
         form.setValue("street", street);
@@ -200,10 +204,12 @@ export function AddressForm({ onSubmit }) {
         },
         (error) => {
           console.error("Error getting location:", error);
-          toast.error("Could not get your location. Please check your browser permissions.");
+          toast.error(
+            "Could not get your location. Please check your browser permissions.",
+          );
           setIsLocating(false);
         },
-        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 },
       );
     } else {
       toast.error("Geolocation is not supported by your browser");
@@ -228,10 +234,10 @@ export function AddressForm({ onSubmit }) {
         `https://nominatim.openstreetmap.org/search?format=json&q=${encodedAddress}&limit=1`,
         {
           headers: {
-            'Accept-Language': 'en-US,en;q=0.9',
-            'User-Agent': 'AddressForm/1.0' // Nominatim requires a user agent
-          }
-        }
+            "Accept-Language": "en-US,en;q=0.9",
+            "User-Agent": "AddressForm/1.0", // Nominatim requires a user agent
+          },
+        },
       );
 
       const data = await response.json();

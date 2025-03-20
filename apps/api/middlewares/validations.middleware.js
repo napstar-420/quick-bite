@@ -4,6 +4,11 @@ const config = require('../config');
 
 const VALID_DAYS = Object.values(config.DAYS_OF_WEEK);
 
+const isAvailableValidation = body('isAvailable')
+  .optional()
+  .isBoolean()
+  .withMessage('isAvailable should be boolean');
+
 const signinValidation = [
   body('email')
     .trim()
@@ -451,9 +456,93 @@ const createMenuValidation = [
     .withMessage('Menu name is required')
     .isLength({ min: 3, max: 64 })
     .withMessage('Menu name must be between 3 and 64 characters'),
-  body('isAvailable').isBoolean().optional(),
+  isAvailableValidation,
   body('branches').isArray({ min: 1 }).withMessage('One branch is required'),
   body('branches.*').isString().withMessage('Each branch must be a string'),
+];
+
+const updateMenuValidation = [
+  body('name')
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage('Menu name is required')
+    .isLength({ min: 3, max: 64 })
+    .withMessage('Menu name must be between 3 and 64 characters'),
+  isAvailableValidation,
+  body('branches')
+    .optional()
+    .isArray({ min: 1 })
+    .withMessage('One branch is required'),
+  body('branches.*').isString().withMessage('Each branch must be a string'),
+];
+
+const createMenuItemValidations = [
+  body('name')
+    .trim()
+    .escape()
+    .notEmpty()
+    .withMessage('Item name is required')
+    .isLength({ min: 3 })
+    .withMessage('Item name should be at least 3 characters long'),
+
+  body('description')
+    .trim()
+    .escape()
+    .notEmpty()
+    .withMessage('Item description is required')
+    .isLength({ min: 3 })
+    .withMessage('Description should be at least 3 characters long'),
+
+  body('price')
+    .isNumeric()
+    .withMessage('Price must be a number')
+    .isFloat({ min: 0 })
+    .withMessage('Price must be a positive number'),
+
+  body('img_url')
+    .notEmpty()
+    .withMessage('Image URL is required')
+    .isURL()
+    .withMessage('Not a valid URL'),
+
+  isAvailableValidation,
+];
+
+const updateMenuItemValidations = [
+  body('name')
+    .optional()
+    .trim()
+    .escape()
+    .notEmpty()
+    .withMessage('Item name is required')
+    .isLength({ min: 3 })
+    .withMessage('Item name should be at least 3 characters long'),
+
+  body('description')
+    .optional()
+    .trim()
+    .escape()
+    .notEmpty()
+    .withMessage('Item description is required')
+    .isLength({ min: 3 })
+    .withMessage('Description should be at least 3 characters long'),
+
+  body('price')
+    .optional()
+    .isNumeric()
+    .withMessage('Price must be a number')
+    .isFloat({ min: 0 })
+    .withMessage('Price must be a positive number'),
+
+  body('img_url')
+    .optional()
+    .notEmpty()
+    .withMessage('Image URL is required')
+    .isURL()
+    .withMessage('Not a valid URL'),
+
+  isAvailableValidation,
 ];
 
 module.exports = {
@@ -469,4 +558,7 @@ module.exports = {
   updateReviewValidation,
   createRestaurantValidation,
   createMenuValidation,
+  createMenuItemValidations,
+  updateMenuValidation,
+  updateMenuItemValidations,
 };

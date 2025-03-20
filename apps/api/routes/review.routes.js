@@ -12,15 +12,9 @@ const {
 const verifyJwt = require('../middlewares/verify-jwt.middleware');
 const { getReviewUserId } = require('../services/review.service');
 
-router.get(
-  '/',
-  reviewController.getAllReviews,
-);
+router.get('/', reviewController.getAllReviews);
 
-router.get(
-  '/:id',
-  reviewController.getReviewById,
-);
+router.get('/:id', reviewController.getReviewById);
 
 // All routes require authentication
 router.use(verifyJwt);

@@ -6,7 +6,7 @@ import {
 } from "../features/partner/partnerApiSlice";
 import { reset } from "../features/partner/partnerSlice";
 import { Outlet } from "react-router-dom";
-import config from '../config'
+import config from "../config";
 import PendingApproval from "../pages/partner/pending-approval";
 
 export default function PartnerProvider() {
@@ -31,8 +31,8 @@ export default function PartnerProvider() {
   }
 
   if (restaurant.status === config.RESTAURANT_STATUS.UNDER_REVIEW) {
-    return <PendingApproval />
+    return <PendingApproval />;
   }
 
-  return <Outlet />
+  return <Outlet />;
 }

@@ -126,7 +126,9 @@ async function deleteReview(req, res) {
  */
 async function getReviewForAuth(reviewId) {
   try {
-    return await Review.findById(reviewId).populate('user', 'id').select('user');
+    return await Review.findById(reviewId)
+      .populate('user', 'id')
+      .select('user');
   }
   catch (error) {
     logger.error(`Get review for auth error: ${error.message}`);

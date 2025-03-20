@@ -2,10 +2,7 @@ const { customAlphabet } = require('nanoid');
 
 const config = require('../config');
 
-const idGenerator = customAlphabet(
-  config.ID_ALPHABETS,
-  config.ID_LENGTH,
-);
+const idGenerator = customAlphabet(config.ID_ALPHABETS, config.ID_LENGTH);
 
 function generateId(prefix) {
   const id = idGenerator();
@@ -27,16 +24,13 @@ const genPermissionId = customAlphabet(
 
 function genRestaurantId() {
   return `${config.RESTAURANT_ID_PREFIX}${idGenerator()}`;
-};
+}
 
 function genRestaurantBranchId() {
-  const idGenerator = customAlphabet(
-    config.ID_ALPHABETS,
-    config.ID_LENGTH,
-  );
+  const idGenerator = customAlphabet(config.ID_ALPHABETS, config.ID_LENGTH);
 
   return `${config.RESTAURANT_BRANCH_ID_PREFIX}${idGenerator()}`;
-};
+}
 
 const genReviewId = customAlphabet(
   config.USER_ID_ALPHABETS,

@@ -18,10 +18,12 @@ const RoleSchema = new Schema(
       type: String,
       trim: true,
     },
-    permissions: [{
-      type: String,
-      ref: 'Permission',
-    }],
+    permissions: [
+      {
+        type: String,
+        ref: 'Permission',
+      },
+    ],
   },
   { timestamps: true },
 );

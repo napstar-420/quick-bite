@@ -18,6 +18,7 @@ const menuItemSchema = new Schema(
     description: {
       type: String,
       trim: true,
+      required: true,
     },
 
     price: {
@@ -28,11 +29,6 @@ const menuItemSchema = new Schema(
 
     image: {
       type: String,
-    },
-
-    branch: {
-      type: String,
-      ref: 'RestaurantBranch',
       required: true,
     },
 

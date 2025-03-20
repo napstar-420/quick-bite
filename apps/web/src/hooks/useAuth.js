@@ -15,7 +15,7 @@ export const useAuth = () => {
   const userRoles = useSelector(selectUserRoles);
 
   const hasRole = (role) => {
-    return userRoles.some(userRole => userRole.name === role);
+    return userRoles.some((userRole) => userRole.name === role);
   };
 
   /**
@@ -27,12 +27,14 @@ export const useAuth = () => {
   const hasPermission = (resource, action) => {
     if (!user || !userRoles.length) return false;
 
-    return userRoles.some(role =>
-      role.permissions.some(permission =>
-        (permission.resource === resource && permission.action === action) ||
-        (permission.resource === resource && permission.action === 'manage') ||
-        (permission.resource === '*' && permission.action === '*')
-      )
+    return userRoles.some((role) =>
+      role.permissions.some(
+        (permission) =>
+          (permission.resource === resource && permission.action === action) ||
+          (permission.resource === resource &&
+            permission.action === "manage") ||
+          (permission.resource === "*" && permission.action === "*"),
+      ),
     );
   };
 
@@ -44,15 +46,22 @@ export const useAuth = () => {
    * @param {string} ownerField - The field that identifies the owner (default: 'userId')
    * @returns {boolean} Whether the user has permission for this resource instance
    */
-  const hasResourcePermission = (resource, action, resourceInstance, ownerField = 'userId') => {
+  const hasResourcePermission = (
+    resource,
+    action,
+    resourceInstance,
+    ownerField = "userId",
+  ) => {
     if (!user || !resourceInstance) return false;
 
     // Check if user has global permission for this resource type
-    const hasGlobalPermission = userRoles.some(role =>
-      role.permissions.some(permission =>
-        (permission.resource === resource && permission.action === 'manage') ||
-        (permission.resource === '*' && permission.action === '*')
-      )
+    const hasGlobalPermission = userRoles.some((role) =>
+      role.permissions.some(
+        (permission) =>
+          (permission.resource === resource &&
+            permission.action === "manage") ||
+          (permission.resource === "*" && permission.action === "*"),
+      ),
     );
 
     // If user has global permission, they can access any instance
@@ -77,6 +86,6 @@ export const useAuth = () => {
     hasPermission,
     hasRole,
     hasResourcePermission,
-    isLoading: false
+    isLoading: false,
   };
 };

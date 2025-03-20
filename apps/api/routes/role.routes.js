@@ -18,17 +18,9 @@ const verifyJwt = require('../middlewares/verify-jwt.middleware');
 router.use(verifyJwt);
 
 // Role routes
-router.get(
-  '/',
-  authorize('role', 'read'),
-  roleController.getAllRoles,
-);
+router.get('/', authorize('role', 'read'), roleController.getAllRoles);
 
-router.get(
-  '/:id',
-  authorize('role', 'read'),
-  roleController.getRoleById,
-);
+router.get('/:id', authorize('role', 'read'), roleController.getRoleById);
 
 router.post(
   '/',
@@ -46,11 +38,7 @@ router.put(
   roleController.updateRole,
 );
 
-router.delete(
-  '/:id',
-  authorize('role', 'delete'),
-  roleController.deleteRole,
-);
+router.delete('/:id', authorize('role', 'delete'), roleController.deleteRole);
 
 // Permission routes
 router.get(

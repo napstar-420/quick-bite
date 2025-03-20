@@ -137,11 +137,14 @@ export default function PartnerSidebar() {
             <nav className="flex-1 px-2 py-4 space-y-1">
               {navItems.map((item) => {
                 return (
-                  <NavLink to={item.href} key={item.name}
+                  <NavLink
+                    to={item.href}
+                    key={item.name}
                     className={({ isActive }) =>
-                      `${isActive
-                        ? "bg-primary text-primary-foreground"
-                        : "hover:text-primary-foreground hover:bg-primary hover:bg-opacity-25"
+                      `${
+                        isActive
+                          ? "bg-primary text-primary-foreground"
+                          : "hover:text-primary-foreground hover:bg-primary hover:bg-opacity-25"
                       } flex items-center px-2 py-2 text-sm font-medium rounded-md`
                     }
                   >

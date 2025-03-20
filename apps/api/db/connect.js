@@ -5,8 +5,10 @@ const { logger } = require('../utils/logger');
 
 async function connectDB() {
   try {
-    const conn = await mongoose.connect(config.DB_URI);
-    logger.info(`MongoDB connected: ${conn.connection.host}`);
+    const DB_CONNECTION = await mongoose.connect(config.DB_URI, {
+      replicaSet: 'rs0',
+    });
+    logger.info(`MongoDB connected: ${DB_CONNECTION.connection.host}`);
   }
   catch (error) {
     logger.error('Mongo DB connection failed');
@@ -42,4 +44,4 @@ if (config.NODE_ENV !== 'development') {
   });
 }
 
-module.exports = { connectDB, disconnectDB };
+module.exports = { connectDB, disconnectDB, connection: mongoose.connection };

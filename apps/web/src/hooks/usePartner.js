@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import {
   selectRestaurant,
-  selectBranches
+  selectBranches,
 } from "../features/partner/partnerSlice";
 
 export const usePartner = () => {
@@ -10,6 +10,6 @@ export const usePartner = () => {
 
   return {
     restaurant,
-    branches
-  }
-}
+    branches,
+  };
+};

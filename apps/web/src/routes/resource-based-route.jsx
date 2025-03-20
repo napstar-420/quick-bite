@@ -1,6 +1,6 @@
-import { Navigate, useLocation } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import { useAuth } from '../hooks/useAuth';
+import { Navigate, useLocation } from "react-router-dom";
+import PropTypes from "prop-types";
+import { useAuth } from "../hooks/useAuth";
 
 /**
  * A wrapper component for resource-based route protection that checks ownership
@@ -18,8 +18,8 @@ const ResourceBasedRoute = ({
   resource,
   action,
   resourceInstance,
-  ownerField = 'userId',
-  redirectTo = '/auth'
+  ownerField = "userId",
+  redirectTo = "/auth",
 }) => {
   const { user, isAuthenticated, hasResourcePermission, isLoading } = useAuth();
   const location = useLocation();
@@ -28,7 +28,9 @@ const ResourceBasedRoute = ({
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary">Loading...</div>
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary">
+          Loading...
+        </div>
       </div>
     );
   }
@@ -55,7 +57,8 @@ const ResourceBasedRoute = ({
 ResourceBasedRoute.propTypes = {
   children: PropTypes.node.isRequired,
   resource: PropTypes.string.isRequired,
-  action: PropTypes.oneOf(['create', 'read', 'update', 'delete', 'manage']).isRequired,
+  action: PropTypes.oneOf(["create", "read", "update", "delete", "manage"])
+    .isRequired,
   resourceInstance: PropTypes.object.isRequired,
   ownerField: PropTypes.string,
   redirectTo: PropTypes.string,

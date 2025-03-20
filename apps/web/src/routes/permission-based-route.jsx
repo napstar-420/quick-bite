@@ -1,6 +1,6 @@
-import { Navigate, useLocation } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import { useAuth } from '../hooks/useAuth';
+import { Navigate, useLocation } from "react-router-dom";
+import PropTypes from "prop-types";
+import { useAuth } from "../hooks/useAuth";
 
 /**
  * A wrapper component for permission-based route protection that works with Redux
@@ -11,7 +11,12 @@ import { useAuth } from '../hooks/useAuth';
  * @param {string} [props.redirectTo] - Path to redirect to if unauthorized (defaults to /auth)
  * @returns {React.ReactNode} The protected route component
  */
-export default function PermissionBasedRoute({ children, resource, action, redirectTo = '/auth' }) {
+export default function PermissionBasedRoute({
+  children,
+  resource,
+  action,
+  redirectTo = "/auth",
+}) {
   const { user, isAuthenticated, hasPermission, isLoading } = useAuth();
   const location = useLocation();
 
@@ -19,7 +24,9 @@ export default function PermissionBasedRoute({ children, resource, action, redir
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary">Loading...</div>
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary">
+          Loading...
+        </div>
       </div>
     );
   }
@@ -41,11 +48,12 @@ export default function PermissionBasedRoute({ children, resource, action, redir
 
   // Render the protected route
   return children;
-};
+}
 
 PermissionBasedRoute.propTypes = {
   children: PropTypes.node.isRequired,
   resource: PropTypes.string.isRequired,
-  action: PropTypes.oneOf(['create', 'read', 'update', 'delete', 'manage']).isRequired,
+  action: PropTypes.oneOf(["create", "read", "update", "delete", "manage"])
+    .isRequired,
   redirectTo: PropTypes.string,
 };

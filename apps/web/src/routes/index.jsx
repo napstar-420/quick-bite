@@ -33,7 +33,6 @@ import Suspended from "../pages/suspended";
 // Partner Pages
 import PartnerNew from "../pages/partner/new";
 
-
 import { PartnerRoutes } from "./partner-routes";
 
 // Config
@@ -66,12 +65,7 @@ const router = createBrowserRouter(
             }
           />
 
-          <Route
-            path="logout"
-            element={
-              <Logout />
-            }
-          />
+          <Route path="logout" element={<Logout />} />
           {/* Private Routes */}
           <Route
             path="admin"

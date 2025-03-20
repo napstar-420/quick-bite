@@ -35,5 +35,5 @@ export default function CustomerRoutes() {
       <Route path="loyalty" element={<LoyaltyPage />} />
       <Route path="profile" element={<ProfilePage />} /> */}
     </Route>
-  )
+  );
 }

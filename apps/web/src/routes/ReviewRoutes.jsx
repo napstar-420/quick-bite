@@ -1,11 +1,11 @@
-import { Routes, Route, useParams } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import PermissionBasedRoute from './permission-based-route';
-import ResourceBasedRoute from './resource-based-route';
-import ReviewsList from '../pages/ReviewsList';
-import ReviewDetail from '../pages/ReviewDetail';
-import EditReview from '../pages/EditReview';
-import CreateReview from '../pages/CreateReview';
+import { Routes, Route, useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import PermissionBasedRoute from "./permission-based-route";
+import ResourceBasedRoute from "./resource-based-route";
+import ReviewsList from "../pages/ReviewsList";
+import ReviewDetail from "../pages/ReviewDetail";
+import EditReview from "../pages/EditReview";
+import CreateReview from "../pages/CreateReview";
 
 // Wrapper component for resource-based routes that need to fetch data first
 const ReviewEditWrapper = () => {
@@ -21,7 +21,7 @@ const ReviewEditWrapper = () => {
         // Replace with your actual API call
         const response = await fetch(`/api/reviews/${reviewId}`);
         if (!response.ok) {
-          throw new Error('Failed to fetch review');
+          throw new Error("Failed to fetch review");
         }
         const data = await response.json();
         setReview(data);
@@ -106,10 +106,7 @@ const ReviewRoutes = () => {
       />
 
       {/* Edit a review - requires ownership or admin permission */}
-      <Route
-        path="/edit/:reviewId"
-        element={<ReviewEditWrapper />}
-      />
+      <Route path="/edit/:reviewId" element={<ReviewEditWrapper />} />
     </Routes>
   );
 };

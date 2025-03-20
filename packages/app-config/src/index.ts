@@ -10,7 +10,7 @@ export default {
   PASS_ALLOWED_SPECIAL_CHARS,
   PASS_REGEX: new RegExp(
     // eslint-disable-next-line style/max-len, regexp/prefer-w
-    `^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[${PASS_ALLOWED_SPECIAL_CHARS}])[A-Za-z\\d${PASS_ALLOWED_SPECIAL_CHARS}]{${PASS_MIN_LENGTH},${PASS_MAX_LENGTH}}$`
+    `^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[${PASS_ALLOWED_SPECIAL_CHARS}])[A-Za-z\\d${PASS_ALLOWED_SPECIAL_CHARS}]{${PASS_MIN_LENGTH},${PASS_MAX_LENGTH}}$`,
   ),
   NAME_MIN_LENGTH: 2,
   NAME_MAX_LENGTH: 64,

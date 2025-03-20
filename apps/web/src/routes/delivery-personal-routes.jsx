@@ -5,7 +5,6 @@ import DeliveryHistory from "../pages/delivery/history";
 import DeliveryEarnings from "../pages/delivery/earnings";
 import DeliverySettings from "../pages/delivery/settings";
 
-
 export default function DeliveryPersonalRoutes() {
   return (
     <Route
@@ -25,5 +24,5 @@ export default function DeliveryPersonalRoutes() {
       <Route path="earnings" element={<DeliveryEarnings />} />
       <Route path="settings" element={<DeliverySettings />} />
     </Route>
-  )
+  );
 }

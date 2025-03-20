@@ -90,7 +90,9 @@ async function initRolesAndPermissions() {
     }
 
     // Create admin role with global management permissions
-    const adminPermissions = resources.map(resource => permissionsMap[resource].manage.global);
+    const adminPermissions = resources.map(
+      resource => permissionsMap[resource].manage.global,
+    );
 
     try {
       await createRole({
@@ -139,7 +141,8 @@ async function initRolesAndPermissions() {
     try {
       await createRole({
         name: appConfig.ROLES.RESTAURANT_OWNER,
-        description: 'Restaurant owner with permissions to manage their restaurant and menu items',
+        description:
+          'Restaurant owner with permissions to manage their restaurant and menu items',
         permissions: restaurantOwnerPermissions,
       });
       logger.info(`Created role: ${appConfig.ROLES.RESTAURANT_OWNER}`);

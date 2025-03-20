@@ -9,8 +9,6 @@ import AdminRestaurants from "../pages/admin/restaurants";
 import RoleBasedRoute from "./role-based-route";
 import config from "../config";
 
-export async function loader() { }
-
 export default function AdminRoutes() {
   return (
     <Route

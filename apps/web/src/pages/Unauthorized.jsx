@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from "react-router-dom";
 
 // TODO: update to use components from components folder
 const Unauthorized = () => {
@@ -26,7 +26,8 @@ const Unauthorized = () => {
         <h1 className="text-2xl font-bold text-gray-800 mb-4">Access Denied</h1>
 
         <p className="text-gray-600 mb-6">
-          You don't have permission to access this page. Please contact your administrator if you believe this is an error.
+          You don't have permission to access this page. Please contact your
+          administrator if you believe this is an error.
         </p>
 
         <div className="flex flex-col space-y-3">

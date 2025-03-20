@@ -65,7 +65,10 @@ export default function PartnerNew() {
 
     try {
       setLoading(true);
-      await axios.post(API_ROUTES.RESTAURANTS.CREATE, { ...formData, address: data });
+      await axios.post(API_ROUTES.RESTAURANTS.CREATE, {
+        ...formData,
+        address: data,
+      });
       toast.success("Restaurant created successfully", {
         description: "Redirecting to partner dashboard...",
       });
@@ -109,13 +112,12 @@ export default function PartnerNew() {
         </div>
       )}
 
-      {
-        loading && (
-          <div className="w-full h-screen bg-secondary absolute top-0 left-0 flex-1 flex flex-col items-center justify-center">
-            <LoadingSpinner size="md" /><p className="mt-2">Submitting your request...</p>
-          </div>
-        )
-      }
+      {loading && (
+        <div className="w-full h-screen bg-secondary absolute top-0 left-0 flex-1 flex flex-col items-center justify-center">
+          <LoadingSpinner size="md" />
+          <p className="mt-2">Submitting your request...</p>
+        </div>
+      )}
     </div>
   );
 }
@@ -634,25 +636,32 @@ function NewPartnerForm3({ onSubmit, defaultValues }) {
 const openingHoursFormSchema = z.object({
   timeSlots: z
     .array(
-      z.object({
-        days: z.array(z.string()).min(1, { message: "At least one day is required" }),
-        from: z.string(),
-        to: z.string(),
-      }).refine(data => {
-        // Skip validation for 24/7 slots
-        if (data.from === "00:00" && data.to === "00:00") {
-          return true;
-        }
+      z
+        .object({
+          days: z
+            .array(z.string())
+            .min(1, { message: "At least one day is required" }),
+          from: z.string(),
+          to: z.string(),
+        })
+        .refine(
+          (data) => {
+            // Skip validation for 24/7 slots
+            if (data.from === "00:00" && data.to === "00:00") {
+              return true;
+            }
 
-        // Convert times to comparable values (minutes since midnight)
-        const fromTime = parseInt(data.from.split(':')[0]) * 60;
-        const toTime = parseInt(data.to.split(':')[0]) * 60;
+            // Convert times to comparable values (minutes since midnight)
+            const fromTime = parseInt(data.from.split(":")[0]) * 60;
+            const toTime = parseInt(data.to.split(":")[0]) * 60;
 
-        // Check if "to" time is greater than "from" time
-        return toTime > fromTime;
-      }, {
-        message: "Closing time must be after opening time",
-      })
+            // Check if "to" time is greater than "from" time
+            return toTime > fromTime;
+          },
+          {
+            message: "Closing time must be after opening time",
+          },
+        ),
     )
     .min(1, { message: "At least one time slot is required" }),
 });
@@ -741,43 +750,61 @@ function OpeningHoursForm({ onSubmit }) {
     timeSlots.length >= 7 ||
     timeSlots.map((slot) => slot.days.length).reduce((a, b) => a + b, 0) >= 7;
 
-
   const templatesActions = {
-    "24-7": () => setTimeSlots([
-      {
-        days: ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
-        from: "00:00",
-        to: "00:00",
-      },
-    ]),
-    "weekdays": () => setTimeSlots([
-      {
-        days: ["monday", "tuesday", "wednesday", "thursday", "friday"],
-        from: "09:00",
-        to: "18:00",
-      },
-    ]),
-    "weekends": () => setTimeSlots([
-      {
-        days: ["saturday", "sunday"],
-        from: "09:00",
-        to: "18:00",
-      },
-    ]),
-    "custom": () => {
+    "24-7": () =>
       setTimeSlots([
         {
-          days: ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
+          days: [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday",
+            "saturday",
+            "sunday",
+          ],
+          from: "00:00",
+          to: "00:00",
+        },
+      ]),
+    weekdays: () =>
+      setTimeSlots([
+        {
+          days: ["monday", "tuesday", "wednesday", "thursday", "friday"],
           from: "09:00",
           to: "18:00",
         },
-      ])
+      ]),
+    weekends: () =>
+      setTimeSlots([
+        {
+          days: ["saturday", "sunday"],
+          from: "09:00",
+          to: "18:00",
+        },
+      ]),
+    custom: () => {
+      setTimeSlots([
+        {
+          days: [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday",
+            "saturday",
+            "sunday",
+          ],
+          from: "09:00",
+          to: "18:00",
+        },
+      ]);
     },
-  }
+  };
 
   const handleTemplateChange = (value) => {
     templatesActions[value]();
-  }
+  };
 
   useEffect(() => {
     form.setValue("timeSlots", timeSlots);
@@ -786,14 +813,14 @@ function OpeningHoursForm({ onSubmit }) {
   // Add a function to validate time slots before submission
   const handleSubmit = (data) => {
     // Check if any time slot has invalid time range
-    const hasInvalidTimeRange = timeSlots.some(slot => {
+    const hasInvalidTimeRange = timeSlots.some((slot) => {
       // Skip validation for 24/7 slots
       if (slot.from === "00:00" && slot.to === "00:00") {
         return false;
       }
 
-      const fromHour = parseInt(slot.from.split(':')[0]);
-      const toHour = parseInt(slot.to.split(':')[0]);
+      const fromHour = parseInt(slot.from.split(":")[0]);
+      const toHour = parseInt(slot.to.split(":")[0]);
 
       return toHour <= fromHour;
     });
@@ -809,12 +836,16 @@ function OpeningHoursForm({ onSubmit }) {
 
   // Add a function to validate time selection in real-time
   const handleToTimeChange = (value, index) => {
-    const fromTime = parseInt(timeSlots[index].from.split(':')[0]);
-    const toTime = parseInt(value.split(':')[0]);
+    const fromTime = parseInt(timeSlots[index].from.split(":")[0]);
+    const toTime = parseInt(value.split(":")[0]);
 
     // For 24/7 slots, allow any time
     if (timeSlots[index].from === "00:00" && value === "00:00") {
-      setTimeSlots(timeSlots.map((slot, i) => i === index ? { ...slot, to: value } : slot));
+      setTimeSlots(
+        timeSlots.map((slot, i) =>
+          i === index ? { ...slot, to: value } : slot,
+        ),
+      );
       return;
     }
 
@@ -823,7 +854,9 @@ function OpeningHoursForm({ onSubmit }) {
       toast.warning("Closing time should be after opening time");
     }
 
-    setTimeSlots(timeSlots.map((slot, i) => i === index ? { ...slot, to: value } : slot));
+    setTimeSlots(
+      timeSlots.map((slot, i) => (i === index ? { ...slot, to: value } : slot)),
+    );
   };
 
   return (
@@ -838,9 +871,14 @@ function OpeningHoursForm({ onSubmit }) {
             <div className="bg-white p-6 rounded-lg border shadow-sm">
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-sm font-medium">Business hours templates</h3>
+                  <h3 className="text-sm font-medium">
+                    Business hours templates
+                  </h3>
                   <div className="mt-2">
-                    <Select defaultValue="custom" onValueChange={handleTemplateChange}>
+                    <Select
+                      defaultValue="custom"
+                      onValueChange={handleTemplateChange}
+                    >
                       <SelectTrigger className="w-full h-10">
                         <SelectValue />
                       </SelectTrigger>
@@ -890,10 +928,11 @@ function OpeningHoursForm({ onSubmit }) {
                                     );
                                   }
                                 }}
-                                className={`rounded-full w-8 h-8 ${isDisabled && !isSelected
-                                  ? "opacity-50 cursor-not-allowed"
-                                  : ""
-                                  }`}
+                                className={`rounded-full w-8 h-8 ${
+                                  isDisabled && !isSelected
+                                    ? "opacity-50 cursor-not-allowed"
+                                    : ""
+                                }`}
                                 title={`${day.fullName}${isDisabled ? " (already selected in another time slot)" : ""}`}
                               >
                                 {day.label}
@@ -901,13 +940,15 @@ function OpeningHoursForm({ onSubmit }) {
                             );
                           })}
 
-                          {
-                            form.formState.errors.timeSlots?.[index]?.days?.message && (
-                              <p role="alert" className="text-red-500 text-sm">
-                                {form.formState.errors.timeSlots?.[index]?.days?.message}
-                              </p>
-                            )
-                          }
+                          {form.formState.errors.timeSlots?.[index]?.days
+                            ?.message && (
+                            <p role="alert" className="text-red-500 text-sm">
+                              {
+                                form.formState.errors.timeSlots?.[index]?.days
+                                  ?.message
+                              }
+                            </p>
+                          )}
                         </div>
                       </div>
 
@@ -922,7 +963,13 @@ function OpeningHoursForm({ onSubmit }) {
                             render={() => (
                               <Select
                                 onValueChange={(value) => {
-                                  setTimeSlots(timeSlots.map((slot, i) => i === index ? { ...slot, from: value } : slot));
+                                  setTimeSlots(
+                                    timeSlots.map((slot, i) =>
+                                      i === index
+                                        ? { ...slot, from: value }
+                                        : slot,
+                                    ),
+                                  );
                                 }}
                                 value={field.from}
                               >
@@ -966,7 +1013,9 @@ function OpeningHoursForm({ onSubmit }) {
                                   </SelectTrigger>
                                   <SelectContent>
                                     {Array.from({ length: 24 }).map((_, i) => {
-                                      const hour = i.toString().padStart(2, "0");
+                                      const hour = i
+                                        .toString()
+                                        .padStart(2, "0");
                                       return (
                                         <SelectItem
                                           key={hour}
@@ -978,19 +1027,17 @@ function OpeningHoursForm({ onSubmit }) {
                                     })}
                                   </SelectContent>
                                 </Select>
-                              )
+                              );
                             }}
                           />
                         </div>
                       </div>
 
-                      {
-                        form.formState.errors.timeSlots?.[index]?.message && (
-                          <p role="alert" className="text-red-500 text-sm">
-                            {form.formState.errors.timeSlots?.[index]?.message}
-                          </p>
-                        )
-                      }
+                      {form.formState.errors.timeSlots?.[index]?.message && (
+                        <p role="alert" className="text-red-500 text-sm">
+                          {form.formState.errors.timeSlots?.[index]?.message}
+                        </p>
+                      )}
 
                       {/* Remove button */}
                       {timeSlots.length > 1 && (
@@ -1019,7 +1066,11 @@ function OpeningHoursForm({ onSubmit }) {
                     onClick={addNewTimeSlot}
                     className="w-full flex items-center justify-center gap-1"
                     disabled={disableAddNewTimeSlot}
-                    title={disableAddNewTimeSlot ? "You can only add up to 7 time slots" : ""}
+                    title={
+                      disableAddNewTimeSlot
+                        ? "You can only add up to 7 time slots"
+                        : ""
+                    }
                   >
                     <span className="text-lg">+</span> Add new time slot
                   </Button>

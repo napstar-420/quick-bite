@@ -28,10 +28,12 @@ const UserSchema = new Schema(
       minlength: config.PASS_MIN_LENGTH,
       maxlength: config.PASS_MAX_LENGTH,
     },
-    roles: [{
-      type: String,
-      ref: 'Role',
-    }],
+    roles: [
+      {
+        type: String,
+        ref: 'Role',
+      },
+    ],
     refreshToken: {
       type: String,
       default: null,

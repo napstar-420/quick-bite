@@ -56,7 +56,14 @@ const restaurantSchema = new Schema(
     },
     status: {
       type: String,
-      enum: ['pending', 'under-review', 'approved', 'rejected', 'closed', 'suspended'],
+      enum: [
+        'pending',
+        'under-review',
+        'approved',
+        'rejected',
+        'closed',
+        'suspended',
+      ],
       default: 'pending',
     },
     createdAt: {

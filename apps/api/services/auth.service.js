@@ -31,12 +31,10 @@ async function hasPermission(userId, resource, action, resourceOwnerIds = []) {
       return role.permissions.some((permission) => {
         // Check if permission matches resource and action
         const resourceMatches
-          = permission.resource === resource
-            || permission.resource === '*';
+          = permission.resource === resource || permission.resource === '*';
 
         const actionMatches
-          = permission.action === action
-            || permission.action === 'manage';
+          = permission.action === action || permission.action === 'manage';
 
         // Check scope
         // If permission scope is 'global', it applies to all resources

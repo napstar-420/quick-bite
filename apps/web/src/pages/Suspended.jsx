@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
+import { Link } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 // TODO: update to use components from components folder
 const Suspended = () => {
@@ -24,10 +24,13 @@ const Suspended = () => {
           </svg>
         </div>
 
-        <h1 className="text-2xl font-bold text-gray-800 mb-4">Account Suspended</h1>
+        <h1 className="text-2xl font-bold text-gray-800 mb-4">
+          Account Suspended
+        </h1>
 
         <p className="text-gray-600 mb-6">
-          Your account has been suspended. Please contact customer support for assistance.
+          Your account has been suspended. Please contact customer support for
+          assistance.
         </p>
 
         <div className="flex flex-col space-y-3">

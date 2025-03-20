@@ -21,7 +21,7 @@ function authorize(resource, action, options = {}) {
       // Get resource owner ID if provided
       let resourceOwnerId = [];
       if (options.getOwnerIds) {
-        resourceOwnerId = options.getOwnerIds(req);
+        resourceOwnerId = await options.getOwnerIds(req);
       }
 
       // Check if user has permission for this resource and action

@@ -238,7 +238,10 @@ async function seedUsers() {
 
   const role = await getRole({ name: config.ROLES.CUSTOMER }, 'id');
   const adminRole = await getRole({ name: config.ROLES.ADMIN }, 'id');
-  const superAdminRole = await getRole({ name: config.ROLES.SUPER_ADMIN }, 'id');
+  const superAdminRole = await getRole(
+    { name: config.ROLES.SUPER_ADMIN },
+    'id',
+  );
 
   for (let i = 0; i < TOTAL_USERS; i++) {
     try {

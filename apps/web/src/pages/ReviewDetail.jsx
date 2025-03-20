@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 const ReviewDetail = () => {
   const { reviewId } = useParams();
@@ -17,7 +17,7 @@ const ReviewDetail = () => {
         // Replace with your actual API call
         const response = await fetch(`/api/reviews/${reviewId}`);
         if (!response.ok) {
-          throw new Error('Failed to fetch review');
+          throw new Error("Failed to fetch review");
         }
         const data = await response.json();
         setReview(data);
@@ -36,18 +36,18 @@ const ReviewDetail = () => {
   };
 
   const handleDelete = async () => {
-    if (window.confirm('Are you sure you want to delete this review?')) {
+    if (window.confirm("Are you sure you want to delete this review?")) {
       try {
         // Replace with your actual API call
         const response = await fetch(`/api/reviews/${reviewId}`, {
-          method: 'DELETE',
+          method: "DELETE",
         });
 
         if (!response.ok) {
-          throw new Error('Failed to delete review');
+          throw new Error("Failed to delete review");
         }
 
-        navigate('/reviews');
+        navigate("/reviews");
       } catch (err) {
         setError(err.message);
       }
@@ -79,10 +79,10 @@ const ReviewDetail = () => {
   }
 
   // Check if user can edit this specific review
-  const canEdit = hasResourcePermission('review', 'update', review, 'userId');
+  const canEdit = hasResourcePermission("review", "update", review, "userId");
 
   // Check if user can delete this specific review
-  const canDelete = hasResourcePermission('review', 'delete', review, 'userId');
+  const canDelete = hasResourcePermission("review", "delete", review, "userId");
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -114,8 +114,9 @@ const ReviewDetail = () => {
             {[...Array(5)].map((_, i) => (
               <svg
                 key={i}
-                className={`w-5 h-5 ${i < review.rating ? 'text-yellow-400' : 'text-gray-300'
-                  }`}
+                className={`w-5 h-5 ${
+                  i < review.rating ? "text-yellow-400" : "text-gray-300"
+                }`}
                 fill="currentColor"
                 viewBox="0 0 20 20"
               >

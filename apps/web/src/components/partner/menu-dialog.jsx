@@ -23,7 +23,8 @@ import {
 } from "../ui/dialog";
 import { Switch } from "../ui/switch";
 import { MultiSelect } from "../ui/multi-select";
-import { useEffect } from "react";
+import { isEmpty } from "lodash";
+import { useState } from "react";
 
 const menuSchema = z.object({
   name: z.string().min(3, { message: "Menu name is required" }),
@@ -33,25 +34,55 @@ const menuSchema = z.object({
     .min(1, { message: "At least one branch is required" }),
 });
 
-export function CreateMenuDialog({ open, setOpen, handleSubmit, options }) {
+export function MenuDialog({
+  handleSubmit,
+  options = [],
+  type = "create",
+  defaultValues = {
+    name: "",
+    isAvailable: true,
+    branches: [],
+  },
+  children,
+}) {
+  const [open, setOpen] = useState(false);
+
   const form = useForm({
     resolver: zodResolver(menuSchema),
-    defaultValues: {
-      name: "",
-      isAvailable: true,
-      branches: [],
-    },
+    defaultValues,
   });
 
-  useEffect(() => {
-    if (!open) {
-      form.reset();
-      form.clearErrors();
+  const onSubmit = async (formData) => {
+    const data = {};
+
+    if (formData.name !== defaultValues.name) {
+      data.name = formData.name;
     }
-  }, [form, open]);
+
+    if (formData.isAvailable !== defaultValues.isAvailable) {
+      data.isAvailable = formData.isAvailable;
+    }
+
+    if (
+      JSON.stringify(formData.branches) !==
+      JSON.stringify(defaultValues.branches)
+    ) {
+      data.branches = formData.branches;
+    }
+
+    if (isEmpty(data)) {
+      return;
+    }
+
+    await handleSubmit(data);
+    setOpen(false);
+  };
+
+  const submitLabel = type === "create" ? "Create menu" : "Update menu";
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} setOpen={setOpen} onOpenChange={setOpen}>
+      <DialogTrigger onClick={() => setOpen(!open)}>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Create New Menu</DialogTitle>
@@ -60,7 +91,7 @@ export function CreateMenuDialog({ open, setOpen, handleSubmit, options }) {
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="grid gap-4 py-4">
               <FormField
                 control={form.control}
@@ -85,8 +116,8 @@ export function CreateMenuDialog({ open, setOpen, handleSubmit, options }) {
                 control={form.control}
                 render={({ field }) => (
                   <MultiSelect
-                    options={options}
-                    selected={field.value}
+                    options={options || []}
+                    selected={field.value || []}
                     onChange={field.onChange}
                     placeholder="Select branches"
                     emptyText="No branches found"
@@ -120,10 +151,16 @@ export function CreateMenuDialog({ open, setOpen, handleSubmit, options }) {
               />
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setOpen(false)}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setOpen(false)}
+              >
                 Cancel
               </Button>
-              <Button type="submit">Create Menu</Button>
+              <Button type="submit" disabled={!form.formState.isDirty}>
+                {form.formState.isSubmitting ? "Please wait" : submitLabel}
+              </Button>
             </DialogFooter>
           </form>
         </Form>

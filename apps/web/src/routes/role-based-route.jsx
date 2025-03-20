@@ -1,6 +1,6 @@
-import { Navigate, useLocation } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import { useAuth } from '../hooks/useAuth';
+import { Navigate, useLocation } from "react-router-dom";
+import PropTypes from "prop-types";
+import { useAuth } from "../hooks/useAuth";
 
 /**
  * A wrapper component for role-based route protection that works with Redux
@@ -11,7 +11,11 @@ import { useAuth } from '../hooks/useAuth';
  * @param {string} [props.redirectTo] - Path to redirect to if unauthorized (defaults to /auth)
  * @returns {React.ReactNode} The protected route component
  */
-export default function RoleBasedRoute({ children, role, redirectTo = '/auth' }) {
+export default function RoleBasedRoute({
+  children,
+  role,
+  redirectTo = "/auth",
+}) {
   const { user, isAuthenticated, hasRole, isLoading } = useAuth();
   const location = useLocation();
 
@@ -21,7 +25,9 @@ export default function RoleBasedRoute({ children, role, redirectTo = '/auth' })
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary">Loading...</div>
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary">
+          Loading...
+        </div>
       </div>
     );
   }
@@ -43,7 +49,7 @@ export default function RoleBasedRoute({ children, role, redirectTo = '/auth' })
 
   // Render the protected route
   return children;
-};
+}
 
 RoleBasedRoute.propTypes = {
   children: PropTypes.node.isRequired,

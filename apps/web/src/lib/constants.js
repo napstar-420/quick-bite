@@ -21,6 +21,9 @@ export const API_ROUTES = {
     RESTAURANT: "partner/restaurant",
     BRANCHES: "partner/branches",
     MENUS: "partner/restaurant/menus",
-    MENU_ITEMS: "partner/menu-items",
+    MENU: (menuId) => `partner/restaurant/menus/${menuId}`,
+    MENU_ITEM: (menuId, itemId) =>
+      `partner/restaurant/menus/${menuId}/items/${itemId}`,
+    MENU_ITEMS: (menuId) => `partner/restaurant/menus/${menuId}/items`,
   },
 };

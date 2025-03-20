@@ -6,11 +6,7 @@ async function getUserByID(id, projection) {
   return UserModel.findById(id, projection);
 }
 
-async function getUser(
-  filters,
-  projection,
-  options,
-) {
+async function getUser(filters, projection, options) {
   return UserModel.findOne(filters, projection, options);
 }
 
