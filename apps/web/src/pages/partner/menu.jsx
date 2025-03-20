@@ -6,8 +6,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+} from "../../components/ui/card";
+import { Tabs, TabsContent } from "../../components/ui/tabs";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,13 +16,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../../components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
+import { Button } from "../../components/ui/button";
 import { Plus, MoreVertical, Trash, Edit } from "lucide-react";
 import axios from "../../services/axios";
 import { usePartner } from "../../hooks/usePartner";
 import { MenuDialog } from "../../components/partner/menu-dialog";
 import { MenuItemDialog } from "../../components/partner/menu-item-dialog";
 import { MenuItemCard } from "../../components/partner/menu-item-card";
+import { MenuTabsList } from "../../components/partner/menu-tabs-list";
 import { API_ROUTES } from "../../lib/constants";
 
 export default function PartnerMenuManagement() {
@@ -270,20 +271,7 @@ export default function PartnerMenuManagement() {
         </Card>
       ) : (
         <Tabs value={activeMenuId} onValueChange={setActiveMenuId}>
-          <div className="flex justify-between items-center mb-4">
-            <TabsList
-              className="grid"
-              style={{
-                gridTemplateColumns: `repeat(${menus.length}, minmax(0, 1fr))`,
-              }}
-            >
-              {menus.map((menu) => (
-                <TabsTrigger key={menu._id} value={menu._id}>
-                  {menu.name} {!menu.isAvailable && "(Hidden)"}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </div>
+          <MenuTabsList menus={menus} />
 
           {menus.map((menu) => (
             <TabsContent key={menu._id} value={menu._id}>

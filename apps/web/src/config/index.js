@@ -7,6 +7,7 @@ export default createConfig({
     LOGOUT: "/logout",
     CART: "/cart",
     PARTNER: "/partner",
+    PARTNER_NEW: "/partner/new"
   },
 
   PAGINATION: {

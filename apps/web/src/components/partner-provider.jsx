@@ -5,9 +5,10 @@ import {
   useGetBranchesQuery,
 } from "../features/partner/partnerApiSlice";
 import { reset } from "../features/partner/partnerSlice";
-import { Outlet } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import config from "../config";
 import PendingApproval from "../pages/partner/pending-approval";
+import { Button } from "./ui/button";
 
 export default function PartnerProvider() {
   const dispatch = useDispatch();
@@ -27,7 +28,15 @@ export default function PartnerProvider() {
   }
 
   if (!restaurant || !branches.length) {
-    return <div>Sorry no restaurant could be found</div>;
+    return <div className="flex flex-col items-center justify-center min-h-screen">
+      <h1 className="text-2xl font-bold mb-4">No Restaurant Found</h1>
+      <p className="mb-4">
+        You need to create a restaurant first before managing menus.
+      </p>
+      <Button asChild>
+        <Link to={config.ROUTES.PARTNER_NEW}>Create Restaurant</Link>
+      </Button>
+    </div>;
   }
 
   if (restaurant.status === config.RESTAURANT_STATUS.UNDER_REVIEW) {
