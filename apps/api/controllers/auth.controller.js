@@ -117,7 +117,7 @@ async function refreshToken(req, res) {
     return res.sendStatus(401);
   }
 
-  const user = await UserService.getUser({ refreshToken }, 'id roles');
+  const user = await UserService.getUser({ refreshToken }, 'id roles name');
 
   if (isNil(user)) {
     return res.sendStatus(403);
