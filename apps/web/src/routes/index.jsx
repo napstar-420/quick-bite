@@ -27,8 +27,8 @@ import PrivateRoute from "./private-route";
 import PublicRoute from "./public-route";
 import NotFound from "../pages/not-found";
 import ErrorPage from "../pages/error";
-import Unauthorized from "../pages/unauthorized";
-import Suspended from "../pages/suspended";
+import Unauthorized from "../pages/Unauthorized.jsx";
+import Suspended from "../pages/Suspended.jsx";
 
 // Partner Pages
 import PartnerNew from "../pages/partner/new";

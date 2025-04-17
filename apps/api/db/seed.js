@@ -2,7 +2,9 @@ const { faker } = require('@faker-js/faker');
 const axios = require('axios');
 
 const config = require('../config');
+const PermissionModel = require('../models/permission.model');
 const CategoryModel = require('../models/restaurant-category.model');
+const RoleModel = require('../models/role.model');
 const UserModel = require('../models/user.model');
 const { getRole } = require('../services/auth.service');
 const { hashPassword } = require('../utils/helpers');
@@ -22,6 +24,8 @@ const NOMINATIM_DELAY_MS = 1100; // Adding a little buffer to be safe
 async function seedData() {
   await connectDB();
   await deleteData();
+  await seedPermissions();
+  await seedRoles();
   await seedUsers();
   await seedCategories();
   await disconnectDB();
@@ -31,6 +35,8 @@ async function deleteData() {
   try {
     await UserModel.deleteMany();
     await CategoryModel.deleteMany();
+    await RoleModel.deleteMany();
+    await PermissionModel.deleteMany();
     logger.debug('Emptied DB for fresh seeding');
   }
   catch (error) {
@@ -227,6 +233,174 @@ async function getRandomAddress() {
   }
 }
 
+async function seedPermissions() {
+  logger.info('Starting to seed permissions...');
+
+  const permissions = [];
+  const resources = Object.values(config.RESOURCES);
+  const actions = Object.values(config.ACTIONS);
+  const scopes = Object.values(config.SCOPES);
+
+  // Generate all possible permission combinations
+  for (const resource of resources) {
+    for (const action of actions) {
+      for (const scope of scopes) {
+        // Skip some irrelevant combinations
+        // For example, you can't have "own" scope for some actions on some resources
+        if (action === config.ACTIONS.MANAGE && scope === config.SCOPES.OWN) {
+          continue; // Skip this combination as manage is typically global
+        }
+
+        permissions.push({
+          resource,
+          action,
+          scope,
+          name: `${action}:${resource}:${scope}`,
+          description: `Permission to ${action} ${scope} ${resource}.`,
+        });
+      }
+    }
+  }
+
+  try {
+    await PermissionModel.insertMany(permissions);
+    logger.info(`${permissions.length} permissions seeded successfully.`);
+    return permissions;
+  }
+  catch (error) {
+    logger.error('Error seeding permissions', error);
+    throw error;
+  }
+}
+
+async function seedRoles() {
+  logger.info('Starting to seed roles...');
+
+  // Get all permissions
+  const allPermissions = await PermissionModel.find({});
+
+  // Define role permissions
+  const rolePermissions = {
+    [config.ROLES.SUPER_ADMIN]: allPermissions.map(p => p._id), // Super admin gets all permissions
+
+    [config.ROLES.ADMIN]: allPermissions.filter(p =>
+      p.action !== config.ACTIONS.DELETE
+      || (p.resource !== config.RESOURCES.ROLE
+        && p.resource !== config.RESOURCES.PERMISSION),
+    ).map(p => p._id),
+
+    [config.ROLES.RESTAURANT_OWNER]: allPermissions.filter(p =>
+      // Restaurant owners can manage their own restaurants, branches, menus, items, etc.
+      ((p.resource === config.RESOURCES.RESTAURANT
+        || p.resource === config.RESOURCES.BRANCH
+        || p.resource === config.RESOURCES.MENU
+        || p.resource === config.RESOURCES.MENU_ITEM
+        || p.resource === config.RESOURCES.DISCOUNT)
+      && (p.scope === config.SCOPES.OWN))
+      // They can read reviews of their restaurants
+    || (p.resource === config.RESOURCES.REVIEW
+      && p.action === config.ACTIONS.READ
+      && p.scope === config.SCOPES.OWN)
+      // They can read and update their own orders
+    || (p.resource === config.RESOURCES.ORDER
+      && (p.action === config.ACTIONS.READ || p.action === config.ACTIONS.UPDATE)
+      && p.scope === config.SCOPES.OWN)
+      // They can manage notifications for their restaurants
+    || (p.resource === config.RESOURCES.NOTIFICATION
+      && p.scope === config.SCOPES.OWN)
+      // They can read delivery persons assigned to their orders
+    || (p.resource === config.RESOURCES.DELIVERY_PERSON
+      && p.action === config.ACTIONS.READ
+      && p.scope === config.SCOPES.OWN),
+    ).map(p => p._id),
+
+    [config.ROLES.RESTAURANT_STAFF]: allPermissions.filter(p =>
+      // Staff can read and update (but not create/delete) restaurant items
+      ((p.resource === config.RESOURCES.RESTAURANT
+        || p.resource === config.RESOURCES.BRANCH
+        || p.resource === config.RESOURCES.MENU
+        || p.resource === config.RESOURCES.MENU_ITEM)
+      && (p.action === config.ACTIONS.READ || p.action === config.ACTIONS.UPDATE)
+      && p.scope === config.SCOPES.OWN)
+      // They can read and update orders
+    || (p.resource === config.RESOURCES.ORDER
+      && (p.action === config.ACTIONS.READ || p.action === config.ACTIONS.UPDATE)
+      && p.scope === config.SCOPES.OWN)
+      // They can read reviews
+    || (p.resource === config.RESOURCES.REVIEW
+      && p.action === config.ACTIONS.READ
+      && p.scope === config.SCOPES.OWN)
+      // They can read notifications
+    || (p.resource === config.RESOURCES.NOTIFICATION
+      && p.action === config.ACTIONS.READ
+      && p.scope === config.SCOPES.OWN),
+    ).map(p => p._id),
+
+    [config.ROLES.CUSTOMER]: allPermissions.filter(p =>
+      // Customers can manage their own user account
+      (p.resource === config.RESOURCES.USER
+        && p.scope === config.SCOPES.OWN)
+      // They can read restaurants, branches, menus, and items
+      || ((p.resource === config.RESOURCES.RESTAURANT
+        || p.resource === config.RESOURCES.BRANCH
+        || p.resource === config.RESOURCES.MENU
+        || p.resource === config.RESOURCES.MENU_ITEM)
+      && p.action === config.ACTIONS.READ)
+      // They can create, read, and update (but not delete) their own orders
+    || (p.resource === config.RESOURCES.ORDER
+      && (p.action === config.ACTIONS.CREATE
+        || p.action === config.ACTIONS.READ
+        || p.action === config.ACTIONS.UPDATE)
+      && p.scope === config.SCOPES.OWN)
+      // They can CRUD their own reviews
+    || (p.resource === config.RESOURCES.REVIEW
+      && p.scope === config.SCOPES.OWN)
+      // They can read notifications
+    || (p.resource === config.RESOURCES.NOTIFICATION
+      && p.action === config.ACTIONS.READ
+      && p.scope === config.SCOPES.OWN),
+    ).map(p => p._id),
+
+    [config.ROLES.DELIVERY_PERSON]: allPermissions.filter(p =>
+      // Delivery persons can manage their own user account
+      (p.resource === config.RESOURCES.USER
+        && p.scope === config.SCOPES.OWN)
+      // They can read and update orders assigned to them
+      || (p.resource === config.RESOURCES.ORDER
+        && (p.action === config.ACTIONS.READ || p.action === config.ACTIONS.UPDATE)
+        && p.scope === config.SCOPES.OWN)
+      // They can read restaurants and branches for delivery
+      || ((p.resource === config.RESOURCES.RESTAURANT
+        || p.resource === config.RESOURCES.BRANCH)
+      && p.action === config.ACTIONS.READ)
+      // They can read and update their own delivery person profile
+    || (p.resource === config.RESOURCES.DELIVERY_PERSON
+      && (p.action === config.ACTIONS.READ || p.action === config.ACTIONS.UPDATE)
+      && p.scope === config.SCOPES.OWN)
+      // They can read notifications
+    || (p.resource === config.RESOURCES.NOTIFICATION
+      && p.action === config.ACTIONS.READ
+      && p.scope === config.SCOPES.OWN),
+    ).map(p => p._id),
+  };
+
+  // Create roles with assigned permissions
+  const roles = Object.entries(config.ROLES).map(([_, name]) => ({
+    name,
+    description: `${name.replace(/-/g, ' ')} role with appropriate permissions`,
+    permissions: rolePermissions[name] || [],
+  }));
+
+  try {
+    await RoleModel.insertMany(roles);
+    logger.info(`${roles.length} roles seeded successfully.`);
+  }
+  catch (error) {
+    logger.error('Error seeding roles', error);
+    throw error;
+  }
+}
+
 async function seedUsers() {
   const users = [];
   const HASHED_PASSWORD = await hashPassword(USER_PASSWORD);
@@ -236,12 +410,13 @@ async function seedUsers() {
     'This may take a few minutes due to API rate limiting (1 request/second)',
   );
 
-  const role = await getRole({ name: config.ROLES.CUSTOMER }, 'id');
-  const adminRole = await getRole({ name: config.ROLES.ADMIN }, 'id');
-  const superAdminRole = await getRole(
-    { name: config.ROLES.SUPER_ADMIN },
-    'id',
-  );
+  // Get role IDs
+  const customerRole = await RoleModel.findOne({ name: config.ROLES.CUSTOMER }, '_id');
+  const adminRole = await RoleModel.findOne({ name: config.ROLES.ADMIN }, '_id');
+  const superAdminRole = await RoleModel.findOne({ name: config.ROLES.SUPER_ADMIN }, '_id');
+  const restaurantOwnerRole = await RoleModel.findOne({ name: config.ROLES.RESTAURANT_OWNER }, '_id');
+  const restaurantStaffRole = await RoleModel.findOne({ name: config.ROLES.RESTAURANT_STAFF }, '_id');
+  const deliveryPersonRole = await RoleModel.findOne({ name: config.ROLES.DELIVERY_PERSON }, '_id');
 
   for (let i = 0; i < TOTAL_USERS; i++) {
     try {
@@ -255,7 +430,7 @@ async function seedUsers() {
         lastActive: faker.date.past(1),
         createdAt: faker.date.past(1),
         updatedAt: faker.date.past(1),
-        roles: [role.id],
+        roles: [customerRole._id],
       });
 
       // Log progress
@@ -275,7 +450,7 @@ async function seedUsers() {
     password: await hashPassword(ADMIN_PASSWORD),
     phone: '+923001234567',
     addresses: [],
-    roles: [adminRole.id],
+    roles: [adminRole._id],
   });
 
   // Add super admin user
@@ -285,7 +460,37 @@ async function seedUsers() {
     password: await hashPassword(SUPER_ADMIN_PASSWORD),
     phone: '+923011234567',
     addresses: [],
-    roles: [superAdminRole.id],
+    roles: [superAdminRole._id],
+  });
+
+  // Add a restaurant owner user
+  users.push({
+    name: 'Restaurant Owner',
+    email: 'owner@quickbite.com',
+    password: await hashPassword(USER_PASSWORD),
+    phone: '+923021234567',
+    addresses: [],
+    roles: [restaurantOwnerRole._id],
+  });
+
+  // Add a restaurant staff user
+  users.push({
+    name: 'Restaurant Staff',
+    email: 'staff@quickbite.com',
+    password: await hashPassword(USER_PASSWORD),
+    phone: '+923031234567',
+    addresses: [],
+    roles: [restaurantStaffRole._id],
+  });
+
+  // Add a delivery person user
+  users.push({
+    name: 'Delivery Person',
+    email: 'delivery@quickbite.com',
+    password: await hashPassword(USER_PASSWORD),
+    phone: '+923041234567',
+    addresses: [],
+    roles: [deliveryPersonRole._id],
   });
 
   try {

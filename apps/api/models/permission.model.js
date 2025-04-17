@@ -40,6 +40,6 @@ const PermissionSchema = new Schema(
 );
 
 // Create a compound index on resource and action for faster lookups
-PermissionSchema.index({ resource: 1, action: 1 }, { unique: true });
+PermissionSchema.index({ resource: 1, action: 1, scope: 1 }, { unique: true });
 
 module.exports = model('Permission', PermissionSchema);
