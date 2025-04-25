@@ -91,7 +91,7 @@ async function createMenuItem(req, res) {
   try {
     const newMenuItem = await RestaurantService.createMenuItem({
       ...data,
-      image: data.img_url,
+      image: data.image,
     });
     await RestaurantService.appendMenuItem(menuId, newMenuItem._id);
 

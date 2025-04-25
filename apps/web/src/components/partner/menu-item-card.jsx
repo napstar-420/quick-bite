@@ -13,7 +13,7 @@ import { Button } from "../ui/button";
 
 export function MenuItemCard({ item, actions }) {
   return (
-    <Card key={item._id}>
+    <Card key={item._id} className="pt-0 pb-4">
       <div className="relative">
         {item.image ? (
           <img
@@ -45,7 +45,7 @@ export function MenuItemCard({ item, actions }) {
                   name: item.name,
                   description: item.description,
                   price: String(item.price),
-                  img_url: item.image,
+                  image: item.image,
                   isAvailable: item.isAvailable,
                 }}
               >

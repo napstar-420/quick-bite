@@ -58,7 +58,7 @@ export default function PartnerHeader() {
                       Settings
                     </a>
                   </Link>
-                  <Link to="/partner/auth/login">
+                  <Link to="/logout">
                     <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                       Sign out
                     </a>

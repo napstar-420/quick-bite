@@ -500,10 +500,10 @@ const createMenuItemValidations = [
     .isFloat({ min: 0 })
     .withMessage('Price must be a positive number'),
 
-  body('img_url')
+  body('image')
     .notEmpty()
     .withMessage('Image URL is required')
-    .isURL()
+    .isString()
     .withMessage('Not a valid URL'),
 
   isAvailableValidation,
@@ -535,11 +535,11 @@ const updateMenuItemValidations = [
     .isFloat({ min: 0 })
     .withMessage('Price must be a positive number'),
 
-  body('img_url')
+  body('image')
     .optional()
     .notEmpty()
     .withMessage('Image URL is required')
-    .isURL()
+    .isString()
     .withMessage('Not a valid URL'),
 
   isAvailableValidation,

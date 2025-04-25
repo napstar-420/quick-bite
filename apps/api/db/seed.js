@@ -24,8 +24,8 @@ const NOMINATIM_DELAY_MS = 1100; // Adding a little buffer to be safe
 async function seedData() {
   await connectDB();
   await deleteData();
-  await seedPermissions();
-  await seedRoles();
+  // await seedPermissions();
+  // await seedRoles();
   await seedUsers();
   await seedCategories();
   await disconnectDB();
@@ -35,8 +35,8 @@ async function deleteData() {
   try {
     await UserModel.deleteMany();
     await CategoryModel.deleteMany();
-    await RoleModel.deleteMany();
-    await PermissionModel.deleteMany();
+    // await RoleModel.deleteMany();
+    // await PermissionModel.deleteMany();
     logger.debug('Emptied DB for fresh seeding');
   }
   catch (error) {

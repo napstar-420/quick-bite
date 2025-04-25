@@ -71,7 +71,7 @@ const menuItemSchema = z.object({
     .nonempty("Item description is required")
     .min(3, { message: "Description should be at least 3 characters long" }),
   price: priceSchema,
-  img_url: z.string().url({ message: "Not a valid URL" }),
+  image: z.string().url({ message: "Not a valid URL" }),
   isAvailable: z.boolean().default(true),
 });
 
@@ -82,7 +82,7 @@ export function MenuItemDialog({
     name: "",
     description: "",
     price: "",
-    img_url: "https://placehold.co/600x400",
+    image: "https://placehold.co/600x400",
     isAvailable: true,
   },
   children,
@@ -190,7 +190,7 @@ export function MenuItemDialog({
               {/* Img URL field */}
               <FormField
                 control={form.control}
-                name="img_url"
+                name="image"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Image URL</FormLabel>

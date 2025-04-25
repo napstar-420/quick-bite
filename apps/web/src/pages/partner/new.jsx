@@ -32,6 +32,7 @@ import {
 import { isPossiblePhoneNumber, parsePhoneNumber } from "libphonenumber-js";
 import { AddressForm } from "../../components/addressForm";
 import { LoadingSpinner } from "../../components/loading-spinner";
+import { faker } from "@faker-js/faker";
 
 export default function PartnerNew() {
   const [formStep, setFormStep] = useState(1);
@@ -165,8 +166,8 @@ function NewPartnerForm1({ onSubmit }) {
   const form = useForm({
     resolver: zodResolver(Form1Schema),
     defaultValues: {
-      name: "My restaurant",
-      email: "myrestaurant@gmail.com",
+      name: faker.person.firstName() + " food",
+      email: faker.internet.email(),
       phone: "+923001234567",
       category: "Italian",
       priceRange: "$$",

@@ -123,6 +123,7 @@ const navItems = [
   { name: "Analytics", href: "/partner/analytics", icon: AnalyticsIcon },
   { name: "Reviews", href: "/partner/reviews", icon: ReviewsIcon },
   { name: "Profile", href: "/partner/profile", icon: ProfileIcon },
+  { name: "abv", href: "/partner/profile", icon: ProfileIcon },
 ];
 
 export default function PartnerSidebar() {
