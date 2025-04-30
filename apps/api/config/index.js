@@ -6,7 +6,6 @@ const path = require('node:path');
 dotenv.config({
   path: [
     path.join(__dirname, '../.env'),
-    path.join(__dirname, '../../../.env'),
   ],
 });
 

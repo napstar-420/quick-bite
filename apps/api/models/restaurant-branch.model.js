@@ -71,6 +71,7 @@ const RestaurantBranchSchema = new Schema(
     ],
     coverImage: {
       type: String,
+      required: true,
     },
     isActive: {
       type: Boolean,

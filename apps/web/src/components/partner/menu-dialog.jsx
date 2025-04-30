@@ -82,7 +82,9 @@ export function MenuDialog({
 
   return (
     <Dialog open={open} setOpen={setOpen} onOpenChange={setOpen}>
-      <DialogTrigger asChild onClick={() => setOpen(!open)} className="WWWWWWWWWWWWWWWWW">{children}</DialogTrigger>
+      <DialogTrigger asChild onClick={() => setOpen(!open)}>
+        {children}
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Create New Menu</DialogTitle>
@@ -158,7 +160,12 @@ export function MenuDialog({
               >
                 Cancel
               </Button>
-              <Button type="submit" disabled={!form.formState.isDirty || form.formState.isSubmitting}>
+              <Button
+                type="submit"
+                disabled={
+                  !form.formState.isDirty || form.formState.isSubmitting
+                }
+              >
                 {form.formState.isSubmitting ? "Please wait" : submitLabel}
               </Button>
             </DialogFooter>

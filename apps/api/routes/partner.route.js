@@ -8,6 +8,7 @@ const {
   createMenuItemValidations,
   updateMenuValidation,
   updateMenuItemValidations,
+  createBranchValidation,
 } = require('../middlewares/validations.middleware.js');
 const verifyPartner = require('../middlewares/verify-partner.middleware.js');
 const RestaurantService = require('../services/restaurant.service.js');
@@ -25,6 +26,7 @@ async function getMenuOwnerIds(req) {
 
 const router = express.Router();
 
+// Middleware to verify the user is a restaurant owner, manager or staff member
 router.use(verifyPartner);
 
 router.get(
@@ -106,6 +108,16 @@ router.delete(
     getOwnerIds: getMenuOwnerIds,
   }),
   partnerController.deleteMenuItem,
+);
+
+router.post(
+  '/restaurant/branch/new',
+  authorize('branch', 'create', {
+    getOwnerIds: req => [req.user_id],
+  }),
+  createBranchValidation,
+  handleValidationErrors,
+  partnerController.createBranch,
 );
 
 module.exports = router;

@@ -11,6 +11,7 @@ export const API_ROUTES = {
     ROLES: (userId) => `user/${userId}/roles`,
   },
   GET_USERS: "user",
+  GET_USER: (id) => `user/${id}`,
   CATEGORIES: {
     SEARCH: "category/search",
   },
@@ -25,5 +26,6 @@ export const API_ROUTES = {
     MENU_ITEM: (menuId, itemId) =>
       `partner/restaurant/menus/${menuId}/items/${itemId}`,
     MENU_ITEMS: (menuId) => `partner/restaurant/menus/${menuId}/items`,
+    CREATE_BRANCH: "partner/restaurant/branch/new",
   },
 };

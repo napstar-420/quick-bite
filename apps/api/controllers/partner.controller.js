@@ -178,6 +178,24 @@ async function deleteMenuItem(req, res) {
   }
 }
 
+async function createBranch(req, res) {
+  const data = matchedData(req);
+  const { restaurantId } = req;
+
+  try {
+    const branch = await RestaurantService.createBranch({
+      restaurant: restaurantId,
+      ...data,
+      status: 'approved',
+    });
+    return res.json(branch);
+  }
+  catch (error) {
+    logger.error(error);
+    return res.status(500).json({ message: 'Something went wrong' });
+  }
+}
+
 module.exports = {
   getRestaurant,
   getBranches,
@@ -189,4 +207,5 @@ module.exports = {
   deleteMenu,
   updateMenuItem,
   deleteMenuItem,
+  createBranch,
 };

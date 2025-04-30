@@ -5,7 +5,7 @@ export default function RootLayout() {
   return (
     <div>
       <Outlet />
-      <Toaster />
+      <Toaster richColors />
     </div>
   );
 }

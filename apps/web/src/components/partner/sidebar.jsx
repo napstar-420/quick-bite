@@ -116,7 +116,7 @@ const ProfileIcon = () => (
 );
 
 const navItems = [
-  { name: "Dashboard", href: "/partner/dashboard", icon: DashboardIcon },
+  { name: "Dashboard", href: "/partner", icon: DashboardIcon },
   { name: "Orders", href: "/partner/orders", icon: OrdersIcon },
   { name: "Menu", href: "/partner/menu", icon: MenuIcon },
   { name: "Branches", href: "/partner/branches", icon: BranchesIcon },

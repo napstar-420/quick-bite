@@ -5,6 +5,8 @@ import NotFound from "../pages/not-found";
 import PartnerMenu from "../pages/partner/menu";
 import PrivateRoute from "./private-route";
 import PartnerProvider from "../components/partner-provider";
+import PartnerBranches from "../pages/partner/branches";
+import PartnerCreateBranch from "../pages/partner/create-branch";
 // import PartnerOrders from "../pages/partner/orders";
 // import PartnerOrderDetail from "../pages/partner/orders/detail";
 // import PartnerReviews from "../pages/partner/reviews";
@@ -20,8 +22,11 @@ export const PartnerRoutes = (
     }
   >
     <Route path="partner" element={<PartnerLayout />}>
-      <Route path="dashboard" element={<PartnerDashboard />} />
+      <Route index element={<PartnerDashboard />} />
       <Route path="menu" element={<PartnerMenu />} />
+      <Route path="branches" element={<PartnerBranches />} />
+      <Route path="branch/new" element={<PartnerCreateBranch />} />
+
       {/* <Route path="orders">
         <Route index element={<PartnerOrders />} />
         <Route path=":id" element={<PartnerOrderDetail />} />

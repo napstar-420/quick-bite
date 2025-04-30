@@ -7,6 +7,8 @@ async function connectDB() {
   try {
     const DB_CONNECTION = await mongoose.connect(config.DB_URI, {
       replicaSet: 'rs0',
+      directConnection: true,
+      dbName: 'quick-bite',
     });
     logger.info(`MongoDB connected: ${DB_CONNECTION.connection.host}`);
   }
