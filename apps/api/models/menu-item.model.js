@@ -18,7 +18,6 @@ const menuItemSchema = new Schema(
     description: {
       type: String,
       trim: true,
-      required: true,
     },
 
     price: {
@@ -29,7 +28,6 @@ const menuItemSchema = new Schema(
 
     image: {
       type: String,
-      required: true,
     },
 
     isAvailable: {

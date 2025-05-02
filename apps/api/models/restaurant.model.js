@@ -28,6 +28,7 @@ const restaurantSchema = new Schema(
       type: Schema.Types.String,
       ref: 'User',
       required: true,
+      unique: true,
     },
     logo: {
       type: String,
@@ -77,8 +78,5 @@ const restaurantSchema = new Schema(
   },
   { timestamps: true },
 );
-
-// geospatial index for location-based queries
-restaurantSchema.index({ location: '2dsphere' });
 
 module.exports = model('Restaurant', restaurantSchema);

@@ -2,7 +2,7 @@ const { faker } = require('@faker-js/faker');
 const axios = require('axios');
 
 const config = require('../config');
-const PermissionModel = require('../models/permission.model');
+// const PermissionModel = require('../models/permission.model');
 const CategoryModel = require('../models/restaurant-category.model');
 const RoleModel = require('../models/role.model');
 const UserModel = require('../models/user.model');
@@ -233,173 +233,174 @@ async function getRandomAddress() {
   }
 }
 
-async function seedPermissions() {
-  logger.info('Starting to seed permissions...');
+// async function seedPermissions() {
+//   logger.info('Starting to seed permissions...');
 
-  const permissions = [];
-  const resources = Object.values(config.RESOURCES);
-  const actions = Object.values(config.ACTIONS);
-  const scopes = Object.values(config.SCOPES);
+//   const permissions = [];
+//   const resources = Object.values(config.RESOURCES);
+//   const actions = Object.values(config.ACTIONS);
+//   const scopes = Object.values(config.SCOPES);
 
-  // Generate all possible permission combinations
-  for (const resource of resources) {
-    for (const action of actions) {
-      for (const scope of scopes) {
-        // Skip some irrelevant combinations
-        // For example, you can't have "own" scope for some actions on some resources
-        if (action === config.ACTIONS.MANAGE && scope === config.SCOPES.OWN) {
-          continue; // Skip this combination as manage is typically global
-        }
+//   // Generate all possible permission combinations
+//   for (const resource of resources) {
+//     for (const action of actions) {
+//       for (const scope of scopes) {
+//         // Skip some irrelevant combinations
+//         // For example, you can't have "own" scope for some actions on some resources
+//         if (action === config.ACTIONS.MANAGE && scope === config.SCOPES.OWN) {
+//           continue; // Skip this combination as manage is typically global
+//         }
 
-        permissions.push({
-          resource,
-          action,
-          scope,
-          name: `${action}:${resource}:${scope}`,
-          description: `Permission to ${action} ${scope} ${resource}.`,
-        });
-      }
-    }
-  }
+//         permissions.push({
+//           resource,
+//           action,
+//           scope,
+//           name: `${action}:${resource}:${scope}`,
+//           description: `Permission to ${action} ${scope} ${resource}.`,
+//         });
+//       }
+//     }
+//   }
 
-  try {
-    await PermissionModel.insertMany(permissions);
-    logger.info(`${permissions.length} permissions seeded successfully.`);
-    return permissions;
-  }
-  catch (error) {
-    logger.error('Error seeding permissions', error);
-    throw error;
-  }
-}
+//   try {
+//     await PermissionModel.insertMany(permissions);
+//     logger.info(`${permissions.length} permissions seeded successfully.`);
+//     return permissions;
+//   }
+//   catch (error) {
+//     logger.error('Error seeding permissions', error);
+//     throw error;
+//   }
+// }
 
-async function seedRoles() {
-  logger.info('Starting to seed roles...');
+// async function seedRoles() {
+//   logger.info('Starting to seed roles...');
 
-  // Get all permissions
-  const allPermissions = await PermissionModel.find({});
+//   // Get all permissions
+//   const allPermissions = await PermissionModel.find({});
 
-  // Define role permissions
-  const rolePermissions = {
-    [config.ROLES.SUPER_ADMIN]: allPermissions.map(p => p._id), // Super admin gets all permissions
+//   // Define role permissions
+//   const rolePermissions = {
+//     // Super admin gets all permissions
+//     [config.ROLES.SUPER_ADMIN]: allPermissions.map(p => p._id),
 
-    [config.ROLES.ADMIN]: allPermissions.filter(p =>
-      p.action !== config.ACTIONS.DELETE
-      || (p.resource !== config.RESOURCES.ROLE
-        && p.resource !== config.RESOURCES.PERMISSION),
-    ).map(p => p._id),
+//     [config.ROLES.ADMIN]: allPermissions.filter(p =>
+//       p.action !== config.ACTIONS.DELETE
+//       || (p.resource !== config.RESOURCES.ROLE
+//         && p.resource !== config.RESOURCES.PERMISSION),
+//     ).map(p => p._id),
 
-    [config.ROLES.RESTAURANT_OWNER]: allPermissions.filter(p =>
-      // Restaurant owners can manage their own restaurants, branches, menus, items, etc.
-      ((p.resource === config.RESOURCES.RESTAURANT
-        || p.resource === config.RESOURCES.BRANCH
-        || p.resource === config.RESOURCES.MENU
-        || p.resource === config.RESOURCES.MENU_ITEM
-        || p.resource === config.RESOURCES.DISCOUNT)
-      && (p.scope === config.SCOPES.OWN))
-      // They can read reviews of their restaurants
-    || (p.resource === config.RESOURCES.REVIEW
-      && p.action === config.ACTIONS.READ
-      && p.scope === config.SCOPES.OWN)
-      // They can read and update their own orders
-    || (p.resource === config.RESOURCES.ORDER
-      && (p.action === config.ACTIONS.READ || p.action === config.ACTIONS.UPDATE)
-      && p.scope === config.SCOPES.OWN)
-      // They can manage notifications for their restaurants
-    || (p.resource === config.RESOURCES.NOTIFICATION
-      && p.scope === config.SCOPES.OWN)
-      // They can read delivery persons assigned to their orders
-    || (p.resource === config.RESOURCES.DELIVERY_PERSON
-      && p.action === config.ACTIONS.READ
-      && p.scope === config.SCOPES.OWN),
-    ).map(p => p._id),
+//     [config.ROLES.RESTAURANT_OWNER]: allPermissions.filter(p =>
+//       // Restaurant owners can manage their own restaurants, branches, menus, items, etc.
+//       ((p.resource === config.RESOURCES.RESTAURANT
+//         || p.resource === config.RESOURCES.BRANCH
+//         || p.resource === config.RESOURCES.MENU
+//         || p.resource === config.RESOURCES.MENU_ITEM
+//         || p.resource === config.RESOURCES.DISCOUNT)
+//       && (p.scope === config.SCOPES.OWN))
+//       // They can read reviews of their restaurants
+//     || (p.resource === config.RESOURCES.REVIEW
+//       && p.action === config.ACTIONS.READ
+//       && p.scope === config.SCOPES.OWN)
+//       // They can read and update their own orders
+//     || (p.resource === config.RESOURCES.ORDER
+//       && (p.action === config.ACTIONS.READ || p.action === config.ACTIONS.UPDATE)
+//       && p.scope === config.SCOPES.OWN)
+//       // They can manage notifications for their restaurants
+//     || (p.resource === config.RESOURCES.NOTIFICATION
+//       && p.scope === config.SCOPES.OWN)
+//       // They can read delivery persons assigned to their orders
+//     || (p.resource === config.RESOURCES.DELIVERY_PERSON
+//       && p.action === config.ACTIONS.READ
+//       && p.scope === config.SCOPES.OWN),
+//     ).map(p => p._id),
 
-    [config.ROLES.RESTAURANT_STAFF]: allPermissions.filter(p =>
-      // Staff can read and update (but not create/delete) restaurant items
-      ((p.resource === config.RESOURCES.RESTAURANT
-        || p.resource === config.RESOURCES.BRANCH
-        || p.resource === config.RESOURCES.MENU
-        || p.resource === config.RESOURCES.MENU_ITEM)
-      && (p.action === config.ACTIONS.READ || p.action === config.ACTIONS.UPDATE)
-      && p.scope === config.SCOPES.OWN)
-      // They can read and update orders
-    || (p.resource === config.RESOURCES.ORDER
-      && (p.action === config.ACTIONS.READ || p.action === config.ACTIONS.UPDATE)
-      && p.scope === config.SCOPES.OWN)
-      // They can read reviews
-    || (p.resource === config.RESOURCES.REVIEW
-      && p.action === config.ACTIONS.READ
-      && p.scope === config.SCOPES.OWN)
-      // They can read notifications
-    || (p.resource === config.RESOURCES.NOTIFICATION
-      && p.action === config.ACTIONS.READ
-      && p.scope === config.SCOPES.OWN),
-    ).map(p => p._id),
+//     [config.ROLES.RESTAURANT_STAFF]: allPermissions.filter(p =>
+//       // Staff can read and update (but not create/delete) restaurant items
+//       ((p.resource === config.RESOURCES.RESTAURANT
+//         || p.resource === config.RESOURCES.BRANCH
+//         || p.resource === config.RESOURCES.MENU
+//         || p.resource === config.RESOURCES.MENU_ITEM)
+//       && (p.action === config.ACTIONS.READ || p.action === config.ACTIONS.UPDATE)
+//       && p.scope === config.SCOPES.OWN)
+//       // They can read and update orders
+//     || (p.resource === config.RESOURCES.ORDER
+//       && (p.action === config.ACTIONS.READ || p.action === config.ACTIONS.UPDATE)
+//       && p.scope === config.SCOPES.OWN)
+//       // They can read reviews
+//     || (p.resource === config.RESOURCES.REVIEW
+//       && p.action === config.ACTIONS.READ
+//       && p.scope === config.SCOPES.OWN)
+//       // They can read notifications
+//     || (p.resource === config.RESOURCES.NOTIFICATION
+//       && p.action === config.ACTIONS.READ
+//       && p.scope === config.SCOPES.OWN),
+//     ).map(p => p._id),
 
-    [config.ROLES.CUSTOMER]: allPermissions.filter(p =>
-      // Customers can manage their own user account
-      (p.resource === config.RESOURCES.USER
-        && p.scope === config.SCOPES.OWN)
-      // They can read restaurants, branches, menus, and items
-      || ((p.resource === config.RESOURCES.RESTAURANT
-        || p.resource === config.RESOURCES.BRANCH
-        || p.resource === config.RESOURCES.MENU
-        || p.resource === config.RESOURCES.MENU_ITEM)
-      && p.action === config.ACTIONS.READ)
-      // They can create, read, and update (but not delete) their own orders
-    || (p.resource === config.RESOURCES.ORDER
-      && (p.action === config.ACTIONS.CREATE
-        || p.action === config.ACTIONS.READ
-        || p.action === config.ACTIONS.UPDATE)
-      && p.scope === config.SCOPES.OWN)
-      // They can CRUD their own reviews
-    || (p.resource === config.RESOURCES.REVIEW
-      && p.scope === config.SCOPES.OWN)
-      // They can read notifications
-    || (p.resource === config.RESOURCES.NOTIFICATION
-      && p.action === config.ACTIONS.READ
-      && p.scope === config.SCOPES.OWN),
-    ).map(p => p._id),
+//     [config.ROLES.CUSTOMER]: allPermissions.filter(p =>
+//       // Customers can manage their own user account
+//       (p.resource === config.RESOURCES.USER
+//         && p.scope === config.SCOPES.OWN)
+//       // They can read restaurants, branches, menus, and items
+//       || ((p.resource === config.RESOURCES.RESTAURANT
+//         || p.resource === config.RESOURCES.BRANCH
+//         || p.resource === config.RESOURCES.MENU
+//         || p.resource === config.RESOURCES.MENU_ITEM)
+//       && p.action === config.ACTIONS.READ)
+//       // They can create, read, and update (but not delete) their own orders
+//     || (p.resource === config.RESOURCES.ORDER
+//       && (p.action === config.ACTIONS.CREATE
+//         || p.action === config.ACTIONS.READ
+//         || p.action === config.ACTIONS.UPDATE)
+//       && p.scope === config.SCOPES.OWN)
+//       // They can CRUD their own reviews
+//     || (p.resource === config.RESOURCES.REVIEW
+//       && p.scope === config.SCOPES.OWN)
+//       // They can read notifications
+//     || (p.resource === config.RESOURCES.NOTIFICATION
+//       && p.action === config.ACTIONS.READ
+//       && p.scope === config.SCOPES.OWN),
+//     ).map(p => p._id),
 
-    [config.ROLES.DELIVERY_PERSON]: allPermissions.filter(p =>
-      // Delivery persons can manage their own user account
-      (p.resource === config.RESOURCES.USER
-        && p.scope === config.SCOPES.OWN)
-      // They can read and update orders assigned to them
-      || (p.resource === config.RESOURCES.ORDER
-        && (p.action === config.ACTIONS.READ || p.action === config.ACTIONS.UPDATE)
-        && p.scope === config.SCOPES.OWN)
-      // They can read restaurants and branches for delivery
-      || ((p.resource === config.RESOURCES.RESTAURANT
-        || p.resource === config.RESOURCES.BRANCH)
-      && p.action === config.ACTIONS.READ)
-      // They can read and update their own delivery person profile
-    || (p.resource === config.RESOURCES.DELIVERY_PERSON
-      && (p.action === config.ACTIONS.READ || p.action === config.ACTIONS.UPDATE)
-      && p.scope === config.SCOPES.OWN)
-      // They can read notifications
-    || (p.resource === config.RESOURCES.NOTIFICATION
-      && p.action === config.ACTIONS.READ
-      && p.scope === config.SCOPES.OWN),
-    ).map(p => p._id),
-  };
+//     [config.ROLES.DELIVERY_PERSON]: allPermissions.filter(p =>
+//       // Delivery persons can manage their own user account
+//       (p.resource === config.RESOURCES.USER
+//         && p.scope === config.SCOPES.OWN)
+//       // They can read and update orders assigned to them
+//       || (p.resource === config.RESOURCES.ORDER
+//         && (p.action === config.ACTIONS.READ || p.action === config.ACTIONS.UPDATE)
+//         && p.scope === config.SCOPES.OWN)
+//       // They can read restaurants and branches for delivery
+//       || ((p.resource === config.RESOURCES.RESTAURANT
+//         || p.resource === config.RESOURCES.BRANCH)
+//       && p.action === config.ACTIONS.READ)
+//       // They can read and update their own delivery person profile
+//     || (p.resource === config.RESOURCES.DELIVERY_PERSON
+//       && (p.action === config.ACTIONS.READ || p.action === config.ACTIONS.UPDATE)
+//       && p.scope === config.SCOPES.OWN)
+//       // They can read notifications
+//     || (p.resource === config.RESOURCES.NOTIFICATION
+//       && p.action === config.ACTIONS.READ
+//       && p.scope === config.SCOPES.OWN),
+//     ).map(p => p._id),
+//   };
+//
+//   // Create roles with assigned permissions
+//   const roles = Object.entries(config.ROLES).map(([_, name]) => ({
+//     name,
+//     description: `${name.replace(/-/g, ' ')} role with appropriate permissions`,
+//     permissions: rolePermissions[name] || [],
+//   }));
 
-  // Create roles with assigned permissions
-  const roles = Object.entries(config.ROLES).map(([_, name]) => ({
-    name,
-    description: `${name.replace(/-/g, ' ')} role with appropriate permissions`,
-    permissions: rolePermissions[name] || [],
-  }));
-
-  try {
-    await RoleModel.insertMany(roles);
-    logger.info(`${roles.length} roles seeded successfully.`);
-  }
-  catch (error) {
-    logger.error('Error seeding roles', error);
-    throw error;
-  }
-}
+//   try {
+//     await RoleModel.insertMany(roles);
+//     logger.info(`${roles.length} roles seeded successfully.`);
+//   }
+//   catch (error) {
+//     logger.error('Error seeding roles', error);
+//     throw error;
+//   }
+// }
 
 async function seedUsers() {
   const users = [];
@@ -413,10 +414,22 @@ async function seedUsers() {
   // Get role IDs
   const customerRole = await RoleModel.findOne({ name: config.ROLES.CUSTOMER }, '_id');
   const adminRole = await RoleModel.findOne({ name: config.ROLES.ADMIN }, '_id');
-  const superAdminRole = await RoleModel.findOne({ name: config.ROLES.SUPER_ADMIN }, '_id');
-  const restaurantOwnerRole = await RoleModel.findOne({ name: config.ROLES.RESTAURANT_OWNER }, '_id');
-  const restaurantStaffRole = await RoleModel.findOne({ name: config.ROLES.RESTAURANT_STAFF }, '_id');
-  const deliveryPersonRole = await RoleModel.findOne({ name: config.ROLES.DELIVERY_PERSON }, '_id');
+  const superAdminRole = await RoleModel.findOne(
+    { name: config.ROLES.SUPER_ADMIN },
+    '_id',
+  );
+  const restaurantOwnerRole = await RoleModel.findOne(
+    { name: config.ROLES.RESTAURANT_OWNER },
+    '_id',
+  );
+  const restaurantStaffRole = await RoleModel.findOne(
+    { name: config.ROLES.RESTAURANT_STAFF },
+    '_id',
+  );
+  const deliveryPersonRole = await RoleModel.findOne(
+    { name: config.ROLES.DELIVERY_PERSON },
+    '_id',
+  );
 
   for (let i = 0; i < TOTAL_USERS; i++) {
     try {
