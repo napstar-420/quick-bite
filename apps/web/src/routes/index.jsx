@@ -37,6 +37,7 @@ import { PartnerRoutes } from "./partner-routes";
 
 // Config
 import config from "../config";
+import ManageRestaurant from "../pages/admin/manage-restaurant.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -80,6 +81,7 @@ const router = createBrowserRouter(
             <Route index element={<AdminDashboard />} />
             <Route path="users" element={<AdminUsers />} />
             <Route path="restaurants" element={<AdminRestaurants />} />
+            <Route path="restaurant/:id" element={<ManageRestaurant />} />
             <Route path="*" element={<NotFound backTo={"/admin"} />} />
           </Route>
 

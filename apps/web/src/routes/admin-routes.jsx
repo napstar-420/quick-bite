@@ -8,6 +8,7 @@ import AdminRestaurants from "../pages/admin/restaurants";
 // import AdminSettings from "../pages/admin/settings";
 import RoleBasedRoute from "./role-based-route";
 import config from "../config";
+import ManageRestaurant from "../pages/admin/manage-restaurant";
 
 export default function AdminRoutes() {
   return (
@@ -22,6 +23,7 @@ export default function AdminRoutes() {
       <Route index element={<AdminDashboard />} />
       <Route path="users" element={<AdminUsers />} />
       <Route path="restaurants" element={<AdminRestaurants />} />
+      <Route path="restaurant/:id" element={<ManageRestaurant />} />
       {/* <Route path="delivery" element={<AdminDelivery />} />
             <Route path="orders" element={<AdminOrders />} />
             <Route path="reports" element={<AdminReports />} />

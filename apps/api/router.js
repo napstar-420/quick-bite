@@ -1,6 +1,7 @@
 const express = require('express');
 
 const verifyJwt = require('./middlewares/verify-jwt.middleware');
+const adminRouter = require('./routes/admin.routes.js');
 const authRouter = require('./routes/auth.route.js');
 const categoryRouter = require('./routes/category.route.js');
 const partnerRouter = require('./routes/partner.route.js');
@@ -22,6 +23,7 @@ router.use(verifyJwt);
 
 router.use('/restaurant', restaurantRouter);
 router.use('/partner', partnerRouter);
+router.use('/admin', adminRouter);
 
 router.get('/protected', (_, res) => {
   res.json({ message: 'Protected route' });

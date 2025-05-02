@@ -3,7 +3,7 @@ const axios = require('axios');
 
 const config = require('../config');
 // const PermissionModel = require('../models/permission.model');
-const CategoryModel = require('../models/restaurant-category.model');
+// const CategoryModel = require('../models/restaurant-category.model');
 const RoleModel = require('../models/role.model');
 const UserModel = require('../models/user.model');
 // const { getRole } = require('../services/auth.service');
@@ -27,14 +27,14 @@ async function seedData() {
   // await seedPermissions();
   // await seedRoles();
   await seedUsers();
-  await seedCategories();
+  // await seedCategories();
   await disconnectDB();
 }
 
 async function deleteData() {
   try {
-    await UserModel.deleteMany();
-    await CategoryModel.deleteMany();
+    // await UserModel.deleteMany();
+    // await CategoryModel.deleteMany();
     // await RoleModel.deleteMany();
     // await PermissionModel.deleteMany();
     logger.debug('Emptied DB for fresh seeding');
@@ -515,26 +515,26 @@ async function seedUsers() {
   }
 }
 
-async function seedCategories() {
-  const categories = [];
+// async function seedCategories() {
+//   const categories = [];
 
-  for (let i = 0; i < 50; i++) {
-    categories.push({ name: faker.food.ethnicCategory() });
-  }
+//   for (let i = 0; i < 50; i++) {
+//     categories.push({ name: faker.food.ethnicCategory() });
+//   }
 
-  const filteredCategories = categories.filter(
-    (category, index, self) =>
-      index === self.findIndex(t => t.name === category.name),
-  );
+//   const filteredCategories = categories.filter(
+//     (category, index, self) =>
+//       index === self.findIndex(t => t.name === category.name),
+//   );
 
-  try {
-    await CategoryModel.insertMany(filteredCategories);
-    logger.info(`${filteredCategories.length} categories seeded successfully.`);
-  }
-  catch (error) {
-    logger.error('Error seeding categories', error);
-  }
-}
+//   try {
+//     await CategoryModel.insertMany(filteredCategories);
+//     logger.info(`${filteredCategories.length} categories seeded successfully.`);
+//   }
+//   catch (error) {
+//     logger.error('Error seeding categories', error);
+//   }
+// }
 
 seedData()
   .then(() => {

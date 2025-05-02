@@ -11,7 +11,7 @@ export default createConfig({
     PARTNER_NEW: "/partner/new",
     PARTNER_BRANCH_NEW: "/partner/branch/new",
     PARTNER_BRANCH: id => `/partner/branch/${id}`,
-
+    ADMIN_RESTAURANT: id => `/admin/restaurant/${id}`,
   },
 
   PAGINATION: {
@@ -19,4 +19,6 @@ export default createConfig({
   },
 
   MAPBOX_TOKEN,
+
+  PLACEHOLDER_LOGO: "https://luigispizzakenosha.com/wp-content/uploads/placeholder.png",
 });

@@ -79,4 +79,6 @@ const restaurantSchema = new Schema(
   { timestamps: true },
 );
 
+restaurantSchema.index({ name: 'text' });
+
 module.exports = model('Restaurant', restaurantSchema);

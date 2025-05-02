@@ -15,13 +15,26 @@ async function createBranch(data) {
   return restaurantBranch;
 }
 
-async function getRestaurant(filters, projection, options) {
-  const restaurant = await RestaurantModel.findOne(
-    filters,
-    projection,
-    options,
-  );
-  return restaurant;
+async function getRestaurant(filters, projection, options, populations = []) {
+  const query = RestaurantModel.findOne(filters, projection, options);
+
+  if (populations && populations.length) {
+    for (const populate of populations) {
+      query.populate(populate.path, populate?.projection);
+    }
+  }
+  return query.exec();
+}
+
+async function getRestaurants(filters, projection, options, populations = []) {
+  const query = RestaurantModel.find(filters, projection, options);
+
+  if (populations && populations.length) {
+    for (const populate of populations) {
+      query.populate(populate.path, populate?.projection);
+    }
+  }
+  return query.exec();
 }
 
 async function getRestaurantByID(restaurantId) {
@@ -189,6 +202,7 @@ module.exports = {
   createRestaurant,
   createBranch,
   getRestaurant,
+  getRestaurants,
   getBranches,
   getMenus,
   createMenu,

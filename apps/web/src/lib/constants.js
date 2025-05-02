@@ -28,4 +28,8 @@ export const API_ROUTES = {
     MENU_ITEMS: (menuId) => `partner/restaurant/menus/${menuId}/items`,
     CREATE_BRANCH: "partner/restaurant/branch/new",
   },
+  ADMIN: {
+    RESTAURANTS: "admin/restaurants",
+    RESTAURANT: (id) => `admin/restaurant/${id}`,
+  },
 };
