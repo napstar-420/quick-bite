@@ -47,6 +47,34 @@ async function getUser(req, res) {
   }
 }
 
+async function updateUser(req, res) {
+  const data = matchedData(req);
+  const userId = data.id;
+
+  try {
+    // Check if user exists
+    const user = await UserService.getUserByID(userId);
+    if (isNil(user)) {
+      res.status(404).json({ message: 'User not found' });
+      return;
+    }
+
+    // Remove id from data to avoid overwriting it
+    delete data.id;
+
+    // Debug the data being sent
+    logger.debug('Updating user data:', data);
+
+    // Update the user with the correct ID
+    const result = await UserService.updateUser(userId, data);
+    res.json(result);
+  }
+  catch (error) {
+    logger.error('Server error', error);
+    res.status(500).json({ error: 'Server Error', details: error.message });
+  }
+}
+
 async function getUserRoles(req, res) {
   try {
     const result = await UserService.getUserRoles(req.params.id);
@@ -57,4 +85,4 @@ async function getUserRoles(req, res) {
   }
 }
 
-module.exports = { getUsers, getUser, getUserRoles };
+module.exports = { getUsers, getUser, getUserRoles, updateUser };

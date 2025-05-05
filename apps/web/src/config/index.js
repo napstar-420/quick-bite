@@ -13,6 +13,8 @@ export default createConfig({
     PARTNER_BRANCH: id => `/partner/branch/${id}`,
     ADMIN_RESTAURANT: id => `/admin/restaurant/${id}`,
     RESTAURANT: id => `/restaurant/${id}`,
+    CHECKOUT: "/checkout",
+    ORDER_CONFIRMATION: "/order-confirmation",
   },
 
   PAGINATION: {

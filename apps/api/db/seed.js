@@ -439,7 +439,7 @@ async function seedUsers() {
         email: faker.internet.email(),
         password: HASHED_PASSWORD,
         phone: faker.phone.number({ style: 'international' }),
-        addresses: [address],
+        // address,
         lastActive: faker.date.past(1),
         createdAt: faker.date.past(1),
         updatedAt: faker.date.past(1),
@@ -462,7 +462,6 @@ async function seedUsers() {
     email: 'admin@quickbite.com',
     password: await hashPassword(ADMIN_PASSWORD),
     phone: '+923001234567',
-    addresses: [],
     roles: [adminRole._id],
   });
 
@@ -472,7 +471,6 @@ async function seedUsers() {
     email: 'superadmin@quickbite.com',
     password: await hashPassword(SUPER_ADMIN_PASSWORD),
     phone: '+923011234567',
-    addresses: [],
     roles: [superAdminRole._id],
   });
 
@@ -482,7 +480,6 @@ async function seedUsers() {
     email: 'owner@quickbite.com',
     password: await hashPassword(USER_PASSWORD),
     phone: '+923021234567',
-    addresses: [],
     roles: [restaurantOwnerRole._id],
   });
 
@@ -492,7 +489,6 @@ async function seedUsers() {
     email: 'staff@quickbite.com',
     password: await hashPassword(USER_PASSWORD),
     phone: '+923031234567',
-    addresses: [],
     roles: [restaurantStaffRole._id],
   });
 
@@ -502,7 +498,6 @@ async function seedUsers() {
     email: 'delivery@quickbite.com',
     password: await hashPassword(USER_PASSWORD),
     phone: '+923041234567',
-    addresses: [],
     roles: [deliveryPersonRole._id],
   });
 

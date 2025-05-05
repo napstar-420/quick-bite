@@ -31,6 +31,12 @@ const authSlice = createSlice({
     setUserRoles: (state, action) => {
       state.userRoles = action.payload;
     },
+    setAddress: (state, action) => {
+      state.user.address = action.payload;
+    },
+    updateUser: (state, action) => {
+      state.user = { ...state.user, ...action.payload };
+    },
     setCoordinates: (state, action) => {
       state.coordinates = action.payload;
       localStorage.setItem("coordinates", action.payload);
@@ -60,6 +66,8 @@ export const {
   setCoordinates,
   setCity,
   setIsLocationEnabled,
+  setAddress,
+  updateUser,
 } = authSlice.actions;
 export default authSlice.reducer;
 export const selectCurrentUser = (state) => state.auth.user;

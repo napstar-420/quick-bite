@@ -69,7 +69,7 @@ async function signin(req, res) {
   const data = matchedData(req);
   const user = await UserService.getUser(
     { email: data.email },
-    'name email password roles',
+    'name email password roles phone address',
   );
 
   if (isNil(user)) {
@@ -117,7 +117,7 @@ async function refreshToken(req, res) {
     return res.sendStatus(401);
   }
 
-  const user = await UserService.getUser({ refreshToken }, 'id roles name');
+  const user = await UserService.getUser({ refreshToken }, 'id roles name phone email address');
 
   if (isNil(user)) {
     return res.sendStatus(403);

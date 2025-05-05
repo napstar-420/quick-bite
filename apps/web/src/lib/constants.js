@@ -9,6 +9,7 @@ export const API_ROUTES = {
   },
   USERS: {
     ROLES: (userId) => `user/${userId}/roles`,
+    UPDATE_PHONE: (userId) => `user/${userId}/`,
   },
   GET_USERS: "user",
   GET_USER: (id) => `user/${id}`,

@@ -37,6 +37,9 @@ import { PartnerRoutes } from "./partner-routes";
 
 // Config
 import config from "../config";
+import CartPage from "../pages/cart.jsx";
+import CheckoutPage from "../pages/checkout.jsx";
+import OrderConfirmationPage from "../pages/order-confirmation.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -47,6 +50,24 @@ const router = createBrowserRouter(
           <Route element={<HomeLayout />}>
             <Route index element={<Home />} />
             <Route path="restaurant/:id" element={<Restaurant />} />
+            <Route path="cart" element={<CartPage />} />
+
+            <Route
+              path="checkout"
+              element={
+                <PrivateRoute>
+                  <CheckoutPage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="order-confirmation"
+              element={
+                <PrivateRoute>
+                  <OrderConfirmationPage />
+                </PrivateRoute>
+              }
+            />
             <Route path="*" element={<NotFound />} />
           </Route>
 

@@ -51,28 +51,26 @@ const UserSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    addresses: [
-      {
-        label: { type: String, required: true },
-        title: { type: String, required: true },
-        street: { type: String, required: true },
-        city: { type: String, required: true },
-        state: { type: String, required: true },
-        country: { type: String, required: true },
-        zipCode: { type: String, required: true },
-        location: {
-          type: {
-            type: String,
-            enum: ['Point'],
-            default: 'Point',
-          },
-          coordinates: {
-            type: [Number],
-            index: '2dsphere',
-          },
+    address: {
+      label: { type: String },
+      street: { type: String },
+      floor: { type: String },
+      note: { type: String },
+      city: { type: String },
+      state: { type: String },
+      country: { type: String },
+      location: {
+        type: {
+          type: String,
+          enum: ['Point'],
+          default: 'Point',
+        },
+        coordinates: {
+          type: [Number],
+          index: '2dsphere',
         },
       },
-    ],
+    },
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } },
 );

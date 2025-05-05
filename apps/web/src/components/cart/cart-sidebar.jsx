@@ -14,6 +14,8 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../ui/card
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import { LoadingSpinner } from "../loading-spinner";
+import config from "../../config";
+import { Link } from "react-router-dom";
 
 export function CartSidebar() {
   const dispatch = useDispatch();
@@ -156,8 +158,10 @@ export function CartSidebar() {
           <span>Total</span>
           <span>Rs. {(cartTotal + 50).toFixed(2)}</span>
         </div>
-        <Button className="w-full bg-brand-primary hover:bg-brand-primary/90 mt-2">
-          Proceed to Checkout
+        <Button asChild className="w-full bg-brand-primary hover:bg-brand-primary/90 mt-2">
+          <Link to={config.ROUTES.CHECKOUT}>
+            Proceed to Checkout
+          </Link>
         </Button>
       </CardFooter>
     </Card>
