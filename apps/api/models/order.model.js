@@ -7,9 +7,9 @@ const orderSchema = new Schema(
       ref: 'User',
       required: true,
     },
-    restaurant: {
+    restaurantBranch: {
       type: Schema.Types.ObjectId,
-      ref: 'Restaurant',
+      ref: 'RestaurantBranch',
       required: true,
     },
     deliveryPerson: {
@@ -23,17 +23,7 @@ const orderSchema = new Schema(
           ref: 'MenuItem',
           required: true,
         },
-        name: { type: String, required: true },
-        price: { type: Number, required: true },
         quantity: { type: Number, required: true, min: 1 },
-        customizations: [
-          {
-            name: { type: String },
-            option: { type: String },
-            price: { type: Number, default: 0 },
-          },
-        ],
-        totalPrice: { type: Number, required: true },
       },
     ],
     deliveryAddress: {

@@ -1,4 +1,4 @@
-// const MenuItemModel = require('../models/menu-item.model');
+const MenuItemModel = require('../models/menu-item.model');
 const MenuModel = require('../models/menu.model');
 const RestaurantBranchModel = require('../models/restaurant-branch.model');
 // const ReviewModel = require('../models/review.model');
@@ -58,6 +58,12 @@ async function getHomeMenuItems(c) {
   return { menuItems, restaurantBranches };
 }
 
+async function getMenuItemsByIds(ids) {
+  const menuItems = await MenuItemModel.find({ _id: { $in: ids } });
+  return menuItems;
+}
+
 module.exports = {
   getHomeMenuItems,
+  getMenuItemsByIds,
 };

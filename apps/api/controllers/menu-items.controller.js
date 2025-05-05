@@ -8,6 +8,13 @@ async function getHomeMenuItems(req, res) {
   res.json(menuItems);
 }
 
+async function getMenuItemsByIds(req, res) {
+  const data = matchedData(req);
+  const menuItems = await MenuItemsService.getMenuItemsByIds(data.ids);
+  res.json(menuItems);
+}
+
 module.exports = {
   getHomeMenuItems,
+  getMenuItemsByIds,
 };

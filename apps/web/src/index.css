@@ -152,4 +152,9 @@
   .DialogContent {
     @apply max-h-[calc(100vh_-_64px)] overflow-y-auto;
   }
+
+  /* Remove background color from dialog overlay */
+  div[data-slot="dialog-overlay"] {
+    @apply !bg-black/50;
+  }
 }

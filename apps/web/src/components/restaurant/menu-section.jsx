@@ -1,8 +1,7 @@
 import { MenuItemCard } from "../menu-item-card";
 import { Separator } from "../ui/separator";
 
-export function MenuSection({ menu, title }) {
-  // If title is provided, use it, otherwise use menu name
+export function MenuSection({ menu, title, branchId }) {
   const sectionTitle = title || menu?.name || "Menu";
 
   return (
@@ -15,8 +14,9 @@ export function MenuSection({ menu, title }) {
               key={item._id}
               menuItem={{
                 ...item,
-                restaurant: menu.restaurant?.name
+                restaurant: menu.restaurant?.name,
               }}
+              branchId={branchId}
             />
           ))
         ) : (

@@ -13,6 +13,7 @@ import { Card } from "../components/ui/card";
 import { ChevronLeft, ShoppingBag } from "lucide-react";
 import { Separator } from "../components/ui/separator";
 import { Button } from "../components/ui/button";
+import { CartSidebar } from "../components/cart/cart-sidebar";
 
 export default function RestaurantPage() {
   const { id } = useParams();
@@ -99,7 +100,7 @@ export default function RestaurantPage() {
 
               <div className="mt-6">
                 {activeMenu ? (
-                  <MenuSection menu={activeMenu} />
+                  <MenuSection menu={activeMenu} branchId={restaurantBranch._id} />
                 ) : (
                   <p>Select a menu to view items</p>
                 )}
@@ -114,17 +115,7 @@ export default function RestaurantPage() {
 
         <div className="hidden lg:block">
           <div className="sticky top-6">
-            <Card className="p-6">
-              <div className="flex items-center justify-center flex-col gap-3">
-                <div className="w-12 h-12 rounded-full bg-brand-primary/10 flex items-center justify-center">
-                  <ShoppingBag className="h-6 w-6 text-brand-primary" />
-                </div>
-                <h3 className="font-semibold text-lg">Your Cart</h3>
-                <p className="text-gray-500 text-sm text-center">
-                  Add items to your cart to place an order
-                </p>
-              </div>
-            </Card>
+            <CartSidebar />
           </div>
         </div>
       </div>
