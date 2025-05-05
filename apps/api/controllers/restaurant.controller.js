@@ -64,6 +64,45 @@ async function createRestaurant(req, res) {
   });
 }
 
+async function getRestaurantBranch(req, res) {
+  const { id } = req.params;
+
+  const restaurantBranch = await RestaurantService.getRestaurantBranch(
+    {
+      _id: id,
+    },
+    'name restaurant address',
+    null,
+    {
+      path: 'restaurant',
+      select: 'name logo categories priceRange',
+      populate: {
+        path: 'categories',
+        select: 'name',
+      },
+    },
+  );
+
+  if (!restaurantBranch) {
+    return res.status(404).json({ message: 'Restaurant branch not found' });
+  }
+
+  const menus = await RestaurantService.getMenus(
+    {
+      branches: { $in: [id] },
+    },
+    null,
+    null,
+    [{ path: 'menuItems', select: 'name description price image' }],
+  );
+
+  res.status(200).json({
+    branch: restaurantBranch,
+    menus,
+  });
+}
+
 module.exports = {
   createRestaurant,
+  getRestaurantBranch,
 };

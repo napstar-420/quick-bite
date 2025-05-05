@@ -26,6 +26,12 @@ async function getRestaurant(filters, projection, options, populations = []) {
   return query.exec();
 }
 
+async function getRestaurantBranch(filters, projection, options, populations = {}) {
+  const query = RestaurantBranchModel.findOne(filters, projection, options);
+  query.populate(populations);
+  return query.exec();
+}
+
 async function getRestaurants(filters, projection, options, populations = []) {
   const query = RestaurantModel.find(filters, projection, options);
 
@@ -62,9 +68,16 @@ async function getMenuByID(menuId, projection, options, populations = []) {
   return query.exec();
 }
 
-async function getMenus(filters, projection, options) {
-  const menus = await MenuModel.find(filters, projection, options);
-  return menus;
+async function getMenus(filters, projection, options, populations = []) {
+  const query = MenuModel.find(filters, projection, options);
+
+  if (populations && populations.length) {
+    for (const populate of populations) {
+      query.populate(populate.path, populate.projection);
+    }
+  }
+
+  return query.exec();
 }
 
 async function createMenu(data) {
@@ -216,4 +229,5 @@ module.exports = {
   deleteMenu,
   updateMenuItem,
   deleteMenuItem,
+  getRestaurantBranch,
 };

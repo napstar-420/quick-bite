@@ -5,7 +5,7 @@ import {
   Outlet,
 } from "react-router-dom";
 import Home from "../pages/home";
-
+import Restaurant from "../pages/restaurant";
 // Auth Pages
 import Auth from "../pages/auth";
 import Logout from "../pages/auth/logout";
@@ -19,6 +19,7 @@ import AdminLayout from "../components/layout/admin-layout";
 import AdminDashboard from "../pages/admin/dashboard";
 import AdminUsers from "../pages/admin/users";
 import AdminRestaurants from "../pages/admin/restaurants";
+import ManageRestaurant from "../pages/admin/manage-restaurant.jsx";
 
 // Auth Components
 import AuthProvider from "../components/auth-provider";
@@ -32,12 +33,10 @@ import Suspended from "../pages/Suspended.jsx";
 
 // Partner Pages
 import PartnerNew from "../pages/partner/new";
-
 import { PartnerRoutes } from "./partner-routes";
 
 // Config
 import config from "../config";
-import ManageRestaurant from "../pages/admin/manage-restaurant.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -47,6 +46,7 @@ const router = createBrowserRouter(
           {/* Customer Routes */}
           <Route element={<HomeLayout />}>
             <Route index element={<Home />} />
+            <Route path="restaurant/:id" element={<Restaurant />} />
             <Route path="*" element={<NotFound />} />
           </Route>
 

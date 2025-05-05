@@ -23,6 +23,7 @@ export default function HomePage() {
   const [menuItems, setMenuItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [restaurantBranches, setRestaurantBranches] = useState([]);
+
   useEffect(() => {
     const abortController = new AbortController();
     const fetchMenuItems = async () => {

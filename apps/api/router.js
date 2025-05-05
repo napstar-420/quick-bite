@@ -20,10 +20,10 @@ router.use('/auth', authRouter);
 router.use('/user', userRouter);
 router.use('/category', categoryRouter);
 router.use('/menu-items', menuItemsRouter);
+router.use('/restaurant', restaurantRouter);
 
 router.use(verifyJwt);
 
-router.use('/restaurant', restaurantRouter);
 router.use('/partner', partnerRouter);
 router.use('/admin', adminRouter);
 
