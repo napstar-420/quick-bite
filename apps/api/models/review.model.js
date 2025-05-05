@@ -34,18 +34,14 @@ const ReviewSchema = new Schema(
       ref: 'MenuItem',
       required: true,
     },
-    restaurant: {
+    restaurantBranch: {
       type: String,
-      ref: 'Restaurant',
+      ref: 'RestaurantBranch',
       required: true,
     },
     likes: {
       type: Number,
       default: 0,
-    },
-    userReviewCount: {
-      type: Number,
-      default: 1,
     },
   },
   { timestamps: true },

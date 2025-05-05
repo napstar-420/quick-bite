@@ -32,4 +32,6 @@ export const API_ROUTES = {
     RESTAURANTS: "admin/restaurants",
     RESTAURANT: (id) => `admin/restaurant/${id}`,
   },
+  MENU_ITEMS: (coordinates) =>
+    `menu-items/home?c=${encodeURIComponent(coordinates)}`,
 };

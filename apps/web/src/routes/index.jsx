@@ -44,7 +44,7 @@ const router = createBrowserRouter(
     <Route path="/" errorElement={<ErrorPage />}>
       <Route element={<AuthProvider />}>
         <Route element={<RootLayout />}>
-          {/* Public Routes */}
+          {/* Customer Routes */}
           <Route element={<HomeLayout />}>
             <Route index element={<Home />} />
             <Route path="*" element={<NotFound />} />
@@ -60,13 +60,14 @@ const router = createBrowserRouter(
           <Route
             path="auth"
             element={
-              // <PublicRoute>
-              <Auth />
-              // </PublicRoute>
+              <PublicRoute>
+                <Auth />
+              </PublicRoute>
             }
           />
 
           <Route path="logout" element={<Logout />} />
+
           {/* Private Routes */}
           <Route
             path="admin"
@@ -94,7 +95,6 @@ const router = createBrowserRouter(
               </PrivateRoute>
             }
           />
-
           {PartnerRoutes}
         </Route>
       </Route>

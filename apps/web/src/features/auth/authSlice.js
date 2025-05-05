@@ -6,6 +6,10 @@ const initialState = {
   isAuthenticated: false,
   isLoading: true,
   userRoles: [],
+  coordinates: localStorage.getItem("coordinates") || null,
+  city: localStorage.getItem("city") || 'lahore',
+  isLocationEnabled:
+    localStorage.getItem("isLocationEnabled") === "true" ? true : false,
 };
 
 const authSlice = createSlice({
@@ -27,6 +31,18 @@ const authSlice = createSlice({
     setUserRoles: (state, action) => {
       state.userRoles = action.payload;
     },
+    setCoordinates: (state, action) => {
+      state.coordinates = action.payload;
+      localStorage.setItem("coordinates", action.payload);
+    },
+    setCity: (state, action) => {
+      state.city = action.payload;
+      localStorage.setItem("city", action.payload);
+    },
+    setIsLocationEnabled: (state, action) => {
+      state.isLocationEnabled = action.payload;
+      localStorage.setItem("isLocationEnabled", action.payload);
+    },
     logout: (state) => {
       state.user = null;
       state.token = null;
@@ -37,10 +53,20 @@ const authSlice = createSlice({
   },
 });
 
-export const { setCredentials, logout, setUserRoles } = authSlice.actions;
+export const {
+  setCredentials,
+  logout,
+  setUserRoles,
+  setCoordinates,
+  setCity,
+  setIsLocationEnabled,
+} = authSlice.actions;
 export default authSlice.reducer;
 export const selectCurrentUser = (state) => state.auth.user;
 export const selectToken = (state) => state.auth.token;
 export const selectIsAuthenticated = (state) => state.auth.isAuthenticated;
 export const selectIsLoading = (state) => state.auth.isLoading;
 export const selectUserRoles = (state) => state.auth.userRoles;
+export const selectCoordinates = (state) => state.auth.coordinates;
+export const selectCity = (state) => state.auth.city;
+export const selectIsLocationEnabled = (state) => state.auth.isLocationEnabled;

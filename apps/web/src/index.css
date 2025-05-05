@@ -40,9 +40,11 @@
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
   --brand-primary: #ff6b35;
+  --brand-primary-foreground: #fff;
   --brand-secondary: #1a535c;
+  --brand-secondary-foreground: #fff;
   --brand-accent: #ffd166;
-  --brand-accent: #ffd166;
+  --brand-accent-foreground: #fff;
   --neutral: #f7f7f7;
 }
 
@@ -121,8 +123,11 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-brand-primary: var(--brand-primary);
+  --color-brand-primary-foreground: var(--brand-primary-foreground);
   --color-brand-secondary: var(--brand-secondary);
+  --color-brand-secondary-foreground: var(--brand-secondary-foreground);
   --color-brand-accent: var(--brand-accent);
+  --color-brand-accent-foreground: var(--brand-accent-foreground);
   --color-neutral: var(--neutral);
 }
 

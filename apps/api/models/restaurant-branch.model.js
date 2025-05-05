@@ -83,6 +83,6 @@ const RestaurantBranchSchema = new Schema(
 );
 
 // geospatial index for location-based queries
-RestaurantBranchSchema.index({ location: '2dsphere' });
+RestaurantBranchSchema.index({ 'address.location': '2dsphere' });
 
 module.exports = model('RestaurantBranch', RestaurantBranchSchema);
