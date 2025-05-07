@@ -2,8 +2,47 @@ const { customAlphabet } = require('nanoid');
 
 const config = require('../config');
 
-function genUserId() {
-  return customAlphabet(config.USER_ID_ALPHABETS, config.USER_ID_LENGTH);
+const idGenerator = customAlphabet(config.ID_ALPHABETS, config.ID_LENGTH);
+
+function generateId(prefix) {
+  const id = idGenerator();
+
+  return prefix ? `${prefix}${id}` : id;
 }
 
-module.exports = { genUserId };
+const genUserId = idGenerator;
+
+const genRoleId = customAlphabet(
+  config.ROLE_ID_ALPHABETS,
+  config.ROLE_ID_LENGTH,
+);
+
+const genPermissionId = customAlphabet(
+  config.PERMISSION_ID_ALPHABETS,
+  config.PERMISSION_ID_LENGTH,
+);
+
+function genRestaurantId() {
+  return `${config.RESTAURANT_ID_PREFIX}${idGenerator()}`;
+}
+
+function genRestaurantBranchId() {
+  const idGenerator = customAlphabet(config.ID_ALPHABETS, config.ID_LENGTH);
+
+  return `${config.RESTAURANT_BRANCH_ID_PREFIX}${idGenerator()}`;
+}
+
+const genReviewId = customAlphabet(
+  config.USER_ID_ALPHABETS,
+  config.USER_ID_LENGTH,
+);
+
+module.exports = {
+  generateId,
+  genUserId,
+  genRoleId,
+  genPermissionId,
+  genReviewId,
+  genRestaurantId,
+  genRestaurantBranchId,
+};

@@ -14,6 +14,12 @@ async function verifyJwt(req, res, next) {
   try {
     const decoded = jwt.verify(token, config.ACCESS_TOKEN_SECRET);
     req.user_id = decoded.id;
+
+    // Extract roles from token if available
+    if (decoded.roles) {
+      req.user_roles = decoded.roles;
+    }
+
     next();
   }
   catch (error) {

@@ -1,10 +1,13 @@
-const { validationResult, matchedData } = require('express-validator');
+const { matchedData } = require('express-validator');
 const jwt = require('jsonwebtoken');
 const { isNil } = require('lodash');
 
 const config = require('../config');
 const { refreshTokenConfig } = require('../config/auth.config');
+// Services
+const AuthService = require('../services/auth.service');
 const UserService = require('../services/user.service');
+// Utils
 const { genUserAccessToken, genUserRefreshToken } = require('../utils/auth');
 const { comparePassword } = require('../utils/helpers');
 const { logger } = require('../utils/logger');
@@ -16,13 +19,6 @@ const { logger } = require('../utils/logger');
  * @returns {Promise<void>}
  */
 async function signup(req, res) {
-  const validationErrors = validationResult(req);
-
-  if (!validationErrors.isEmpty()) {
-    const errors = validationErrors.array();
-    return res.status(400).json({ errors });
-  }
-
   const data = matchedData(req);
   const existingUser = await UserService.getUser(
     { email: data.email },
@@ -38,7 +34,14 @@ async function signup(req, res) {
   try {
     const newUser = await UserService.createUser(data);
     logger.debug(`New user created: ${newUser.email}`);
-    const accessToken = genUserAccessToken(newUser.id);
+    const roles = await AuthService.getRoles(
+      { _id: { $in: newUser.roles } },
+      'name',
+    );
+    const accessToken = genUserAccessToken(
+      newUser.id,
+      roles.map(role => role.name),
+    );
     const refreshToken = genUserRefreshToken(newUser.id);
     // Update refresh token
     UserService.updateUser(newUser.id, { refreshToken });
@@ -48,9 +51,10 @@ async function signup(req, res) {
       refreshTokenConfig,
     );
 
-    return res.json({ accessToken });
+    return res.json({ token: accessToken, user: newUser });
   }
-  catch {
+  catch (error) {
+    logger.error(error);
     return res.sendStatus(500);
   }
 }
@@ -62,30 +66,30 @@ async function signup(req, res) {
  * @returns {Promise<void>}
  */
 async function signin(req, res) {
-  const validationErrors = validationResult(req);
-
-  if (!validationErrors.isEmpty()) {
-    const errors = validationErrors.array();
-    return res.status(400).json({ errors });
-  }
-
   const data = matchedData(req);
   const user = await UserService.getUser(
     { email: data.email },
-    'name email password',
+    'name email password roles phone address',
   );
 
   if (isNil(user)) {
-    return res.sendStatus(401);
+    return res.status(401).json({ message: 'Invalid credentials' });
   }
 
   const passwordsMatched = await comparePassword(data.password, user.password);
 
   if (!passwordsMatched) {
-    return res.sendStatus(401);
+    return res.status(401).json({ message: 'Invalid credentials' });
   }
 
-  const accessToken = genUserAccessToken(user.id);
+  const roles = await AuthService.getRoles(
+    { _id: { $in: user.roles } },
+    'name',
+  );
+  const accessToken = genUserAccessToken(
+    user.id,
+    roles.map(role => role.name),
+  );
   const refreshToken = genUserRefreshToken(user.id);
 
   // Update refresh token
@@ -97,7 +101,7 @@ async function signin(req, res) {
     refreshTokenConfig,
   );
 
-  return res.json({ accessToken });
+  return res.json({ token: accessToken, user });
 }
 
 /**
@@ -113,7 +117,7 @@ async function refreshToken(req, res) {
     return res.sendStatus(401);
   }
 
-  const user = await UserService.getUser({ refreshToken });
+  const user = await UserService.getUser({ refreshToken }, 'id roles name phone email address');
 
   if (isNil(user)) {
     return res.sendStatus(403);
@@ -122,13 +126,25 @@ async function refreshToken(req, res) {
   try {
     jwt.verify(refreshToken, config.REFRESH_TOKEN_SECRET);
   }
-  catch {
+  catch (error) {
+    logger.error(error);
+    await UserService.updateUser(user.id, { refreshToken: null });
+    res.clearCookie(config.REFRESH_TOKEN_COOKIE_NAME, refreshTokenConfig);
     return res.sendStatus(403);
   }
 
-  const accessToken = genUserAccessToken(user.id);
+  const roles = await AuthService.getRoles(
+    { _id: { $in: user.roles } },
+    'name',
+  );
+  const accessToken = genUserAccessToken(
+    user.id,
+    roles.map(role => role.name),
+  );
+  // Update user lastActive
+  await UserService.updateUser(user.id, { lastActive: new Date() });
 
-  return res.json({ accessToken });
+  return res.json({ token: accessToken, user });
 }
 
 /**
@@ -146,7 +162,7 @@ async function signout(req, res) {
     return res.sendStatus(204);
   }
 
-  const user = await UserService.getUser({ refreshToken });
+  const user = await UserService.getUser({ refreshToken }, 'id');
 
   if (isNil(user)) {
     return res.sendStatus(204);
@@ -159,9 +175,38 @@ async function signout(req, res) {
   return res.sendStatus(204);
 }
 
+/**
+ * Checks if a user with the specified email exists
+ * @param {Request} req - Express request object with email query parameter
+ * @param {Response} res - Express response object
+ * @returns {Promise<void>}
+ */
+async function checkUserExists(req, res) {
+  const data = matchedData(req);
+
+  try {
+    // Check if user exists
+    const user = await UserService.getUser({ email: data.email }, 'email');
+
+    logger.debug(`User existence check for email: ${data.email}`);
+
+    return res.json({
+      exists: !isNil(user),
+      email: data.email,
+    });
+  }
+  catch (error) {
+    logger.error(`Error checking user existence: ${error.message}`);
+    return res.status(500).json({
+      message: 'Internal server error while checking user existence',
+    });
+  }
+}
+
 module.exports = {
   signin,
   signout,
   refreshToken,
   signup,
+  checkUserExists,
 };
